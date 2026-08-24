@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Figtree, Fraunces } from "next/font/google";
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="flex-1">{children}</main>
         <SiteFooter />
       </body>
+      <GoogleAnalytics gaId="G-HRZWPVKVPH" />
     </html>
   );
 }
