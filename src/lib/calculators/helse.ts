@@ -1,5 +1,5 @@
 import type { Calculator } from "../types";
-import { addDays, formatDate, num, parseDate } from "../format";
+import { addDays, daysBetween, formatDate, num, parseDate } from "../format";
 import { allNumbers, result } from "../helpers";
 
 export const helseCalculators: Calculator[] = [
@@ -47,6 +47,56 @@ export const helseCalculators: Calculator[] = [
       return [
         result("bmi", "BMI", bmi, { digits: 1, primary: true }),
         result("klasse", "Vektklasse", klasse, { kind: "text" }),
+      ];
+    },
+  },
+  {
+    slug: "new-bmi",
+    title: "New BMI",
+    shortTitle: "New BMI",
+    description:
+      "Trefethens New BMI: vekt delt på høyde opphøyd i 2,5. Mindre skjev for korte og høye enn klassisk BMI.",
+    category: "helse",
+    tags: ["bmi", "new bmi", "trefethen", "vekt", "helse"],
+    fields: [
+      {
+        id: "kg",
+        label: "Vekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 75,
+      },
+      {
+        id: "cm",
+        label: "Høyde",
+        type: "number",
+        unit: "cm",
+        defaultValue: 178,
+      },
+    ],
+    formula: "New BMI = 1,3 · vekt (kg) / høyde (m)^2,5",
+    explanation:
+      "Nick Trefethen (Oxford) argumenterte for at klassisk BMI bruker høyde i andre potens, mens friske voksne skalerer nærmere 2,5. Konstanten 1,3 gjør at tallet er uendret ved ca. 169 cm. Korte får da et høyere tall, høye et lavere – på samme WHO-skala som vanlig BMI.",
+    disclaimer:
+      "New BMI er et forslag, ikke en offisiell WHO-standard. Det erstatter ikke vurdering fra helsepersonell.",
+    compute(input) {
+      const kg = num(input, "kg");
+      const cm = num(input, "cm");
+      if (!allNumbers([kg, cm]) || kg <= 0 || cm <= 0) return [];
+      const m = cm / 100;
+      const classic = kg / (m * m);
+      const neu = (1.3 * kg) / m ** 2.5;
+      let klasse = "Fedme klasse III";
+      if (neu < 18.5) klasse = "Undervekt";
+      else if (neu < 25) klasse = "Normalvekt";
+      else if (neu < 30) klasse = "Overvekt";
+      else if (neu < 35) klasse = "Fedme klasse I";
+      else if (neu < 40) klasse = "Fedme klasse II";
+      return [
+        result("new", "New BMI", neu, { digits: 1, primary: true }),
+        result("klassisk", "Klassisk BMI", classic, { digits: 1 }),
+        result("diff", "Forskjell", neu - classic, { digits: 1 }),
+        result("klasse", "Vektklasse (New BMI)", klasse, { kind: "text" }),
       ];
     },
   },
@@ -374,6 +424,168 @@ export const helseCalculators: Calculator[] = [
           digits: 2,
           unit: "kg/uke",
         }),
+      ];
+    },
+  },
+  {
+    slug: "midje-hoyde",
+    title: "Midje-høyde-forhold",
+    shortTitle: "Midje/høyde",
+    description:
+      "Midjemål delt på høyde – et enkelt mål som ofte treffer helserisiko bedre enn BMI alene.",
+    category: "helse",
+    tags: ["midje", "høyde", "helse", "mage"],
+    fields: [
+      {
+        id: "midje",
+        label: "Midjemål",
+        type: "number",
+        unit: "cm",
+        defaultValue: 82,
+        hint: "Mål rett over hofteskålene, etter vanlig utpust.",
+      },
+      {
+        id: "hoyde",
+        label: "Høyde",
+        type: "number",
+        unit: "cm",
+        defaultValue: 178,
+      },
+    ],
+    formula: "WHtR = midje / høyde",
+    explanation:
+      "Et forhold under 0,50 brukes ofte som tommelfingerregel for lavere risiko. Målet fanger opp magefett som BMI kan overse. Det er likevel bare ett tall, ikke en diagnose.",
+    disclaimer: "Ikke medisinsk vurdering. Snakk med fastlege ved bekymring.",
+    compute(input) {
+      const midje = num(input, "midje");
+      const hoyde = num(input, "hoyde");
+      if (!allNumbers([midje, hoyde]) || hoyde <= 0) return [];
+      const r = midje / hoyde;
+      let vurdering = "Over 0,60 – ta det opp med helsepersonell.";
+      if (r < 0.4) vurdering = "Lavt – sjekk at målebåndet sitter riktig.";
+      else if (r < 0.5) vurdering = "Under 0,50 – ofte brukt som «grønt» område.";
+      else if (r < 0.6) vurdering = "0,50–0,60 – forhøyet, verdt å følge med på.";
+      return [
+        result("forhold", "Forhold", r, { digits: 2, primary: true }),
+        result("vurdering", "Tolkning", vurdering, { kind: "text" }),
+      ];
+    },
+  },
+  {
+    slug: "makrofordeling",
+    title: "Makrofordeling",
+    description:
+      "Fordel kalorier på protein, karbohydrat og fett i gram og prosent.",
+    category: "helse",
+    tags: ["makro", "protein", "kalorier", "kosthold"],
+    fields: [
+      {
+        id: "kcal",
+        label: "Kalorier per dag",
+        type: "number",
+        unit: "kcal",
+        defaultValue: 2200,
+      },
+      {
+        id: "protein",
+        label: "Protein",
+        type: "number",
+        unit: "%",
+        defaultValue: 25,
+      },
+      {
+        id: "karbo",
+        label: "Karbohydrat",
+        type: "number",
+        unit: "%",
+        defaultValue: 45,
+      },
+      {
+        id: "fett",
+        label: "Fett",
+        type: "number",
+        unit: "%",
+        defaultValue: 30,
+      },
+    ],
+    formula: "gram = (kcal · %) / (4 eller 9)",
+    explanation:
+      "Protein og karbohydrat gir 4 kcal per gram, fett 9 kcal. Prosentene bør summere til 100. Tallene er et kostholdsverktøy, ikke en diett.",
+    compute(input) {
+      const kcal = num(input, "kcal");
+      const p = num(input, "protein");
+      const k = num(input, "karbo");
+      const f = num(input, "fett");
+      if (!allNumbers([kcal, p, k, f]) || kcal <= 0) return [];
+      const sum = p + k + f;
+      return [
+        result("prot", "Protein", (kcal * p) / 100 / 4, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+        }),
+        result("karb", "Karbohydrat", (kcal * k) / 100 / 4, {
+          digits: 0,
+          unit: "g",
+        }),
+        result("fettg", "Fett", (kcal * f) / 100 / 9, {
+          digits: 0,
+          unit: "g",
+        }),
+        result("sum", "Sum prosent", sum, { kind: "percent", digits: 0 }),
+      ];
+    },
+  },
+  {
+    slug: "graviditetsuke",
+    title: "Graviditetsuke",
+    description:
+      "Finn svangerskapsuke og gjenstående dager fra siste menstruasjons første dag.",
+    category: "helse",
+    tags: ["gravid", "uke", "termin", "svangerskap"],
+    fields: [
+      {
+        id: "lmp",
+        label: "Siste menstruasjons første dag",
+        type: "date",
+        defaultValue: "2026-01-15",
+      },
+      {
+        id: "dato",
+        label: "Dato du vil sjekke",
+        type: "date",
+        defaultValue: "2026-08-25",
+      },
+    ],
+    formula: "dager = dato − Siste menstruasjon     uke = dager / 7",
+    explanation:
+      "Svangerskapet telles fra første dag i siste menstruasjon, ikke unnfangelse. Fullgått er 40 uker (280 dager). Terminkalkulatoren bruker samme utgangspunkt.",
+    disclaimer: "Ultralyd kan justere terminen. Dette erstatter ikke jordmor eller lege.",
+    compute(input) {
+      const lmp = parseDate(input.lmp);
+      const dato = parseDate(input.dato);
+      if (!lmp || !dato) return [];
+      const dager = daysBetween(lmp, dato);
+      if (dager < 0) {
+        return [
+          result("status", "Status", "Sjekkdatoen er før siste menstruasjon.", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      const uker = Math.floor(dager / 7);
+      const rest = dager % 7;
+      const termin = addDays(lmp, 280);
+      const igjen = Math.max(0, daysBetween(dato, termin));
+      return [
+        result("uke", "Svangerskapsuke", `${uker}+${rest}`, {
+          kind: "text",
+          primary: true,
+        }),
+        result("dager", "Dager siden LMP", dager, { kind: "integer" }),
+        result("termin", "Termin (Naegele)", formatDate(termin), { kind: "text" }),
+        result("igjen", "Dager til termin", igjen, { kind: "integer" }),
       ];
     },
   },

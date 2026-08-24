@@ -412,4 +412,216 @@ export const hverdagCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "sovn",
+    title: "Søvnkalkulator",
+    shortTitle: "Søvn",
+    description:
+      "Finn når du bør legge deg eller stå opp, i 90-minutters søvnsykluser.",
+    category: "hverdag",
+    tags: ["søvn", "syklus", "legge seg"],
+    popular: true,
+    fields: [
+      {
+        id: "klokke",
+        label: "Klokkeslett",
+        type: "text",
+        defaultValue: "07:00",
+        placeholder: "07:00",
+        hint: "Skriv 7:00 eller 07:00.",
+      },
+      {
+        id: "retning",
+        label: "Jeg vil",
+        type: "select",
+        defaultValue: "opp",
+        options: [
+          { value: "opp", label: "Stå opp da – når legge meg?" },
+          { value: "sovne", label: "Legge meg da – når stå opp?" },
+        ],
+      },
+      {
+        id: "innsovning",
+        label: "Minutter før du sovner",
+        type: "number",
+        unit: "min",
+        defaultValue: 15,
+      },
+    ],
+    formula: "tid = klokke ± (sykluser · 90 min + innsovning)",
+    explanation:
+      "En søvnsyklus er grovt 90 minutter. Å våkne mellom sykluser kjennes ofte lettere. Innsovning er ikke søvn, derfor trekkes den fra. Behovet varierer – 4–6 sykluser er vanlige forslag, ikke medisin.",
+    compute(input) {
+      const start = parseClock(input.klokke);
+      const fall = num(input, "innsovning");
+      if (start == null || !Number.isFinite(fall) || fall < 0) return [];
+      const sign = input.retning === "sovne" ? 1 : -1;
+      const out = [4, 5, 6].map((cycles) => {
+        const mins = start + sign * (cycles * 90 + fall);
+        return formatClock(mins);
+      });
+      return [
+        result("s6", "6 sykluser (9 t)", out[2], { kind: "text", primary: true }),
+        result("s5", "5 sykluser (7,5 t)", out[1], { kind: "text" }),
+        result("s4", "4 sykluser (6 t)", out[0], { kind: "text" }),
+      ];
+    },
+  },
+  {
+    slug: "ukenummer",
+    title: "Ukenummer",
+    description: "Finn ISO-ukenr og ukedag for en dato.",
+    category: "hverdag",
+    tags: ["uke", "dato", "kalender", "iso"],
+    fields: [
+      {
+        id: "dato",
+        label: "Dato",
+        type: "date",
+        defaultValue: "2026-08-25",
+      },
+    ],
+    formula: "ISO 8601: uke 1 inneholder årets første torsdag",
+    explanation:
+      "Norge bruker ISO-uker: uken starter mandag, og uke 1 er den første uken med minst fire dager i det nye året. 31. desember kan derfor ligge i uke 1 neste år.",
+    compute(input) {
+      const d = parseDate(input.dato);
+      if (!d) return [];
+      const days = ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"];
+      return [
+        result("uke", "Ukenummer", isoWeek(d), {
+          kind: "integer",
+          primary: true,
+        }),
+        result("dag", "Ukedag", days[d.getDay()], { kind: "text" }),
+        result("isoar", "ISO-år", isoWeekYear(d), { kind: "integer" }),
+      ];
+    },
+  },
+  {
+    slug: "abonnement",
+    title: "Abonnement: måned mot år",
+    description: "Sammenlign månedspris og årspris og se hvor mye du sparer.",
+    category: "hverdag",
+    tags: ["abonnement", "pris", "år", "måned"],
+    fields: [
+      {
+        id: "maaned",
+        label: "Månedspris",
+        type: "number",
+        unit: "kr",
+        defaultValue: 149,
+      },
+      {
+        id: "aar",
+        label: "Årspris",
+        type: "number",
+        unit: "kr",
+        defaultValue: 1190,
+      },
+    ],
+    formula: "årskostnad månedspris = 12 · M     sparing = 12M − A",
+    explanation:
+      "Årsavtale lønner seg når 12 ganger månedsprisen er høyere enn årsprisen. Husk bindingstid og om du faktisk bruker tjenesten et helt år.",
+    compute(input) {
+      const m = num(input, "maaned");
+      const a = num(input, "aar");
+      if (!allNumbers([m, a])) return [];
+      const tolv = m * 12;
+      const spar = tolv - a;
+      return [
+        result("spar", "Du sparer på år", spar, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("tolv", "12 × månedspris", tolv, { kind: "currency" }),
+        result("prosent", "Rabatt", tolv === 0 ? 0 : (spar / tolv) * 100, {
+          kind: "percent",
+          digits: 1,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "feriedager",
+    title: "Feriedager igjen",
+    description: "Se hvor mange feriedager du har igjen etter det du har tatt ut.",
+    category: "hverdag",
+    tags: ["ferie", "dager", "arbeid"],
+    fields: [
+      {
+        id: "krav",
+        label: "Feriedager i år",
+        type: "number",
+        defaultValue: 25,
+        hint: "Ferieloven gir 25 virkedager. Mange har 30 (fem uker + tre dager).",
+      },
+      {
+        id: "brukt",
+        label: "Tatt ut",
+        type: "number",
+        defaultValue: 10,
+      },
+      {
+        id: "planlagt",
+        label: "Planlagt fremover",
+        type: "number",
+        defaultValue: 5,
+      },
+    ],
+    formula: "igjen = krav − brukt − planlagt",
+    explanation:
+      "Virkedager i ferieloven er mandag–lørdag. Mange arbeidsplasser teller mandag–fredag. Bruk det tallet avtalen din bruker.",
+    compute(input) {
+      const krav = num(input, "krav");
+      const brukt = num(input, "brukt");
+      const planlagt = num(input, "planlagt");
+      if (!allNumbers([krav, brukt, planlagt])) return [];
+      const igjen = krav - brukt - planlagt;
+      return [
+        result("igjen", "Igjen etter planlagt", igjen, {
+          kind: "integer",
+          unit: "dager",
+          primary: true,
+        }),
+        result("naa", "Igjen nå", krav - brukt, {
+          kind: "integer",
+          unit: "dager",
+        }),
+      ];
+    },
+  },
 ];
+
+function parseClock(value: string | undefined): number | null {
+  if (!value) return null;
+  const m = value.trim().match(/^(\d{1,2})[:.](\d{2})$/);
+  if (!m) return null;
+  const h = Number(m[1]);
+  const min = Number(m[2]);
+  if (h > 23 || min > 59) return null;
+  return h * 60 + min;
+}
+
+function formatClock(mins: number): string {
+  const day = 24 * 60;
+  const n = ((Math.round(mins) % day) + day) % day;
+  const h = Math.floor(n / 60);
+  const min = n % 60;
+  return `${h}:${String(min).padStart(2, "0")}`;
+}
+
+function isoWeek(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}
+
+function isoWeekYear(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  return d.getUTCFullYear();
+}

@@ -171,4 +171,54 @@ export const skoleCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "eksamen-standpunkt",
+    title: "Eksamen og standpunkt",
+    description:
+      "Finn samlet karakter når standpunkt og eksamen vektes ulikt.",
+    category: "skole",
+    tags: ["eksamen", "standpunkt", "karakter", "vekt"],
+    fields: [
+      {
+        id: "standpunkt",
+        label: "Standpunkt",
+        type: "number",
+        defaultValue: 5,
+      },
+      {
+        id: "eksamen",
+        label: "Eksamen",
+        type: "number",
+        defaultValue: 4,
+      },
+      {
+        id: "eksvekt",
+        label: "Eksamensvekt",
+        type: "number",
+        unit: "%",
+        defaultValue: 50,
+        hint: "Mange fag teller 50/50. Noen teller eksamen mindre.",
+      },
+    ],
+    formula: "samlet = standpunkt · (1 − v) + eksamen · v",
+    explanation:
+      "v er eksamensandelen som desimal. 50 % eksamen betyr at standpunkt og eksamen teller likt. Skolen kan ha egne regler for avrunding.",
+    compute(input) {
+      const s = num(input, "standpunkt");
+      const e = num(input, "eksamen");
+      const v = num(input, "eksvekt");
+      if (!allNumbers([s, e, v])) return [];
+      const andel = v / 100;
+      const samlet = s * (1 - andel) + e * andel;
+      return [
+        result("samlet", "Samlet karakter", samlet, {
+          digits: 2,
+          primary: true,
+        }),
+        result("avr", "Avrundet til heltall", Math.round(samlet), {
+          kind: "integer",
+        }),
+      ];
+    },
+  },
 ];

@@ -670,6 +670,349 @@ export const okonomiCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "egenkapital-bolig",
+    title: "Egenkapital til bolig",
+    shortTitle: "Egenkapital",
+    description:
+      "Finn 15 % egenkapital, dokumentavgift og hvor mye du må ha klart til boligkjøp.",
+    category: "okonomi",
+    tags: ["bolig", "egenkapital", "dokumentavgift", "lån"],
+    popular: true,
+    fields: [
+      {
+        id: "pris",
+        label: "Kjøpesum",
+        type: "number",
+        unit: "kr",
+        defaultValue: 4500000,
+      },
+      {
+        id: "krav",
+        label: "Egenkapitalkrav",
+        type: "number",
+        unit: "%",
+        defaultValue: 15,
+      },
+      {
+        id: "bruktbolig",
+        label: "Dokumentavgift",
+        type: "select",
+        defaultValue: "ja",
+        options: [
+          { value: "ja", label: "Bruktbolig (2,5 %)" },
+          { value: "nei", label: "Nybygg / ingen dokumentavgift" },
+        ],
+      },
+    ],
+    formula: "egenkapital = pris · krav     dokumentavgift = 0,025 · pris",
+    explanation:
+      "Finanstilsynet krever normalt minst 15 % egenkapital. Ved bruktbolig kommer dokumentavgift på 2,5 % av kjøpesummen i tillegg. Fellesgjeld og omkostninger til megler er ikke med her.",
+    disclaimer:
+      "Banken kan ha andre krav. Sjekk belåningsgrad, fellesgjeld og omkostninger i salgsoppgaven.",
+    compute(input) {
+      const pris = num(input, "pris");
+      const krav = num(input, "krav");
+      if (!allNumbers([pris, krav]) || pris <= 0) return [];
+      const ek = pris * (krav / 100);
+      const dok = input.bruktbolig === "ja" ? pris * 0.025 : 0;
+      const lan = pris - ek;
+      return [
+        result("ek", "Egenkapital", ek, { kind: "currency", primary: true }),
+        result("lan", "Lån (maks)", lan, { kind: "currency" }),
+        result("dok", "Dokumentavgift", dok, { kind: "currency" }),
+        result("kontant", "Kontantbehov (EK + dok.)", ek + dok, {
+          kind: "currency",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "serielan",
+    title: "Serielån",
+    description:
+      "Regn ut første og siste termin, avdrag og renter for et serielån.",
+    category: "okonomi",
+    tags: ["lån", "serielån", "avdrag"],
+    fields: [
+      {
+        id: "belop",
+        label: "Lånebeløp",
+        type: "number",
+        unit: "kr",
+        defaultValue: 2000000,
+      },
+      {
+        id: "rente",
+        label: "Nominell rente",
+        type: "number",
+        unit: "%",
+        defaultValue: 5.5,
+        step: 0.1,
+      },
+      {
+        id: "aar",
+        label: "Nedbetalingstid",
+        type: "number",
+        unit: "år",
+        defaultValue: 20,
+      },
+    ],
+    formula: "avdrag = P / n     termin = avdrag + restgjeld · r",
+    explanation:
+      "I et serielån er avdraget fast, mens rentene synker når restgjelden synker. Første termin er høyest, siste er lavest. n er antall måneder, r er månedlig rente.",
+    compute(input) {
+      const P = num(input, "belop");
+      const rente = num(input, "rente");
+      const aar = num(input, "aar");
+      if (!allNumbers([P, rente, aar]) || P <= 0 || aar <= 0) return [];
+      const n = aar * 12;
+      const r = rente / 100 / 12;
+      const avdrag = P / n;
+      const forste = avdrag + P * r;
+      const siste = avdrag + avdrag * r;
+      const totalRenter = (r * n * (2 * P - (n - 1) * avdrag)) / 2;
+      return [
+        result("forste", "Første termin", forste, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("siste", "Siste termin", siste, { kind: "currency" }),
+        result("avdrag", "Faste avdrag", avdrag, { kind: "currency" }),
+        result("renter", "Totale renter", totalRenter, { kind: "currency" }),
+        result("total", "Totalt tilbakebetalt", P + totalRenter, {
+          kind: "currency",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "valuta",
+    title: "Valutakalkulator",
+    description: "Regn om mellom valuta og norske kroner når du kjenner kursen.",
+    category: "okonomi",
+    tags: ["valuta", "kurs", "nok", "reise"],
+    fields: [
+      {
+        id: "belop",
+        label: "Beløp",
+        type: "number",
+        defaultValue: 100,
+      },
+      {
+        id: "kurs",
+        label: "Kurs (kroner per 1 utenlandsk enhet)",
+        type: "number",
+        defaultValue: 11.5,
+        step: 0.01,
+        hint: "For eksempel 11,50 hvis 1 euro koster 11,50 kr.",
+      },
+      {
+        id: "retning",
+        label: "Retning",
+        type: "select",
+        defaultValue: "til_nok",
+        options: [
+          { value: "til_nok", label: "Fra utenlandsk valuta til kroner" },
+          { value: "fra_nok", label: "Fra kroner til utenlandsk valuta" },
+        ],
+      },
+    ],
+    formula: "NOK = beløp · kurs     valuta = NOK / kurs",
+    explanation:
+      "Banken viser ofte «kroner per 1 euro/dollar». Vekslekursen du får i kasse eller app inkluderer vanligvis margin. Oppgi den kursen du faktisk får.",
+    compute(input) {
+      const belop = num(input, "belop");
+      const kurs = num(input, "kurs");
+      if (!allNumbers([belop, kurs]) || kurs <= 0) return [];
+      const nok = input.retning === "fra_nok" ? belop : belop * kurs;
+      const fx = input.retning === "fra_nok" ? belop / kurs : belop;
+      return [
+        result("hoved", input.retning === "fra_nok" ? "Utenlandsk beløp" : "I kroner", 
+          input.retning === "fra_nok" ? fx : nok, {
+          digits: 2,
+          primary: true,
+        }),
+        result("motsatt", input.retning === "fra_nok" ? "I kroner" : "Utenlandsk beløp",
+          input.retning === "fra_nok" ? nok : fx, { digits: 2 }),
+      ];
+    },
+  },
+  {
+    slug: "timepris-frilans",
+    title: "Timepris for frilans",
+    description:
+      "Finn ut hvilken timepris du trenger for å sitte igjen med et ønsket beløp.",
+    category: "okonomi",
+    tags: ["frilans", "timepris", "honorar", "næring"],
+    fields: [
+      {
+        id: "netto",
+        label: "Ønsket utbetalt per år",
+        type: "number",
+        unit: "kr",
+        defaultValue: 500000,
+      },
+      {
+        id: "skatt",
+        label: "Skatt og avgifter",
+        type: "number",
+        unit: "%",
+        defaultValue: 35,
+      },
+      {
+        id: "timer",
+        label: "Timer per uke",
+        type: "number",
+        defaultValue: 30,
+      },
+      {
+        id: "ferie",
+        label: "Ferieuker",
+        type: "number",
+        defaultValue: 5,
+      },
+      {
+        id: "utnyttelse",
+        label: "Fakturerbar andel",
+        type: "number",
+        unit: "%",
+        defaultValue: 70,
+        hint: "Resten går til administrasjon, salg og avbrekk.",
+      },
+    ],
+    formula: "timepris = (netto / (1 − skatt)) / (uker · timer · utnyttelse)",
+    explanation:
+      "Frilansere fakturerer sjelden alle arbeidstimene. Her regnes bruttobehov fra ønsket netto, fordelt på fakturerbare timer i året.",
+    disclaimer: "Ikke skatteråd. MVA, pensjon og sykepenger kommer i tillegg.",
+    compute(input) {
+      const netto = num(input, "netto");
+      const skatt = num(input, "skatt");
+      const timer = num(input, "timer");
+      const ferie = num(input, "ferie");
+      const utn = num(input, "utnyttelse");
+      if (!allNumbers([netto, skatt, timer, ferie, utn]) || skatt >= 100) return [];
+      const uker = 52 - ferie;
+      const fakturerbart = uker * timer * (utn / 100);
+      if (fakturerbart <= 0) return [];
+      const brutto = netto / (1 - skatt / 100);
+      const timepris = brutto / fakturerbart;
+      return [
+        result("time", "Nødvendig timepris", timepris, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("brutto", "Brutto årsbehov", brutto, { kind: "currency" }),
+        result("timer", "Fakturerbare timer", fakturerbart, {
+          digits: 0,
+          unit: "t",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "nodfond",
+    title: "Nødfond",
+    description: "Hvor stort buffer bør du ha for tre til seks måneders utgifter?",
+    category: "okonomi",
+    tags: ["buffer", "sparing", "budsjett", "nødfond"],
+    fields: [
+      {
+        id: "utgifter",
+        label: "Faste utgifter per måned",
+        type: "number",
+        unit: "kr",
+        defaultValue: 28000,
+      },
+      {
+        id: "maaneder",
+        label: "Antall måneder",
+        type: "number",
+        defaultValue: 3,
+        hint: "Vanlig råd er 3–6 måneder.",
+      },
+    ],
+    formula: "nødfond = månedlige utgifter · måneder",
+    explanation:
+      "Et nødfond skal dekke husleie, mat, strøm og andre faste utgifter hvis inntekten svikter. Tre måneder er et vanlig startmål, seks måneder gir mer ro.",
+    compute(input) {
+      const utgifter = num(input, "utgifter");
+      const maaneder = num(input, "maaneder");
+      if (!allNumbers([utgifter, maaneder]) || maaneder < 0) return [];
+      return [
+        result("fond", "Anbefalt fond", utgifter * maaneder, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("halvaar", "For 6 måneder", utgifter * 6, { kind: "currency" }),
+      ];
+    },
+  },
+  {
+    slug: "kredittkort-renter",
+    title: "Kredittkort-renter",
+    description:
+      "Se neste måneds renter og hvor lang tid det tar å betale ned kortgjelden.",
+    category: "okonomi",
+    tags: ["kredittkort", "renter", "gjeld"],
+    fields: [
+      {
+        id: "saldo",
+        label: "Saldo",
+        type: "number",
+        unit: "kr",
+        defaultValue: 25000,
+      },
+      {
+        id: "rente",
+        label: "Effektiv årsrente",
+        type: "number",
+        unit: "%",
+        defaultValue: 22,
+      },
+      {
+        id: "betaling",
+        label: "Fast månedlig betaling",
+        type: "number",
+        unit: "kr",
+        defaultValue: 1500,
+      },
+    ],
+    formula: "n = ln(PMT / (PMT − r · S)) / ln(1 + r)",
+    explanation:
+      "r er månedlig rente. Hvis betalingen bare dekker rentene, synker ikke saldoen. Små ekstra innbetalinger kutter tiden mye når renten er høy.",
+    compute(input) {
+      const S = num(input, "saldo");
+      const rente = num(input, "rente");
+      const pmt = num(input, "betaling");
+      if (!allNumbers([S, rente, pmt]) || S <= 0) return [];
+      const r = rente / 100 / 12;
+      const nesteRente = S * r;
+      if (pmt <= nesteRente + 1e-9) {
+        return [
+          result("rente", "Renter neste måned", nesteRente, {
+            kind: "currency",
+            primary: true,
+          }),
+          result("status", "Nedbetaling", "Betalingen dekker ikke rentene.", {
+            kind: "text",
+          }),
+        ];
+      }
+      const n = Math.log(pmt / (pmt - r * S)) / Math.log(1 + r);
+      const total = pmt * n;
+      return [
+        result("maaneder", "Tid til nedbetalt", n, {
+          digits: 1,
+          unit: "måneder",
+          primary: true,
+        }),
+        result("rente", "Renter neste måned", nesteRente, { kind: "currency" }),
+        result("totalt", "Totalt innbetalt", total, { kind: "currency" }),
+        result("kost", "Renter totalt", total - S, { kind: "currency" }),
+      ];
+    },
+  },
 ];
 
 function formatPlain(n: number): string {

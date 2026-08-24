@@ -884,6 +884,171 @@ export const sportCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "enrm",
+    title: "1RM (maksvekt)",
+    shortTitle: "1RM",
+    description:
+      "Estimer en repetisjon maksimum fra vekt og antall repetisjoner (Epley).",
+    category: "sport",
+    tags: ["styrke", "1rm", "benk", "knebøy"],
+    popular: true,
+    fields: [
+      {
+        id: "vekt",
+        label: "Vekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 80,
+      },
+      {
+        id: "reps",
+        label: "Repetisjoner",
+        type: "number",
+        defaultValue: 5,
+      },
+    ],
+    formula: "1RM ≈ vekt · (1 + reps / 30)",
+    explanation:
+      "Epley-formelen passer best for 1–10 repetisjoner nær utmattelse. Den overvurderer ofte mange reps. Bruk den til å styre prosentbasert trening, ikke som fasit på konkurransemaks.",
+    compute(input) {
+      const vekt = num(input, "vekt");
+      const reps = num(input, "reps");
+      if (!allNumbers([vekt, reps]) || vekt <= 0 || reps < 1) return [];
+      const rm = reps === 1 ? vekt : vekt * (1 + reps / 30);
+      return [
+        result("rm", "Estimert 1RM", rm, { digits: 1, unit: "kg", primary: true }),
+        result("p90", "90 % (tung styrke)", rm * 0.9, { digits: 1, unit: "kg" }),
+        result("p80", "80 % (5–8 reps)", rm * 0.8, { digits: 1, unit: "kg" }),
+        result("p70", "70 % (volum)", rm * 0.7, { digits: 1, unit: "kg" }),
+      ];
+    },
+  },
+  {
+    slug: "ftp-soner",
+    title: "FTP-soner (sykkel)",
+    description: "Sykkelwatt-soner etter Coggan fra funksjonell terskelwatt (FTP).",
+    category: "sport",
+    tags: ["sykkel", "watt", "ftp", "soner"],
+    fields: [
+      {
+        id: "ftp",
+        label: "FTP",
+        type: "number",
+        unit: "W",
+        defaultValue: 250,
+      },
+    ],
+    formula: "sone = prosent av FTP",
+    explanation:
+      "FTP er den høyeste watt du kan holde i omtrent en time. Sone 2 er utholdenhet, sone 4 terskel, sone 5 VO₂-maks. Testen er ofte 20 minutter · 0,95, eller en 60-minutters test.",
+    compute(input) {
+      const ftp = num(input, "ftp");
+      if (!Number.isFinite(ftp) || ftp <= 0) return [];
+      const band = (a: number, b: number) =>
+        `${Math.round(ftp * a)}–${Math.round(ftp * b)} W`;
+      return [
+        result("z2", "Sone 2 (55–75 %)", band(0.55, 0.75), {
+          kind: "text",
+          primary: true,
+        }),
+        result("z1", "Sone 1 (< 55 %)", `under ${Math.round(ftp * 0.55)} W`, {
+          kind: "text",
+        }),
+        result("z3", "Sone 3 (76–90 %)", band(0.76, 0.9), { kind: "text" }),
+        result("z4", "Sone 4 (91–105 %)", band(0.91, 1.05), { kind: "text" }),
+        result("z5", "Sone 5 (106–120 %)", band(1.06, 1.2), { kind: "text" }),
+        result("z6", "Sone 6 (121–150 %)", band(1.21, 1.5), { kind: "text" }),
+      ];
+    },
+  },
+  {
+    slug: "svommetempo",
+    title: "Svømmetempo",
+    description: "Regn om sluttid til tid per 100 m, 50 m og 1500 m.",
+    category: "sport",
+    tags: ["svømming", "tempo", "basseng"],
+    fields: [
+      {
+        id: "meter",
+        label: "Distanse",
+        type: "number",
+        unit: "m",
+        defaultValue: 400,
+      },
+      {
+        id: "tid",
+        label: "Sluttid",
+        type: "text",
+        defaultValue: "7:20",
+        placeholder: "7:20 eller 1:12:00",
+      },
+    ],
+    formula: "tid per 100 m = sluttid · 100 / distanse",
+    explanation:
+      "Oppgi tid som 7:20 eller 1:12:00. Tempoet per 100 m er det vanlige språket i basseng. Åpent vann og vendinger gjør at bassengtid og sjøtid ikke er det samme.",
+    compute(input) {
+      const meter = num(input, "meter");
+      const sek = parseRaceSeconds(input.tid);
+      if (!Number.isFinite(meter) || meter <= 0 || sek == null || sek <= 0) {
+        return [];
+      }
+      const per100 = (sek / meter) * 100;
+      return [
+        result("p100", "Per 100 m", formatHms(per100), {
+          kind: "text",
+          primary: true,
+        }),
+        result("p50", "Per 50 m", formatHms(per100 / 2), { kind: "text" }),
+        result("p1500", "Estimert 1500 m", formatHms((sek / meter) * 1500), {
+          kind: "text",
+        }),
+        result("fart", "Snittfart", meter / 1000 / (sek / 3600), {
+          digits: 2,
+          unit: "km/t",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "watt-per-kg",
+    title: "Watt per kilo",
+    description: "Effekt relativt til kroppsvekt – nyttig på sykkel og i motbakke.",
+    category: "sport",
+    tags: ["watt", "ftp", "sykkel", "vekt"],
+    fields: [
+      {
+        id: "watt",
+        label: "Effekt",
+        type: "number",
+        unit: "W",
+        defaultValue: 250,
+      },
+      {
+        id: "kg",
+        label: "Kroppsvekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 75,
+      },
+    ],
+    formula: "W/kg = watt / kroppsvekt",
+    explanation:
+      "I motbakke betyr watt per kilo mer enn rå watt. Rundt 2–3 W/kg er vanlig mosjon, 4+ W/kg er sterkt på FTP-nivå. Tallet sier ingenting om teknikk eller utholdenhet alene.",
+    compute(input) {
+      const watt = num(input, "watt");
+      const kg = num(input, "kg");
+      if (!allNumbers([watt, kg]) || kg <= 0) return [];
+      return [
+        result("wkg", "Watt per kilo", watt / kg, {
+          digits: 2,
+          unit: "W/kg",
+          primary: true,
+        }),
+        result("ftp75", "Ved 75 kg", watt / 75, { digits: 2, unit: "W/kg" }),
+      ];
+    },
+  },
 ];
 
 function resolveDistance(input: Record<string, string>): number | null {

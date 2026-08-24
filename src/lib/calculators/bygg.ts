@@ -296,4 +296,93 @@ export const byggCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "gipsplater",
+    title: "Gipsplater",
+    description: "Estimer antall gipsplater til vegger, med svinn.",
+    category: "bygg",
+    tags: ["gips", "vegg", "oppussing"],
+    fields: [
+      { id: "lengde", label: "Romlengde", type: "number", unit: "m", defaultValue: 5 },
+      { id: "bredde", label: "Rombredde", type: "number", unit: "m", defaultValue: 4 },
+      { id: "hoyde", label: "Takhøyde", type: "number", unit: "m", defaultValue: 2.4 },
+      {
+        id: "apninger",
+        label: "Dører og vinduer",
+        type: "number",
+        unit: "m²",
+        defaultValue: 4,
+      },
+      {
+        id: "svinn",
+        label: "Svinn",
+        type: "number",
+        unit: "%",
+        defaultValue: 10,
+      },
+    ],
+    formula: "plater = veggareal · (1 + svinn) / 2,88",
+    explanation:
+      "Standard plate 120 × 240 cm dekker 2,88 m². Her kles alle fire vegger. Tak, sjakter og kapping kommer i tillegg – derfor svinn.",
+    compute(input) {
+      const l = num(input, "lengde");
+      const b = num(input, "bredde");
+      const h = num(input, "hoyde");
+      const ap = num(input, "apninger");
+      const svinn = num(input, "svinn");
+      if (!allNumbers([l, b, h, ap, svinn])) return [];
+      const areal = Math.max(0, 2 * (l + b) * h - ap);
+      const medSvinn = areal * (1 + svinn / 100);
+      const plater = medSvinn / 2.88;
+      return [
+        result("plater", "Plater (avrundet opp)", Math.ceil(plater), {
+          kind: "integer",
+          primary: true,
+        }),
+        result("areal", "Veggareal", areal, { digits: 1, unit: "m²" }),
+      ];
+    },
+  },
+  {
+    slug: "grus-sand",
+    title: "Grus og sand",
+    description: "Finn volum og vekt til gårdsplass, bed eller drenering.",
+    category: "bygg",
+    tags: ["grus", "sand", "hage", "volum"],
+    fields: [
+      { id: "lengde", label: "Lengde", type: "number", unit: "m", defaultValue: 8 },
+      { id: "bredde", label: "Bredde", type: "number", unit: "m", defaultValue: 3 },
+      {
+        id: "tykkelse",
+        label: "Tykkelse",
+        type: "number",
+        unit: "cm",
+        defaultValue: 10,
+      },
+      {
+        id: "tetthet",
+        label: "Tetthet",
+        type: "number",
+        unit: "t/m³",
+        defaultValue: 1.6,
+        hint: "Tørr sand ca. 1,5–1,7 t/m³, grus ofte rundt 1,6.",
+      },
+    ],
+    formula: "V = lengde · bredde · tykkelse     masse = V · tetthet",
+    explanation:
+      "Tykkelse i centimeter omregnes til meter. Bestill gjerne 5–10 % ekstra til komprimering og ujevn bunn.",
+    compute(input) {
+      const l = num(input, "lengde");
+      const b = num(input, "bredde");
+      const t = num(input, "tykkelse");
+      const dens = num(input, "tetthet");
+      if (!allNumbers([l, b, t, dens]) || t < 0) return [];
+      const vol = l * b * (t / 100);
+      return [
+        result("vol", "Volum", vol, { digits: 2, unit: "m³", primary: true }),
+        result("tonn", "Vekt", vol * dens, { digits: 2, unit: "t" }),
+        result("ekstra", "Med 10 % ekstra", vol * 1.1, { digits: 2, unit: "m³" }),
+      ];
+    },
+  },
 ];

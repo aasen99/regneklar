@@ -84,6 +84,19 @@ export const formulas: Formula[] = [
     calculatorSlug: "bmi",
   },
   {
+    slug: "new-bmi-formel",
+    title: "New BMI (Trefethen)",
+    category: "helse",
+    expression: "New BMI = 1,3 · m / h^2,5",
+    variables: [
+      { symbol: "m", meaning: "Kroppsvekt i kilogram" },
+      { symbol: "h", meaning: "Høyde i meter" },
+    ],
+    explanation:
+      "Eksponenten 2,5 treffer voksen kroppsbygning bedre enn 2. 1,3 holder tallet uendret ved ca. 169 cm, slik at WHO-klassene fortsatt kan brukes.",
+    calculatorSlug: "new-bmi",
+  },
+  {
     slug: "mifflin-st-jeor",
     title: "Mifflin–St Jeor (BMR)",
     category: "helse",
@@ -437,6 +450,74 @@ export const formulas: Formula[] = [
     explanation:
       "Fart er steglengde ganger stegfrekvens. Øker du kadensen uten å øke farten, blir stegene kortere.",
     calculatorSlug: "kadens-steglengde",
+  },
+  {
+    slug: "egenkapital-formel",
+    title: "Egenkapitalkrav",
+    category: "okonomi",
+    expression: "EK = pris · 0,15     dokumentavgift = 0,025 · pris",
+    variables: [
+      { symbol: "EK", meaning: "Egenkapital" },
+      { symbol: "pris", meaning: "Kjøpesum" },
+    ],
+    explanation:
+      "Normalt boliglånskrav er 15 % egenkapital. Dokumentavgift på 2,5 % gjelder vanligvis bruktbolig, ikke nybygg.",
+    calculatorSlug: "egenkapital-bolig",
+  },
+  {
+    slug: "serielan-formel",
+    title: "Serielån",
+    category: "okonomi",
+    expression: "avdrag = P / n     termin_k = avdrag + restgjeld_k · r",
+    variables: [
+      { symbol: "P", meaning: "Lånebeløp" },
+      { symbol: "n", meaning: "Antall terminer" },
+      { symbol: "r", meaning: "Rente per termin" },
+    ],
+    explanation:
+      "Avdraget er fast. Rentene synker med restgjelden, så første termin er høyest.",
+    calculatorSlug: "serielan",
+  },
+  {
+    slug: "epley",
+    title: "Epley 1RM",
+    category: "sport",
+    expression: "1RM ≈ w · (1 + reps / 30)",
+    variables: [
+      { symbol: "w", meaning: "Løftet vekt" },
+      { symbol: "reps", meaning: "Antall repetisjoner til utmattelse" },
+    ],
+    explanation:
+      "En vanlig estimeringsformel for maksvekt. Passer best for få repetisjoner.",
+    calculatorSlug: "enrm",
+  },
+  {
+    slug: "bakerprosent-formel",
+    title: "Bakerprosent",
+    category: "mat",
+    expression: "ingrediens = mel · % / 100     (mel = 100 %)",
+    variables: [
+      { symbol: "mel", meaning: "Mel i gram, definert som 100 %" },
+      { symbol: "%", meaning: "Bakerprosent for vann, salt eller gjær" },
+    ],
+    explanation:
+      "Alle andre ingredienser uttrykkes som prosent av melet. Da kan deigen skaleres uten å miste forholdene.",
+    calculatorSlug: "bakerprosent",
+  },
+  {
+    slug: "varme-formel",
+    title: "Spesifikk varme",
+    category: "fysikk",
+    expression: "Q = m · c · ΔT",
+    variables: [
+      { symbol: "Q", meaning: "Varmeenergi i joule" },
+      { symbol: "m", meaning: "Masse i kilogram" },
+      { symbol: "c", meaning: "Spesifikk varmekapasitet i J/kg·K" },
+      { symbol: "ΔT", meaning: "Temperaturendring i K eller °C" },
+    ],
+    explanation:
+      "Energien som trengs for å endre temperaturen, er masse ganger stoffets varmekapasitet ganger temperaturendringen.",
+    calculatorSlug: "varmeenergi",
   },
 ];
 

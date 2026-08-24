@@ -274,4 +274,45 @@ export const fysikkCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "varmeenergi",
+    title: "Varmeenergi (Q = mcΔT)",
+    description:
+      "Regn ut energien som trengs for å varme eller avkjøle et stoff.",
+    category: "fysikk",
+    tags: ["varme", "energi", "kalorimetri", "vann"],
+    fields: [
+      { id: "m", label: "Masse", type: "number", unit: "kg", defaultValue: 1 },
+      {
+        id: "c",
+        label: "Spesifikk varmekapasitet",
+        type: "number",
+        unit: "J/kg·K",
+        defaultValue: 4186,
+        hint: "Vann er 4186. Luft ca. 1000, jern ca. 450.",
+      },
+      {
+        id: "dt",
+        label: "Temperaturendring",
+        type: "number",
+        unit: "°C",
+        defaultValue: 20,
+      },
+    ],
+    formula: "Q = m · c · ΔT",
+    explanation:
+      "ΔT i Celsius og kelvin er like store steg. Positivt Q er energi tilført, negativt er avgitt. 1 kWh = 3,6 millioner joule.",
+    compute(input) {
+      const m = num(input, "m");
+      const c = num(input, "c");
+      const dt = num(input, "dt");
+      if (!allNumbers([m, c, dt])) return [];
+      const q = m * c * dt;
+      return [
+        result("j", "Energi", q, { digits: 0, unit: "J", primary: true }),
+        result("kj", "Kilojoule", q / 1000, { digits: 1, unit: "kJ" }),
+        result("kwh", "Kilowattimer", q / 3.6e6, { digits: 4, unit: "kWh" }),
+      ];
+    },
+  },
 ];

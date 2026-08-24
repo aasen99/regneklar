@@ -166,4 +166,108 @@ export const matCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "bakerprosent",
+    title: "Bakerprosent",
+    description:
+      "Regn ut vann, salt og gjær fra melmengden. Melet er alltid 100 %.",
+    category: "mat",
+    tags: ["baking", "brød", "deig", "prosent"],
+    fields: [
+      { id: "mel", label: "Mel", type: "number", unit: "g", defaultValue: 500 },
+      {
+        id: "vann",
+        label: "Hydrering",
+        type: "number",
+        unit: "%",
+        defaultValue: 70,
+      },
+      {
+        id: "salt",
+        label: "Salt",
+        type: "number",
+        unit: "%",
+        defaultValue: 2,
+      },
+      {
+        id: "gjaer",
+        label: "Gjær",
+        type: "number",
+        unit: "%",
+        defaultValue: 1,
+        hint: "Tørrgjær ofte 0,5–1 %, fersk gjær omtrent tre ganger så mye.",
+      },
+    ],
+    formula: "ingrediens = mel · prosent / 100",
+    explanation:
+      "Bakerprosent gjør oppskrifter skalerbare. 70 % hydrering på 500 g mel er 350 g vann. Salt ligger vanligvis rundt 1,8–2,2 %.",
+    compute(input) {
+      const mel = num(input, "mel");
+      const vann = num(input, "vann");
+      const salt = num(input, "salt");
+      const gjaer = num(input, "gjaer");
+      if (!allNumbers([mel, vann, salt, gjaer]) || mel <= 0) return [];
+      const vg = (mel * vann) / 100;
+      const sg = (mel * salt) / 100;
+      const gg = (mel * gjaer) / 100;
+      return [
+        result("vann", "Vann", vg, { digits: 0, unit: "g", primary: true }),
+        result("salt", "Salt", sg, { digits: 1, unit: "g" }),
+        result("gjaer", "Gjær", gg, { digits: 1, unit: "g" }),
+        result("deig", "Deig totalt", mel + vg + sg + gg, {
+          digits: 0,
+          unit: "g",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "gjaer",
+    title: "Gjæromregning",
+    description: "Regn om mellom fersk gjær, aktiv tørrgjær og instant gjær.",
+    category: "mat",
+    tags: ["gjær", "baking", "brød"],
+    fields: [
+      {
+        id: "mengde",
+        label: "Mengde",
+        type: "number",
+        unit: "g",
+        defaultValue: 25,
+      },
+      {
+        id: "fra",
+        label: "Jeg har",
+        type: "select",
+        defaultValue: "fersk",
+        options: [
+          { value: "fersk", label: "Fersk gjær" },
+          { value: "aktiv", label: "Aktiv tørrgjær" },
+          { value: "instant", label: "Instant / tørrgjær i pose" },
+        ],
+      },
+    ],
+    formula: "fersk : aktiv : instant ≈ 3 : 1,5 : 1",
+    explanation:
+      "En pose instant gjær er ofte 7 g og tilsvarer grovt 25 g fersk. Forholdet varierer mellom merker. Ikke bytt 1:1 i søte, tunge deiger uten å kjenne etter.",
+    compute(input) {
+      const m = num(input, "mengde");
+      if (!Number.isFinite(m) || m < 0) return [];
+      const toInstant: Record<string, number> = {
+        fersk: 1 / 3,
+        aktiv: 1 / 1.5,
+        instant: 1,
+      };
+      const inst = m * (toInstant[input.fra] ?? 1);
+      return [
+        result("instant", "Instant gjær", inst, {
+          digits: 1,
+          unit: "g",
+          primary: true,
+        }),
+        result("aktiv", "Aktiv tørrgjær", inst * 1.5, { digits: 1, unit: "g" }),
+        result("fersk", "Fersk gjær", inst * 3, { digits: 1, unit: "g" }),
+      ];
+    },
+  },
 ];

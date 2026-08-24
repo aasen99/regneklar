@@ -631,6 +631,133 @@ export const matematikkCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "sff-mfm",
+    title: "Største felles faktor og minste felles multiplum",
+    shortTitle: "SFF og MFM",
+    description: "Finn SFF (gcd) og MFM (lcm) for to hele tall.",
+    category: "matematikk",
+    tags: ["sff", "mfm", "gcd", "lcm", "tallteori"],
+    fields: [
+      { id: "a", label: "Tall a", type: "number", defaultValue: 24 },
+      { id: "b", label: "Tall b", type: "number", defaultValue: 36 },
+    ],
+    formula: "SFF(a, b) via Euklid     MFM = |a · b| / SFF",
+    explanation:
+      "Største felles faktor er det største tallet som går opp i begge. Minste felles multiplum er det minste positive tallet begge går opp i – nyttig når du skal finne felles nevner.",
+    compute(input) {
+      const a = num(input, "a");
+      const b = num(input, "b");
+      if (!allNumbers([a, b]) || a === 0 || b === 0) return [];
+      const g = gcd(Math.abs(a), Math.abs(b));
+      const l = Math.abs(a * b) / g;
+      return [
+        result("sff", "SFF", g, { kind: "integer", primary: true }),
+        result("mfm", "MFM", l, { kind: "integer" }),
+      ];
+    },
+  },
+  {
+    slug: "forstegard",
+    title: "Førstegradsligning",
+    description: "Løs ax + b = c for x.",
+    category: "matematikk",
+    tags: ["ligning", "algebra", "x"],
+    fields: [
+      { id: "a", label: "a (koeffisient foran x)", type: "number", defaultValue: 3 },
+      { id: "b", label: "b", type: "number", defaultValue: 5 },
+      { id: "c", label: "c", type: "number", defaultValue: 20 },
+    ],
+    formula: "ax + b = c     x = (c − b) / a",
+    explanation:
+      "Trekk b fra begge sider og del på a. Hvis a er 0, er det ingen x å løse for – da er det enten aldri sant eller alltid sant.",
+    compute(input) {
+      const a = num(input, "a");
+      const b = num(input, "b");
+      const c = num(input, "c");
+      if (!allNumbers([a, b, c])) return [];
+      if (a === 0) {
+        return [
+          result("x", "Løsning", b === c ? "Alle x (identitet)" : "Ingen løsning", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      return [
+        result("x", "x", (c - b) / a, { digits: 4, primary: true }),
+      ];
+    },
+  },
+  {
+    slug: "trekant-vinkler",
+    title: "Vinkler i en trekant",
+    description: "Finn den tredje vinkelen når du kjenner to. Summen er 180°.",
+    category: "matematikk",
+    tags: ["trekant", "vinkel", "geometri"],
+    fields: [
+      { id: "a", label: "Vinkel A", type: "number", unit: "°", defaultValue: 50 },
+      { id: "b", label: "Vinkel B", type: "number", unit: "°", defaultValue: 60 },
+    ],
+    formula: "A + B + C = 180°",
+    explanation:
+      "I et euklidsk plan er vinkelsummen i en trekant alltid 180 grader. Er C null eller negativ, kan ikke A og B danne en trekant.",
+    compute(input) {
+      const a = num(input, "a");
+      const b = num(input, "b");
+      if (!allNumbers([a, b])) return [];
+      const c = 180 - a - b;
+      if (c <= 0 || a <= 0 || b <= 0) {
+        return [
+          result("c", "Vinkel C", "Ugyldig – vinklene danner ikke en trekant.", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      let type = "Uliksidet";
+      if (Math.abs(a - 90) < 1e-9 || Math.abs(b - 90) < 1e-9 || Math.abs(c - 90) < 1e-9) {
+        type = "Rettvinklet";
+      } else if (a > 90 || b > 90 || c > 90) type = "Stumpvinklet";
+      else type = "Spissvinklet";
+      return [
+        result("c", "Vinkel C", c, { digits: 2, unit: "°", primary: true }),
+        result("type", "Type", type, { kind: "text" }),
+      ];
+    },
+  },
+  {
+    slug: "logaritme",
+    title: "Logaritme",
+    description: "Regn logaritme med valgfri base, pluss 10-log og naturlig log.",
+    category: "matematikk",
+    tags: ["log", "ln", "logaritme"],
+    fields: [
+      { id: "x", label: "Tall x", type: "number", defaultValue: 100 },
+      {
+        id: "base",
+        label: "Base (for log_b x)",
+        type: "number",
+        defaultValue: 10,
+      },
+    ],
+    formula: "log_b(x) = ln(x) / ln(b)",
+    explanation:
+      "Logaritmen spør «hvilken eksponent trenger basen for å bli x?». 10-log brukes i desibel og pH, ln i vekst og renter. x og base må være positive, og basen kan ikke være 1.",
+    compute(input) {
+      const x = num(input, "x");
+      const base = num(input, "base");
+      if (!allNumbers([x, base]) || x <= 0 || base <= 0 || base === 1) return [];
+      return [
+        result("custom", `log${base}(${x})`, Math.log(x) / Math.log(base), {
+          digits: 6,
+          primary: true,
+        }),
+        result("log10", "log₁₀(x)", Math.log10(x), { digits: 6 }),
+        result("ln", "ln(x)", Math.log(x), { digits: 6 }),
+      ];
+    },
+  },
 ];
 
 function gcd(a: number, b: number): number {
