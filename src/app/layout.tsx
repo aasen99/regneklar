@@ -36,12 +36,12 @@ export const metadata: Metadata = {
     "matematikk",
   ],
   openGraph: {
-    title: "REGNEKLAR – kalkulatorer og formler",
-    description:
-      "Regn det ut. Skjønn det. Kalkulatorer og formler for alle, på norsk.",
     locale: "nb_NO",
     type: "website",
     siteName: "REGNEKLAR",
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

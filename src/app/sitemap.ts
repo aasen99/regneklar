@@ -10,7 +10,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base, lastModified: now },
     { url: `${base}/formler`, lastModified: now },
     { url: `${base}/om`, lastModified: now },
-    { url: `${base}/sok`, lastModified: now },
     ...categories.map((c) => ({
       url: `${base}/kategori/${c.id}`,
       lastModified: now,

@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { FormulaCard } from "@/components/FormulaCard";
 import { SearchForm } from "@/components/SearchForm";
 import { formulas } from "@/lib/formulas";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Formelsamling",
-  description: "Formler for økonomi, geometri, fysikk, helse og hverdag – forklart på norsk.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Formelsamling",
+  "Formler for økonomi, geometri, fysikk, helse og hverdag – forklart på norsk.",
+);
 
 export default function FormulasPage() {
   return (

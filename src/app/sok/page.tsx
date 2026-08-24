@@ -9,6 +9,8 @@ type Props = { searchParams: Promise<{ q?: string }> };
 
 export const metadata: Metadata = {
   title: "Søk",
+  description: "Søk i kalkulatorer og formler på REGNEKLAR.",
+  robots: { index: false, follow: true },
 };
 
 export default async function SearchPage({ searchParams }: Props) {

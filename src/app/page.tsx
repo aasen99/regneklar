@@ -2,20 +2,25 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CalculatorCard } from "@/components/CalculatorCard";
 import { CategoryGrid } from "@/components/CategoryGrid";
+import { JsonLd } from "@/components/JsonLd";
 import { SearchForm } from "@/components/SearchForm";
 import { calculators, featuredCalculators } from "@/lib/catalog";
 import { categories } from "@/lib/categories";
 import { formulas } from "@/lib/formulas";
+import { pageMetadata, SITE_DESCRIPTION, websiteJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "REGNEKLAR – kalkulatorer og formler for alle",
-};
+export const metadata: Metadata = pageMetadata(
+  "REGNEKLAR – kalkulatorer og formler for alle",
+  SITE_DESCRIPTION,
+  { absoluteTitle: true },
+);
 
 export default function HomePage() {
   const featured = featuredCalculators();
 
   return (
     <>
+      <JsonLd data={websiteJsonLd()} />
       <section className="hero-grid border-b border-line">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <p className="text-xs uppercase tracking-[0.22em] text-pine">

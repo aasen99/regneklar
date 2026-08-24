@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { calculators } from "@/lib/catalog";
 import { formulas } from "@/lib/formulas";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Om REGNEKLAR",
-  description: "Hva REGNEKLAR er, og hvordan kalkulatorene er tenkt brukt.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Om REGNEKLAR",
+  "Hva REGNEKLAR er, og hvordan kalkulatorene er tenkt brukt.",
+);
 
 export default function AboutPage() {
   return (
