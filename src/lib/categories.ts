@@ -17,7 +17,7 @@ export const categories: Category[] = [
     id: "sport",
     title: "Sport",
     description:
-      "Løpetempo, km/t til min/km, 400 m-rundetid, split, sluttid og treningssoner.",
+      "Løpetempo, 400 m-runde, sluttid, split og treningssoner.",
     blurb: "Løping, tempo og runder",
   },
   {

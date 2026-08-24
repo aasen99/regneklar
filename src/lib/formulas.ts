@@ -381,7 +381,7 @@ export const formulas: Formula[] = [
       { symbol: "km/t", meaning: "Fart i kilometer per time" },
     ],
     explanation:
-      "12 km/t er 5:00 per km. 15 km/t er 4:00 per km. Tempo er den vanlige måten løpere snakker om fart på.",
+      "12 km/t er 5:00 per km. 15 km/t er 4:00 per km. Tempo er den vanlige måten løpere snakker om fart.",
     calculatorSlug: "km-t-min-km",
   },
   {
@@ -422,7 +422,7 @@ export const formulas: Formula[] = [
       { symbol: "T₂, D₂", meaning: "Tid og distanse du vil estimere" },
     ],
     explanation:
-      "Formelen anslår hvordan sluttid vokser når distansen øker. Den forutsetter lik form og at du har trent på den nye distansen. Brukes ofte fra 5 km eller 10 km til halv og hel maraton.",
+      "Formelen anslår hvordan sluttiden vokser når distansen øker. Den forutsetter lik form, og at du har trent på den nye distansen. Brukes ofte fra 5 km eller 10 km til halvmaraton og maraton.",
     calculatorSlug: "predikert-lopsid",
   },
   {
@@ -435,7 +435,7 @@ export const formulas: Formula[] = [
       { symbol: "VO₂-maks", meaning: "ml oksygen per kg per minutt" },
     ],
     explanation:
-      "Kenneth Cooper sin 12-minutters test. Lenger distanse betyr høyere estimert oksygenopptak. Formelen er et grovt estimat for voksne.",
+      "Kenneth Coopers 12-minutterstest. Lengre distanse betyr høyere estimert oksygenopptak. Formelen er et grovt estimat for voksne.",
     calculatorSlug: "cooper-test",
   },
   {

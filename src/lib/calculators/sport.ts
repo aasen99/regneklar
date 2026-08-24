@@ -94,7 +94,7 @@ export const sportCalculators: Calculator[] = [
     title: "Km/t til min/km",
     shortTitle: "Tempo",
     description:
-      "Regn om mellom kilometer i timen og minutter per kilometer – plus 400 m-runde, mil og vanlige løpsdistanser.",
+      "Regn om mellom kilometer i timen og minutter per kilometer. Viser også 400 m-runde og vanlige løpsdistanser.",
     category: "sport",
     tags: [
       "løping",
@@ -122,7 +122,7 @@ export const sportCalculators: Calculator[] = [
         label: "Verdi",
         type: "text",
         defaultValue: "12",
-        hint: "Km/t som 12 eller 12,5. Tempo som 5:00 eller 4:45.",
+        hint: "Skriv km/t som 12 eller 12,5, og tempo som 5:00 eller 4:45.",
       },
     ],
     formula: "min/km = 60 / km/t     km/t = 60 / min/km",
@@ -139,7 +139,7 @@ export const sportCalculators: Calculator[] = [
     title: "Rundetid 400 m",
     shortTitle: "400 m",
     description:
-      "Finn rundetid på 400 m-bane fra tempo, km/t eller sluttid. Viser også 100 m, 200 m og hvor mange runder distansen er.",
+      "Finn rundetid på 400 m-bane ut fra tempo, km/t eller sluttid. Viser også 100 m, 200 m og hvor mange runder distansen tilsvarer.",
     category: "sport",
     tags: ["400m", "bane", "runde", "løping", "friidrett", "lap"],
     popular: true,
@@ -160,7 +160,7 @@ export const sportCalculators: Calculator[] = [
         label: "Tempo eller km/t",
         type: "text",
         defaultValue: "4:00",
-        hint: "Brukes når du har valgt tempo eller km/t. Tempo: 4:00. Fart: 15.",
+        hint: "Brukes når du velger tempo eller km/t. Skriv 4:00 for tempo, eller 15 for km/t.",
       },
       {
         id: "distanse",
@@ -168,14 +168,14 @@ export const sportCalculators: Calculator[] = [
         type: "number",
         unit: "km",
         defaultValue: 5,
-        hint: "Brukes sammen med sluttid, og til antall runder.",
+        hint: "Brukes sammen med sluttid, og til å telle runder.",
       },
       {
         id: "tid",
         label: "Sluttid",
         type: "text",
         defaultValue: "20:00",
-        hint: "F.eks. 20:00 eller 1:23:45. Brukes når du har valgt sluttid.",
+        hint: "For eksempel 20:00 eller 1:23:45. Brukes når du velger sluttid.",
       },
       {
         id: "bane",
@@ -189,9 +189,9 @@ export const sportCalculators: Calculator[] = [
         ],
       },
     ],
-    formula: "rundetid = tempo · (banelengde / 1000 km)",
+    formula: "rundetid = tempo · (banelengde i meter / 1000)",
     explanation:
-      "En standard løpebane er 400 m i innerste felt. 5 km er 12,5 runder: 12 hele 400 m og en oppløpsside på 200 m. Innendørsbaner er ofte 200 m.",
+      "En standard løpebane er 400 m i innerste felt. 5 km er 12,5 runder: tolv hele runder og 200 m. Innendørsbaner er ofte 200 m.",
     compute(input) {
       const pace = readPace(input);
       if (pace == null) return [];
@@ -238,7 +238,7 @@ export const sportCalculators: Calculator[] = [
     title: "Måltempo fra sluttid",
     shortTitle: "Måltempo",
     description:
-      "Hvilket tempo per kilometer trenger du for å løpe en distanse på en gitt sluttid?",
+      "Finn tempoet per kilometer du trenger for å løpe en distanse på ønsket sluttid.",
     category: "sport",
     tags: ["løping", "tempo", "mål", "5km", "10km", "maraton"],
     popular: true,
@@ -263,12 +263,12 @@ export const sportCalculators: Calculator[] = [
         label: "Ønsket sluttid",
         type: "text",
         defaultValue: "50:00",
-        hint: "F.eks. 22:30, 50:00 eller 1:45:00.",
+        hint: "For eksempel 22:30, 50:00 eller 1:45:00.",
       },
     ],
     formula: "tempo = sluttid / distanse",
     explanation:
-      "Del sluttiden på antall kilometer. Et 10 km-løp på 50 minutter krever 5:00 /km, som er 12 km/t. Hold jevnt tempo, eller se negativ split for å planlegge en raskere andrehalvdel.",
+      "Del sluttiden på antall kilometer. Et 10 km-løp på 50 minutter krever 5:00 /km, altså 12 km/t.",
     compute(input) {
       const km = resolveDistance(input);
       const sec = parseRaceSeconds(input.tid);
@@ -292,13 +292,13 @@ export const sportCalculators: Calculator[] = [
     title: "Sluttid fra tempo",
     shortTitle: "Sluttid",
     description:
-      "Regn ut sluttid når du kjenner tempo eller km/t og distansen du skal løpe.",
+      "Regn ut sluttiden fra tempo eller km/t og distansen du skal løpe.",
     category: "sport",
     tags: ["løping", "sluttid", "tempo", "prediksjon"],
     fields: [
       {
         id: "utgangspunkt",
-        label: "Tempo som",
+        label: "Oppgi tempo som",
         type: "select",
         defaultValue: "tempo",
         options: [
@@ -329,7 +329,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "sluttid = tempo · distanse",
     explanation:
-      "Et jevnt tempo på 5:30 /km på 10 km gir 55 minutter. I konkurranse går det ofte noen sekunder raskere eller saktere per kilometer – bruk splitkalkulatoren for å planlegge.",
+      "Et jevnt tempo på 5:30 /km på 10 km gir 55 minutter. I konkurranse varierer ofte tempoet noen sekunder per kilometer.",
     compute(input) {
       const pace = readPace(input);
       const km = resolveDistance(input);
@@ -349,7 +349,7 @@ export const sportCalculators: Calculator[] = [
     slug: "split-tider",
     title: "Split-tider",
     description:
-      "Jevne kilometer- og 400 m-splittider mot en mål-sluttid. For 5 km, 10 km, halv og maraton.",
+      "Finn jevne mellomtider for hver kilometer og hver 400 m, ut fra ønsket sluttid. Fungerer for 5 km, 10 km, halvmaraton og maraton.",
     category: "sport",
     tags: ["split", "mellomtid", "løping", "maraton", "5km"],
     fields: [
@@ -369,14 +369,14 @@ export const sportCalculators: Calculator[] = [
       },
       {
         id: "tid",
-        label: "Mål-sluttid",
+        label: "Ønsket sluttid",
         type: "text",
         defaultValue: "50:00",
       },
     ],
     formula: "tid ved d km = sluttid · (d / total)",
     explanation:
-      "Jevn split betyr samme tempo hele veien. Mange løper første halvdel litt roligere (negativ split). Her er alle mellomtider jevnt fordelt.",
+      "Jevn split betyr samme tempo hele veien. Mange løper første halvdel litt roligere (negativ split). Her er alle mellomtidene jevnt fordelt.",
     compute(input) {
       const km = resolveDistance(input);
       const sec = parseRaceSeconds(input.tid);
@@ -418,7 +418,7 @@ export const sportCalculators: Calculator[] = [
     slug: "banerunder",
     title: "Banerunder",
     description:
-      "Hvor mange 400 m-runder er 5 km, 10 km eller en valgfri distanse – og hva blir restmeterne?",
+      "Finn hvor mange 400 m-runder 5 km, 10 km eller en valgfri distanse tilsvarer, og hvor mange meter som blir til rest.",
     category: "sport",
     tags: ["bane", "400m", "runder", "løping"],
     fields: [
@@ -443,7 +443,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "runder = distanse / banelengde",
     explanation:
-      "5 000 m på 400 m-bane er 12,5 runder. Du starter ofte ved 200 m-merket for at målet skal bli i måloppløpet. 10 000 m er 25 runder.",
+      "5000 m på 400 m-bane er 12,5 runder. Du starter ofte ved 200 m-merket, slik at målstreken blir i måloppløpet. 10 000 m er 25 runder.",
     compute(input) {
       const meters = num(input, "meter");
       const track = Number(input.bane) || 400;
@@ -467,7 +467,7 @@ export const sportCalculators: Calculator[] = [
     slug: "predikert-lopsid",
     title: "Predikert løpstid",
     description:
-      "Estimer tid på en ny distanse ut fra et løp du allerede har løpt (Riegels formel).",
+      "Estimer tiden på en ny distanse ut fra et løp du allerede har gjennomført (Riegels formel).",
     category: "sport",
     tags: ["prediksjon", "riegel", "løping", "maraton", "5km"],
     fields: [
@@ -494,7 +494,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "T₂ = T₁ · (D₂ / D₁)^1,06",
     explanation:
-      "Pete Riegels formel er et grovt anslag når form og løype er like. Eksponenten 1,06 betyr at lengre distanser går saktere enn ren proporsjon. Den treffer dårligere hvis du ikke har trent på den nye distansen.",
+      "Pete Riegels formel er et grovt anslag når form og løype er sammenlignbare. Eksponenten 1,06 betyr at lengre distanser går saktere enn ved ren proporsjon. Den treffer dårligere hvis du ikke har trent på den nye distansen.",
     disclaimer: "Et estimat, ikke et løfte. Form, vær og løype avgjør mer.",
     compute(input) {
       const d1 = num(input, "kjent");
@@ -520,7 +520,7 @@ export const sportCalculators: Calculator[] = [
     slug: "treningstempo",
     title: "Treningstempo fra 5 km",
     description:
-      "Få rolig tur, terskel, intervall og repetisjon ut fra 5 km-tiden din.",
+      "Finn tempo for rolig tur, terskel, intervall og repetisjoner ut fra 5 km-tiden din.",
     category: "sport",
     tags: ["trening", "terskel", "intervall", "løping", "5km"],
     fields: [
@@ -535,7 +535,7 @@ export const sportCalculators: Calculator[] = [
     formula:
       "rolig ≈ 1,30 · T₅     terskel ≈ 1,07 · T₅     intervall ≈ 0,97 · T₅",
     explanation:
-      "T₅ er 5 km-tempo per kilometer. Rolig tur skal kjennes pratbar. Terskel er «komfortabelt anstrengende». Intervall ligger nær 5 km-fart, repetisjoner litt raskere. Dette er tommelfingerregler, ikke Jack Daniels’ fulle VDOT-tabell.",
+      "T₅ er 5 km-tempo per kilometer. Rolig tur skal kjennes pratbar. Terskel er komfortabelt anstrengende. Intervall ligger nær 5 km-fart, repetisjoner litt raskere. Dette er tommelfingerregler, ikke den fulle VDOT-tabellen til Jack Daniels.",
     compute(input) {
       const t = parseRaceSeconds(input.tid);
       if (t == null || t <= 0) return [];
@@ -582,7 +582,7 @@ export const sportCalculators: Calculator[] = [
         label: "Tempo på dragene",
         type: "text",
         defaultValue: "4:00",
-        hint: "min/km, f.eks. 4:00.",
+        hint: "Skriv min/km, for eksempel 4:00.",
       },
       {
         id: "pause",
@@ -594,7 +594,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "dragtid = tempo · (meter / 1000)     total = n · drag + (n−1) · pause",
     explanation:
-      "Åtte ganger 400 m på 4:00 /km er 1:36 per drag. Med 90 s pause blir økta omtrent 12:48 i løping pluss 10:30 pause.",
+      "Åtte ganger 400 m i 4:00 /km gir 1:36 per drag. Med 90 sekunder pause blir økten omtrent 12:48 løping pluss 10:30 pause.",
     compute(input) {
       const meters = num(input, "drag");
       const n = num(input, "antall");
@@ -616,8 +616,8 @@ export const sportCalculators: Calculator[] = [
           kind: "text",
           primary: true,
         }),
-        result("loping", "Tid i løping", formatHms(totalWork), { kind: "text" }),
-        result("okt", "Økttid inkl. pause", formatHms(totalWork + totalRest), {
+        result("loping", "Samlet løpetid", formatHms(totalWork), { kind: "text" }),
+        result("okt", "Økttid inkludert pause", formatHms(totalWork + totalRest), {
           kind: "text",
         }),
         result("dist", "Løpt distanse", (meters * n) / 1000, {
@@ -634,7 +634,7 @@ export const sportCalculators: Calculator[] = [
     slug: "negativ-split",
     title: "Negativ split",
     description:
-      "Planlegg en raskere andrehalvdel: første og andre halvdel får hvert sitt tempo.",
+      "Planlegg en raskere andre halvdel. Kalkulatoren viser tempo for første og andre halvdel hver for seg.",
     category: "sport",
     tags: ["split", "negativ split", "løping", "taktikk"],
     fields: [
@@ -647,7 +647,7 @@ export const sportCalculators: Calculator[] = [
       },
       {
         id: "tid",
-        label: "Mål-sluttid",
+        label: "Ønsket sluttid",
         type: "text",
         defaultValue: "50:00",
       },
@@ -657,12 +657,12 @@ export const sportCalculators: Calculator[] = [
         type: "number",
         unit: "s",
         defaultValue: 30,
-        hint: "30 s betyr at andre halvdel er 30 sekunder raskere enn første.",
+        hint: "30 sekunder betyr at andre halvdel er 30 sekunder raskere enn første.",
       },
     ],
     formula: "1. halv = (T + δ) / 2     2. halv = (T − δ) / 2",
     explanation:
-      "Negativ split er vanlig i godt løpte konkurranser: du starter kontrollert og øker. 30 sekunder på 10 km merkes, men er overkommelig.",
+      "Negativ split er vanlig i godt løpte konkurranser: du starter kontrollert og øker. 30 sekunder forskjell på 10 km merkes, men er overkommelig.",
     compute(input) {
       const km = num(input, "distanse");
       const t = parseRaceSeconds(input.tid);
@@ -697,7 +697,7 @@ export const sportCalculators: Calculator[] = [
   },
   {
     slug: "kalorier-loping",
-    title: "Kalorier løping",
+    title: "Kalorier ved løping",
     description:
       "Et grovt anslag på kaloriforbruk ut fra kroppsvekt og løpt distanse.",
     category: "sport",
@@ -720,7 +720,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "kcal ≈ 1,036 · kg · km",
     explanation:
-      "Tommelfingerregelen er omtrent 1 kcal per kilo kroppsvekt per kilometer. Tempo påvirker mer over lang tid enn på en enkeltøkt. Tallet er et anslag, ikke laboratoriemåling.",
+      "Tommelfingerregelen er omtrent 1 kcal per kilo kroppsvekt per kilometer. På én enkeltøkt betyr distanse og kroppsvekt mer enn tempo. Tallet er et anslag, ikke en laboratoriemåling.",
     disclaimer: "Individuelt forbruk varierer med terreng, vind og løpsøkonomi.",
     compute(input) {
       const kg = num(input, "kg");
@@ -741,7 +741,7 @@ export const sportCalculators: Calculator[] = [
     slug: "kadens-steglengde",
     title: "Kadens og steglengde",
     description:
-      "Finn steglengde fra fart og steg i minuttet, eller fart fra kadens og steg.",
+      "Finn steglengde ut fra fart og antall steg i minuttet.",
     category: "sport",
     tags: ["kadens", "steg", "løping", "teknikk"],
     fields: [
@@ -801,7 +801,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "VO₂-maks ≈ (distanse − 504,9) / 44,73",
     explanation:
-      "Cooper-testen er 12 minutter så langt du klarer. Formelen gir et grovt estimat på maksimalt oksygenopptak i ml/kg/min. Løp på flatt underlag, og ikke start testen uten å tåle hard innsats.",
+      "Cooper-testen er 12 minutter så langt du klarer. Formelen gir et grovt estimat på maksimalt oksygenopptak i ml/kg/min. Løp på flatt underlag. Ikke ta testen hvis du er syk eller ikke tåler hard innsats.",
     disclaimer: "Ikke en medisinsk test. Unngå maksinnsats ved sykdom eller ukjent hjerterisiko.",
     compute(input) {
       const meters = num(input, "meter");
@@ -816,7 +816,7 @@ export const sportCalculators: Calculator[] = [
           primary: true,
         }),
         result("kmh", "Snittfart", kmh, { digits: 2, unit: "km/t" }),
-        result("tempo", "Snittempo", `${formatPace(pace)} /km`, { kind: "text" }),
+        result("tempo", "Snitt-tempo", `${formatPace(pace)} /km`, { kind: "text" }),
         result("km", "Distanse", meters / 1000, { digits: 2, unit: "km" }),
       ];
     },
@@ -835,7 +835,7 @@ export const sportCalculators: Calculator[] = [
         type: "number",
         unit: "slag/min",
         defaultValue: 190,
-        hint: "Beste anslag er en test, ikke 220 minus alder alene.",
+        hint: "Beste anslag kommer fra en test, ikke fra 220 minus alder alene.",
       },
       {
         id: "hvile",
@@ -843,13 +843,13 @@ export const sportCalculators: Calculator[] = [
         type: "number",
         unit: "slag/min",
         defaultValue: 55,
-        hint: "Fyll inn for Karvonen-soner. La stå tom for prosent av makspuls.",
+        hint: "Fyll inn for Karvonen-soner. La feltet stå tomt for å bruke prosent av makspuls.",
       },
     ],
     formula:
       "Karvonen: slag = hvile + % · (maks − hvile)     ellers: % · maks",
     explanation:
-      "Sone 1–2 er rolig, sone 3 terskel/tempo, sone 4–5 hard. Karvonen bruker pulreserve og treffer ofte bedre enn ren prosent av makspuls.",
+      "Sone 1–2 er rolig, sone 3 terskel/tempo, sone 4–5 hard. Karvonen bruker pulsreserve og treffer ofte bedre enn ren prosent av makspuls.",
     compute(input) {
       const max = num(input, "maks");
       const restRaw = num(input, "hvile");
@@ -889,7 +889,7 @@ export const sportCalculators: Calculator[] = [
     title: "1RM (maksvekt)",
     shortTitle: "1RM",
     description:
-      "Estimer en repetisjon maksimum fra vekt og antall repetisjoner (Epley).",
+      "Estimer maksvekten for én repetisjon (1RM) ut fra vekt og antall repetisjoner (Epley).",
     category: "sport",
     tags: ["styrke", "1rm", "benk", "knebøy"],
     popular: true,
@@ -910,7 +910,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "1RM ≈ vekt · (1 + reps / 30)",
     explanation:
-      "Epley-formelen passer best for 1–10 repetisjoner nær utmattelse. Den overvurderer ofte mange reps. Bruk den til å styre prosentbasert trening, ikke som fasit på konkurransemaks.",
+      "Epley-formelen passer best for 1–10 repetisjoner nær utmattelse. Den overvurderer ofte mange repetisjoner. Bruk den til å styre prosentbasert trening, ikke som fasit for konkurransemaks.",
     compute(input) {
       const vekt = num(input, "vekt");
       const reps = num(input, "reps");
@@ -927,7 +927,7 @@ export const sportCalculators: Calculator[] = [
   {
     slug: "ftp-soner",
     title: "FTP-soner (sykkel)",
-    description: "Sykkelwatt-soner etter Coggan fra funksjonell terskelwatt (FTP).",
+    description: "Finn sykkelsoner etter Coggan ut fra funksjonell terskelwatt (FTP).",
     category: "sport",
     tags: ["sykkel", "watt", "ftp", "soner"],
     fields: [
@@ -941,7 +941,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "sone = prosent av FTP",
     explanation:
-      "FTP er den høyeste watt du kan holde i omtrent en time. Sone 2 er utholdenhet, sone 4 terskel, sone 5 VO₂-maks. Testen er ofte 20 minutter · 0,95, eller en 60-minutters test.",
+      "FTP er den høyeste watt du kan holde i omtrent en time. Sone 2 er utholdenhet, sone 4 terskel og sone 5 VO₂-maks. En vanlig test er 20 minutter ganger 0,95, eller en test på 60 minutter.",
     compute(input) {
       const ftp = num(input, "ftp");
       if (!Number.isFinite(ftp) || ftp <= 0) return [];
@@ -965,7 +965,7 @@ export const sportCalculators: Calculator[] = [
   {
     slug: "svommetempo",
     title: "Svømmetempo",
-    description: "Regn om sluttid til tid per 100 m, 50 m og 1500 m.",
+    description: "Regn om sluttid til tid per 100 m og 50 m, og estimer 1500 m.",
     category: "sport",
     tags: ["svømming", "tempo", "basseng"],
     fields: [
@@ -986,7 +986,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "tid per 100 m = sluttid · 100 / distanse",
     explanation:
-      "Oppgi tid som 7:20 eller 1:12:00. Tempoet per 100 m er det vanlige språket i basseng. Åpent vann og vendinger gjør at bassengtid og sjøtid ikke er det samme.",
+      "Oppgi tid som 7:20 eller 1:12:00. Tempo per 100 m er det vanlige målet i basseng. Tid i åpent vann blir ofte annerledes på grunn av vendinger og forhold.",
     compute(input) {
       const meter = num(input, "meter");
       const sek = parseRaceSeconds(input.tid);
@@ -1013,7 +1013,7 @@ export const sportCalculators: Calculator[] = [
   {
     slug: "watt-per-kg",
     title: "Watt per kilo",
-    description: "Effekt relativt til kroppsvekt – nyttig på sykkel og i motbakke.",
+    description: "Finn effekt relativt til kroppsvekt. Nyttig på sykkel, særlig i motbakke.",
     category: "sport",
     tags: ["watt", "ftp", "sykkel", "vekt"],
     fields: [
@@ -1034,7 +1034,7 @@ export const sportCalculators: Calculator[] = [
     ],
     formula: "W/kg = watt / kroppsvekt",
     explanation:
-      "I motbakke betyr watt per kilo mer enn rå watt. Rundt 2–3 W/kg er vanlig mosjon, 4+ W/kg er sterkt på FTP-nivå. Tallet sier ingenting om teknikk eller utholdenhet alene.",
+      "I motbakke betyr watt per kilo mer enn rå watt. Rundt 2–3 W/kg er vanlig mosjon, 4+ W/kg er sterkt på FTP-nivå. Tallet sier lite om teknikk eller utholdenhet alene.",
     compute(input) {
       const watt = num(input, "watt");
       const kg = num(input, "kg");
