@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-paper: #f3efe4;
+  --color-paper-dark: #e7dfd0;
+  --color-ink: #14221f;
+  --color-ink-soft: #3d4f4a;
+  --color-pine: #1a5c4a;
+  --color-pine-dark: #0e3b30;
+  --color-moss: #d7ebe3;
+  --color-clay: #c45c26;
+  --color-sand: #fffdf8;
+  --color-line: #d9d0c1;
+  --font-sans: var(--font-figtree);
+  --font-serif: var(--font-fraunces);
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.font-serif {
+  font-family: var(--font-serif), ui-serif, Georgia, serif;
+}
+
+::selection {
+  background: var(--color-moss);
+  color: var(--color-pine-dark);
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(20 34 31 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(20 34 31 / 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield;
+}
