@@ -1,4 +1,5 @@
 import { byggCalculators } from "./calculators/bygg";
+import { elektroCalculators } from "./calculators/elektro";
 import { enheterCalculators } from "./calculators/enheter";
 import { fysikkCalculators } from "./calculators/fysikk";
 import { helseCalculators } from "./calculators/helse";
@@ -21,6 +22,7 @@ export const calculators: Calculator[] = [
   ...matCalculators,
   ...skoleCalculators,
   ...fysikkCalculators,
+  ...elektroCalculators,
 ];
 
 export function getCalculator(slug: string): Calculator | undefined {

@@ -262,15 +262,16 @@ export const formulas: Formula[] = [
   {
     slug: "ohms-lov",
     title: "Ohms lov",
-    category: "fysikk",
-    expression: "U = R · I     P = U · I",
+    category: "elektro",
+    expression: "U = R · I     P = U · I = R · I² = U² / R",
     variables: [
       { symbol: "U", meaning: "Spenning i volt" },
       { symbol: "R", meaning: "Resistans i ohm" },
       { symbol: "I", meaning: "Strøm i ampere" },
       { symbol: "P", meaning: "Effekt i watt" },
     ],
-    explanation: "Gjelder for ohmske motstander der strøm og spenning er proporsjonale.",
+    explanation:
+      "Gjelder for ohmske motstander der strøm og spenning er proporsjonale. De tre effektformlene er likeverdige når Ohms lov holder.",
     calculatorSlug: "ohms-lov",
   },
   {
@@ -518,6 +519,235 @@ export const formulas: Formula[] = [
     explanation:
       "Energien som trengs for å endre temperaturen, er masse ganger stoffets varmekapasitet ganger temperaturendringen.",
     calculatorSlug: "varmeenergi",
+  },
+  {
+    slug: "seriekopling",
+    title: "Seriekopling av motstander",
+    category: "elektro",
+    expression: "R = R₁ + R₂ + R₃ + …",
+    variables: [{ symbol: "R", meaning: "Erstatningsresistans" }],
+    explanation:
+      "Samme strøm gjennom alle. Spenningene summeres. Erstatningsresistansen er alltid større enn den største enkeltmotstanden.",
+    calculatorSlug: "serie-parallell",
+  },
+  {
+    slug: "parallellkopling",
+    title: "Parallellkopling av motstander",
+    category: "elektro",
+    expression: "1/R = 1/R₁ + 1/R₂ + 1/R₃ + …",
+    variables: [{ symbol: "R", meaning: "Erstatningsresistans" }],
+    explanation:
+      "Samme spenning over alle. Strømmene summeres. For to motstander: R = (R₁·R₂)/(R₁+R₂). Erstatningsresistansen er lavere enn den minste.",
+    calculatorSlug: "serie-parallell",
+  },
+  {
+    slug: "resistivitet-formel",
+    title: "Ledermotstand",
+    category: "elektro",
+    expression: "R = ℓ / (κ · A)",
+    variables: [
+      { symbol: "ℓ", meaning: "Lengde i meter" },
+      { symbol: "κ", meaning: "Ledningsevne, 56 for Cu og 35 for Al (m/(Ω·mm²))" },
+      { symbol: "A", meaning: "Tverrsnitt i mm²" },
+    ],
+    explanation:
+      "SI-formen er R = ρ·ℓ/A med resistivitet ρ. I el-fag brukes oftere ledningsevne κ. Kobber leder bedre enn aluminium ved samme tverrsnitt.",
+    calculatorSlug: "resistivitet",
+  },
+  {
+    slug: "spenningsfall-formel",
+    title: "Spenningsfall i kabel",
+    category: "elektro",
+    expression: "énfase: ΔU = 2·I·ℓ/(κ·A)     trefase: ΔU = √3·I·ℓ/(κ·A)",
+    variables: [
+      { symbol: "I", meaning: "Strøm i ampere" },
+      { symbol: "ℓ", meaning: "Kabellengde én vei i meter" },
+      { symbol: "A", meaning: "Tverrsnitt i mm²" },
+    ],
+    explanation:
+      "Énfase teller tur og retur. Trefase bruker √3. Krav til maksimalt spenningsfall står i NEK 400, ofte 4 % fram til uttak.",
+    calculatorSlug: "spenningsfall",
+  },
+  {
+    slug: "spenningsdeler-formel",
+    title: "Spenningsdeler",
+    category: "elektro",
+    expression: "U_ut = U_inn · R₂ / (R₁ + R₂)",
+    variables: [
+      { symbol: "R₁", meaning: "Øvre motstand" },
+      { symbol: "R₂", meaning: "Nedre motstand, der utgangen tas" },
+    ],
+    explanation:
+      "Gjelder uten last på utgangen. En last parallelt med R₂ virker som en lavere R₂ og senker U_ut.",
+    calculatorSlug: "spenningsdeler",
+  },
+  {
+    slug: "kirchhoff-strom",
+    title: "Kirchhoffs strømlov (KCL)",
+    category: "elektro",
+    expression: "Σ I_inn = Σ I_ut",
+    variables: [{ symbol: "I", meaning: "Strøm til eller fra et knutepunkt" }],
+    explanation:
+      "Ladning hoper seg ikke opp i et knutepunkt. Summen av strømmene inn er lik summen ut. Fortegnskonvensjon: inn positiv, ut negativ, da er summen null.",
+  },
+  {
+    slug: "kirchhoff-spenning",
+    title: "Kirchhoffs spenningslov (KVL)",
+    category: "elektro",
+    expression: "Σ U = 0 rundt en sløyfe",
+    variables: [{ symbol: "U", meaning: "Spenning over hvert element i sløyfen" }],
+    explanation:
+      "Å gå en runde i en krets og tilbake til start gir null netto spenning. Spenningene over kilder og motstander tar hverandre ut.",
+  },
+  {
+    slug: "joule-lov",
+    title: "Joules lov",
+    category: "elektro",
+    expression: "Q = R · I² · t     P = R · I²",
+    variables: [
+      { symbol: "Q", meaning: "Varmeenergi i joule" },
+      { symbol: "t", meaning: "Tid i sekunder" },
+    ],
+    explanation:
+      "Varmen i en leder er effekten ganger tiden. Strømmen går i annen, derfor varmer overbelastning raskt.",
+    calculatorSlug: "joule-varme",
+  },
+  {
+    slug: "kapasitans-formel",
+    title: "Kapasitans og ladning",
+    category: "elektro",
+    expression: "C = Q / U     Q = C · U     E = ½ C U²",
+    variables: [
+      { symbol: "C", meaning: "Kapasitans i farad" },
+      { symbol: "Q", meaning: "Ladning i coulomb" },
+      { symbol: "U", meaning: "Spenning i volt" },
+      { symbol: "E", meaning: "Lagret energi i joule" },
+    ],
+    explanation:
+      "1 µF = 10⁻⁶ F. Energien vokser med U². Serie: 1/C = 1/C₁ + 1/C₂. Parallell: C = C₁ + C₂ (motsatt av motstander).",
+    calculatorSlug: "kondensator",
+  },
+  {
+    slug: "rc-tidskonstant-formel",
+    title: "RC-tidskonstant",
+    category: "elektro",
+    expression: "τ = R · C",
+    variables: [
+      { symbol: "τ", meaning: "Tidskonstant i sekunder" },
+      { symbol: "R", meaning: "Resistans i ohm" },
+      { symbol: "C", meaning: "Kapasitans i farad" },
+    ],
+    explanation:
+      "Etter 1τ er kondensatoren på ca. 63 % ved lading (eller 37 % ved utlading). Etter 5τ er den praktisk talt ferdig.",
+    calculatorSlug: "rc-tidskonstant",
+  },
+  {
+    slug: "frekvens-formel",
+    title: "Frekvens og periode",
+    category: "elektro",
+    expression: "f = 1 / T     ω = 2πf",
+    variables: [
+      { symbol: "f", meaning: "Frekvens i hertz" },
+      { symbol: "T", meaning: "Periode i sekunder" },
+      { symbol: "ω", meaning: "Vinkelfrekvens i rad/s" },
+    ],
+    explanation: "50 Hz gir T = 20 ms. ω brukes i reaktans: X_L = ωL og X_C = 1/(ωC).",
+    calculatorSlug: "frekvens-periode",
+  },
+  {
+    slug: "reaktans-formel",
+    title: "Reaktans og impedans",
+    category: "elektro",
+    expression: "X_L = 2πfL     X_C = 1/(2πfC)     Z = √(R² + (X_L − X_C)²)",
+    variables: [
+      { symbol: "X_L", meaning: "Induktiv reaktans i ohm" },
+      { symbol: "X_C", meaning: "Kapasitiv reaktans i ohm" },
+      { symbol: "Z", meaning: "Impedans i ohm" },
+    ],
+    explanation:
+      "Spoler motsetter seg raske strømendringer, kondensatorer motsetter seg raske spenningsendringer. Ved 50 Hz og rene R er Z = R.",
+    calculatorSlug: "reaktans-impedans",
+  },
+  {
+    slug: "transformator-formel",
+    title: "Transformator",
+    category: "elektro",
+    expression: "U₁/U₂ = N₁/N₂ = I₂/I₁     S = U · I",
+    variables: [
+      { symbol: "U", meaning: "Spenning" },
+      { symbol: "N", meaning: "Vindingstall" },
+      { symbol: "I", meaning: "Strøm" },
+      { symbol: "S", meaning: "Tilsynelatende effekt i VA" },
+    ],
+    explanation:
+      "Ideell transformator uten tap: effekten er den samme på begge sider. Høyere spenning gir lavere strøm. Virkningsgrad i praksis er ofte 90–98 %.",
+    calculatorSlug: "transformator",
+  },
+  {
+    slug: "rms-formel",
+    title: "Effektivverdi (RMS)",
+    category: "elektro",
+    expression: "U_eff = U_maks / √2     U_maks = U_eff · √2",
+    variables: [
+      { symbol: "U_eff", meaning: "Effektivverdi, det tallet vi oppgir (230 V)" },
+      { symbol: "U_maks", meaning: "Toppverdi / amplitude" },
+    ],
+    explanation:
+      "Gjelder sinus. 230 V effektivverdi har toppverdi ≈ 325 V. RMS betyr rot-middel-kvadrat: verdien som gir samme effekt i en motstand som likespenning av samme tall.",
+    calculatorSlug: "rms-verdi",
+  },
+  {
+    slug: "effektfaktor-formel",
+    title: "Effektfaktor",
+    category: "elektro",
+    expression: "P = U · I · cos φ     (énfase)",
+    variables: [
+      { symbol: "P", meaning: "Aktiv effekt i watt" },
+      { symbol: "cos φ", meaning: "Effektfaktor, mellom 0 og 1" },
+    ],
+    explanation:
+      "cos φ = 1 for ren motstand. Induktive laster (motorer) gir cos φ under 1, så strømmen er høyere enn P/U. Kompensering med kondensatorer hever cos φ.",
+    calculatorSlug: "trefase-effekt",
+  },
+  {
+    slug: "trefase-formel",
+    title: "Trefaseeffekt",
+    category: "elektro",
+    expression: "P = √3 · U · I · cos φ     S = √3 · U · I",
+    variables: [
+      { symbol: "U", meaning: "Linjespenning (hovedspenning), 400 V i Norge" },
+      { symbol: "I", meaning: "Linjestrøm" },
+      { symbol: "S", meaning: "Tilsynelatende effekt i VA" },
+    ],
+    explanation:
+      "U er spenningen mellom to faser, ikke fase-til-null. Reaktiv effekt Q = √3 · U · I · sin φ, enhet var.",
+    calculatorSlug: "trefase-effekt",
+  },
+  {
+    slug: "coulomb-lov",
+    title: "Coulombs lov",
+    category: "elektro",
+    expression: "F = k · q₁ q₂ / r²",
+    variables: [
+      { symbol: "F", meaning: "Kraft mellom ladningene" },
+      { symbol: "q", meaning: "Ladning i coulomb" },
+      { symbol: "r", meaning: "Avstand" },
+      { symbol: "k", meaning: "8,99·10⁹ N·m²/C²" },
+    ],
+    explanation:
+      "Like ladninger frastøter, ulike tiltrekker. Kraften avtar med kvadratet av avstanden. Elektrisk felt: E = F/q = U/d mellom parallelle plater.",
+  },
+  {
+    slug: "induktor-energi",
+    title: "Energi i en spole",
+    category: "elektro",
+    expression: "E = ½ L I²     u = L · di/dt",
+    variables: [
+      { symbol: "L", meaning: "Induktans i henry" },
+      { symbol: "I", meaning: "Strøm i ampere" },
+    ],
+    explanation:
+      "Spolen lagrer energi i magnetfeltet. Bryter du strømmen brått, kan u = L·di/dt gi høye spenningstopper – derfor friløpsdiode over reléspoler.",
   },
 ];
 

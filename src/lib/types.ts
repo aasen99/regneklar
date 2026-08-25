@@ -8,6 +8,7 @@ export type CategoryId =
   | "mat"
   | "skole"
   | "fysikk"
+  | "elektro"
   | "sport";
 
 export type FieldType = "number" | "select" | "date" | "text";

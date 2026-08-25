@@ -21,7 +21,7 @@ export default function AboutPage() {
       <p className="mt-4 leading-relaxed text-ink-soft">
         Nettstedet samler {calculators.length} kalkulatorer og{" "}
         {formulas.length} formler innen økonomi, helse, sport, matematikk,
-        enheter, hverdag, bygg, mat, skole og fysikk. Flere kommer.
+        enheter, hverdag, bygg, mat, skole, fysikk og elektro. Flere kommer.
       </p>
       <h2 className="mt-10 font-serif text-2xl">Slik bruker du det</h2>
       <ul className="mt-3 list-disc space-y-2 pl-5 text-ink-soft">

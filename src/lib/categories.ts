@@ -59,8 +59,15 @@ export const categories: Category[] = [
   {
     id: "fysikk",
     title: "Fysikk",
-    description: "Hastighet, Ohm, kraft, energi, tetthet og effekt.",
+    description: "Hastighet, kraft, energi, tetthet og effekt.",
     blurb: "Naturfag og teknikk",
+  },
+  {
+    id: "elektro",
+    title: "Elektro",
+    description:
+      "Ohm, motstand, spenningsfall, transformator, vekselstrøm og trefase.",
+    blurb: "Strøm, spenning og kretser",
   },
 ];
 

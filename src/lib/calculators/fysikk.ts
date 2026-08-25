@@ -55,66 +55,6 @@ export const fysikkCalculators: Calculator[] = [
     },
   },
   {
-    slug: "ohms-lov",
-    title: "Ohms lov",
-    description: "U = R · I. Finn spenning, resistans eller strøm.",
-    category: "fysikk",
-    tags: ["ohm", "strøm", "spenning", "elektronikk"],
-    popular: true,
-    fields: [
-      {
-        id: "u",
-        label: "Spenning U (volt)",
-        type: "number",
-        hint: "La stå tom for å finne U.",
-      },
-      {
-        id: "r",
-        label: "Resistans R (ohm)",
-        type: "number",
-        defaultValue: 100,
-      },
-      {
-        id: "i",
-        label: "Strøm I (ampere)",
-        type: "number",
-        defaultValue: 0.12,
-      },
-    ],
-    formula: "U = R · I     P = U · I",
-    explanation:
-      "Ohms lov gjelder for ohmske motstander. Effekten P i watt er spenning ganger strøm.",
-    compute(input) {
-      const u = num(input, "u");
-      const r = num(input, "r");
-      const i = num(input, "i");
-      const filled = [u, r, i].filter(Number.isFinite).length;
-      if (filled !== 2) {
-        return [
-          result("hint", "Fyll inn", "Oppgi nøyaktig to felt.", {
-            kind: "text",
-            primary: true,
-          }),
-        ];
-      }
-      let U = u;
-      let R = r;
-      let I = i;
-      if (!Number.isFinite(U) && Number.isFinite(R) && Number.isFinite(I)) U = R * I;
-      if (!Number.isFinite(R) && Number.isFinite(U) && Number.isFinite(I) && I !== 0)
-        R = U / I;
-      if (!Number.isFinite(I) && Number.isFinite(U) && Number.isFinite(R) && R !== 0)
-        I = U / R;
-      if (!Number.isFinite(U) || !Number.isFinite(R) || !Number.isFinite(I)) return [];
-      return [
-        result("u", "Spenning U", U, { digits: 4, unit: "V", primary: true }),
-        result("r", "Resistans R", R, { digits: 4, unit: "Ω" }),
-        result("i", "Strøm I", I, { digits: 4, unit: "A" }),
-        result("p", "Effekt P", U * I, { digits: 4, unit: "W" }),
-      ];
-    },
-  },
-  {
     slug: "kraft",
     title: "Kraft (Newtons 2. lov)",
     description: "F = m · a. Finn kraft, masse eller akselerasjon.",
