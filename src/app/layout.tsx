@@ -36,6 +36,12 @@ export const metadata: Metadata = {
     "enheter",
     "matematikk",
   ],
+  applicationName: "REGNEKLAR",
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    title: "REGNEKLAR",
+    statusBarStyle: "default",
+  },
   openGraph: {
     locale: "nb_NO",
     type: "website",
