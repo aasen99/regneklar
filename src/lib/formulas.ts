@@ -480,6 +480,125 @@ export const formulas: Formula[] = [
     calculatorSlug: "serielan",
   },
   {
+    slug: "regel-72-formel",
+    title: "Regel 72",
+    category: "okonomi",
+    expression: "år ≈ 72 / r",
+    variables: [
+      { symbol: "r", meaning: "Årlig avkastning i prosent" },
+    ],
+    explanation:
+      "Tommelfingerregel for doblingstid. Nøyaktig: ln(2)/ln(1+r/100).",
+    calculatorSlug: "regel-72",
+  },
+  {
+    slug: "bsu-formel",
+    title: "BSU-sparing",
+    category: "okonomi",
+    expression: "skattefordel = innskudd · sats     FV = innskudd · ((1+r)ⁿ − 1) / r",
+    variables: [
+      { symbol: "sats", meaning: "Skattefradragsprosent" },
+      { symbol: "r", meaning: "Årlig rente" },
+      { symbol: "n", meaning: "Antall år" },
+    ],
+    explanation:
+      "BSU har årlige og totale innskuddstak. Skattefradraget beregnes av årets innskudd.",
+    calculatorSlug: "bsu",
+  },
+  {
+    slug: "million-sparing-formel",
+    title: "Sparing til målbeløp",
+    category: "okonomi",
+    expression: "FV = P(1+r)ⁿ + PMT · ((1+r)ⁿ − 1) / r",
+    variables: [
+      { symbol: "P", meaning: "Startbeløp" },
+      { symbol: "PMT", meaning: "Fast innskudd per periode" },
+      { symbol: "r", meaning: "Rente per periode" },
+      { symbol: "n", meaning: "Antall perioder" },
+    ],
+    explanation:
+      "Løses for n når du kjenner sparemål, start, månedlig sparing og avkastning.",
+    calculatorSlug: "million-sparing",
+  },
+  {
+    slug: "effektiv-rente-formel",
+    title: "Effektiv rente",
+    category: "okonomi",
+    expression: "effektiv = (1 + r/m)ᵐ − 1",
+    variables: [
+      { symbol: "r", meaning: "Nominell årsrente" },
+      { symbol: "m", meaning: "Antall terminer per år" },
+    ],
+    explanation:
+      "Hyppigere rentetillegg gir høyere effektiv rente. Gebyrer kommer i tillegg i bankens oppgitte effektive rente.",
+    calculatorSlug: "effektiv-rente",
+  },
+  {
+    slug: "cagr-formel",
+    title: "CAGR",
+    category: "okonomi",
+    expression: "CAGR = (slutt / start)^(1/n) − 1",
+    variables: [
+      { symbol: "start", meaning: "Startverdi" },
+      { symbol: "slutt", meaning: "Sluttverdi" },
+      { symbol: "n", meaning: "Antall år" },
+    ],
+    explanation:
+      "Den jevne årlige vekstraten som tar deg fra start til slutt på n år.",
+    calculatorSlug: "cagr",
+  },
+  {
+    slug: "leieavkastning-formel",
+    title: "Leieavkastning",
+    category: "okonomi",
+    expression: "brutto = 12 · leie / pris     netto = (12 · leie − kostnader) / pris",
+    variables: [
+      { symbol: "leie", meaning: "Månedlig leie" },
+      { symbol: "pris", meaning: "Boligverdi" },
+    ],
+    explanation:
+      "Netto yield trekker driftskostnader. Skatt og finansiering er ikke med.",
+    calculatorSlug: "leieavkastning",
+  },
+  {
+    slug: "laneramme-formel",
+    title: "Låneramme",
+    category: "okonomi",
+    expression: "lån ≤ min(k · inntekt, verdi · LTV)",
+    variables: [
+      { symbol: "k", meaning: "Gjeldsgrad, f.eks. 5" },
+      { symbol: "LTV", meaning: "Belåningsgrad, f.eks. 0,85" },
+    ],
+    explanation:
+      "Inntektstak og belåningsgrad setter ofte hver sin øvre grense. Den laveste gjelder.",
+    calculatorSlug: "laneramme",
+  },
+  {
+    slug: "pris-per-kvm-formel",
+    title: "Pris per kvadratmeter",
+    category: "okonomi",
+    expression: "kr/m² = pris / areal",
+    variables: [
+      { symbol: "pris", meaning: "Totalpris" },
+      { symbol: "areal", meaning: "Areal i m²" },
+    ],
+    explanation: "Nyttig for sammenligning, men ikke det eneste som teller ved boligkjøp.",
+    calculatorSlug: "pris-per-kvm",
+  },
+  {
+    slug: "reallonn-formel",
+    title: "Reallønn / reell økning",
+    category: "okonomi",
+    expression: "reell = (1 + p) / (1 + i) − 1",
+    variables: [
+      { symbol: "p", meaning: "Nominell lønnsøkning" },
+      { symbol: "i", meaning: "Inflasjon" },
+    ],
+    explanation:
+      "Reell økning viser endring i kjøpekraft etter at prisstigning er trukket fra.",
+    calculatorSlug: "lonnsokning",
+  },
+  {
     slug: "epley",
     title: "Epley 1RM",
     category: "sport",
@@ -1296,6 +1415,164 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Spolen lagrer energi i magnetfeltet. Bryter du strømmen brått, kan u = L·di/dt gi høye spenningstopper – derfor friløpsdiode over reléspoler.",
+  },
+  {
+    slug: "gjennomsnitt-formel",
+    title: "Gjennomsnitt",
+    category: "statistikk",
+    expression: "x̄ = (Σ xᵢ) / n",
+    variables: [
+      { symbol: "xᵢ", meaning: "Observasjon i" },
+      { symbol: "n", meaning: "Antall observasjoner" },
+    ],
+    explanation:
+      "Aritmetisk gjennomsnitt trekker alle observasjoner likt. Median er mer robust mot ekstremverdier.",
+    calculatorSlug: "deskriptiv-statistikk",
+  },
+  {
+    slug: "varians-standardavvik",
+    title: "Varians og standardavvik",
+    category: "statistikk",
+    expression: "s² = Σ(x − x̄)² / (n − 1)     s = √s²",
+    variables: [
+      { symbol: "s", meaning: "Utvalgsstandardavvik" },
+      { symbol: "σ", meaning: "Populasjonsstandardavvik (nevner n)" },
+    ],
+    explanation:
+      "Utvalg bruker n − 1 i nevneren. Standardavviket har samme enhet som dataene; variansen er enheten i annen.",
+    calculatorSlug: "standardavvik",
+  },
+  {
+    slug: "z-verdi-formel",
+    title: "z-verdi",
+    category: "statistikk",
+    expression: "z = (x − μ) / σ",
+    variables: [
+      { symbol: "x", meaning: "Observasjon" },
+      { symbol: "μ", meaning: "Forventning / snitt" },
+      { symbol: "σ", meaning: "Standardavvik" },
+    ],
+    explanation:
+      "z forteller hvor mange standardavvik x ligger fra snittet. Under standardnormalfordeling er P(|Z| < 1) ≈ 68 %.",
+    calculatorSlug: "z-verdi",
+  },
+  {
+    slug: "normalfordeling-formel",
+    title: "Normalfordeling",
+    category: "statistikk",
+    expression: "X ~ N(μ, σ²)     φ(z) = (1/√(2π)) e^(−z²/2)",
+    variables: [
+      { symbol: "μ", meaning: "Forventningsverdi" },
+      { symbol: "σ", meaning: "Standardavvik" },
+    ],
+    explanation:
+      "Klokkekurven er symmetrisk om μ. Ca. 95 % av sannsynlighetsmassen ligger innenfor μ ± 2σ.",
+    calculatorSlug: "normalfordeling",
+  },
+  {
+    slug: "konfidensintervall-formel",
+    title: "Konfidensintervall for snitt",
+    category: "statistikk",
+    expression: "x̄ ± z · (s / √n)",
+    variables: [
+      { symbol: "x̄", meaning: "Utvalgssnitt" },
+      { symbol: "z", meaning: "Kritisk verdi fra standardnormal" },
+      { symbol: "s", meaning: "Standardavvik" },
+      { symbol: "n", meaning: "Utvalgsstørrelse" },
+    ],
+    explanation:
+      "For 95 % konfidensnivå er z ≈ 1,96. Små utvalg med ukjent σ bør bruke t-fordeling.",
+    calculatorSlug: "konfidensintervall",
+  },
+  {
+    slug: "kombinasjoner-permutasjoner",
+    title: "Kombinasjoner og permutasjoner",
+    category: "statistikk",
+    expression: "nPr = n!/(n−k)!     nCr = n!/(k!(n−k)!)",
+    variables: [
+      { symbol: "n", meaning: "Totalt antall elementer" },
+      { symbol: "k", meaning: "Antall som trekkes" },
+    ],
+    explanation:
+      "Permutasjoner teller rekkefølge. Kombinasjoner teller utvalg der rekkefølge ikke betyr noe.",
+    calculatorSlug: "kombinatorikk",
+  },
+  {
+    slug: "binomialfordeling",
+    title: "Binomialfordeling",
+    category: "statistikk",
+    expression: "P(X = k) = C(n,k) · pᵏ · (1−p)ⁿ⁻ᵏ",
+    variables: [
+      { symbol: "n", meaning: "Antall uavhengige forsøk" },
+      { symbol: "p", meaning: "Sannsynlighet for treff per forsøk" },
+      { symbol: "k", meaning: "Antall treff" },
+    ],
+    explanation: "Forventning μ = np. Varians σ² = np(1−p).",
+    calculatorSlug: "binomialsannsynlighet",
+  },
+  {
+    slug: "klassisk-sannsynlighet",
+    title: "Klassisk sannsynlighet",
+    category: "statistikk",
+    expression: "P(A) = |A| / |Ω|",
+    variables: [
+      { symbol: "|A|", meaning: "Antall gunstige utfall" },
+      { symbol: "|Ω|", meaning: "Antall mulige utfall" },
+    ],
+    explanation:
+      "Forutsetter like sannsynlige utfall. For uavhengige hendelser: P(A∩B) = P(A)·P(B).",
+    calculatorSlug: "sannsynlighet-enkel",
+  },
+  {
+    slug: "pearson-korrelasjon",
+    title: "Pearsons korrelasjonskoeffisient",
+    category: "statistikk",
+    expression: "r = Σ((x−x̄)(y−ȳ)) / √(Σ(x−x̄)² · Σ(y−ȳ)²)",
+    variables: [
+      { symbol: "r", meaning: "Korrelasjonskoeffisient (−1 til 1)" },
+    ],
+    explanation:
+      "r nær ±1 betyr sterk lineær sammenheng. Korrelasjon er ikke det samme som årsakssammenheng.",
+    calculatorSlug: "korrelasjon",
+  },
+  {
+    slug: "lineaer-regresjon-formel",
+    title: "Lineær regresjon",
+    category: "statistikk",
+    expression: "y = a + bx     b = Σ((x−x̄)(y−ȳ))/Σ(x−x̄)²     a = ȳ − b·x̄",
+    variables: [
+      { symbol: "b", meaning: "Stigningstall" },
+      { symbol: "a", meaning: "Skjæringspunkt med y-aksen" },
+    ],
+    explanation:
+      "Minste kvadraters metode minimerer summen av kvadrerte avvik mellom observerte y og linjen.",
+    calculatorSlug: "lineaer-regresjon",
+  },
+  {
+    slug: "relativ-frekvens-formel",
+    title: "Relativ frekvens",
+    category: "statistikk",
+    expression: "f_rel = f / n",
+    variables: [
+      { symbol: "f", meaning: "Absolutte frekvens" },
+      { symbol: "n", meaning: "Totalt antall observasjoner" },
+    ],
+    explanation: "Summen av relative frekvenser er 1. Ofte oppgitt i prosent.",
+    calculatorSlug: "relativ-frekvens",
+  },
+  {
+    slug: "utvalgsstorrelse-formel",
+    title: "Utvalgsstørrelse for snitt",
+    category: "statistikk",
+    expression: "n = (z · σ / E)²",
+    variables: [
+      { symbol: "E", meaning: "Ønsket feilmargin" },
+      { symbol: "z", meaning: "Kritisk verdi for valgt konfidensnivå" },
+      { symbol: "σ", meaning: "Estimert standardavvik" },
+    ],
+    explanation:
+      "Rund alltid opp til nærmeste hele tall. Mindre E eller høyere konfidens krever større n.",
+    calculatorSlug: "utvalgsstorrelse",
   },
 ];
 

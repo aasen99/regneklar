@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata(
   "Formelsamling",
-  "Formler for økonomi, geometri, fysikk, elektro, helse og hverdag – forklart på norsk.",
+  "Formler for økonomi, geometri, fysikk, elektro, statistikk, helse og hverdag – forklart på norsk.",
 );
 
 export default function FormulasPage() {

@@ -21,7 +21,8 @@ export default function AboutPage() {
       <p className="mt-4 leading-relaxed text-ink-soft">
         Nettstedet samler {calculators.length} kalkulatorer og{" "}
         {formulas.length} formler innen økonomi, helse, sport, matematikk,
-        enheter, hverdag, bygg, mat, skole, fysikk og elektro. Flere kommer.
+        enheter, hverdag, bygg, mat, skole, fysikk, elektro og statistikk.
+        Flere kommer.
       </p>
       <h2 className="mt-10 font-serif text-2xl">Slik bruker du det</h2>
       <ul className="mt-3 list-disc space-y-2 pl-5 text-ink-soft">
@@ -34,6 +35,22 @@ export default function AboutPage() {
         Tallene er til hjelp og læring. De erstatter ikke bank, lege,
         Skatteetaten eller fagfolk. Skatt, lån og helse har regler og unntak
         som en generell kalkulator ikke kan fange.
+      </p>
+      <h2 className="mt-10 font-serif text-2xl">Penger i Fokus</h2>
+      <p className="mt-3 leading-relaxed text-ink-soft">
+        REGNEKLAR og{" "}
+        <a
+          href="https://pengerifokus.no"
+          className="text-pine hover:underline"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          pengerifokus.no
+        </a>{" "}
+        eies av samme. REGNEKLAR er formel- og kalkulatorfokusert; Penger i
+        Fokus går dypere på personlig økonomi med guider, budsjett og mer
+        spesialiserte verktøy. De to sidene kan lenke til hverandre der det
+        gir mening for brukeren.
       </p>
       <p className="mt-8">
         <Link href="/" className="text-pine hover:underline">

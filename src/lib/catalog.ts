@@ -9,6 +9,7 @@ import { matematikkCalculators } from "./calculators/matematikk";
 import { okonomiCalculators } from "./calculators/okonomi";
 import { skoleCalculators } from "./calculators/skole";
 import { sportCalculators } from "./calculators/sport";
+import { statistikkCalculators } from "./calculators/statistikk";
 import type { Calculator, CategoryId } from "./types";
 
 export const calculators: Calculator[] = [
@@ -23,6 +24,7 @@ export const calculators: Calculator[] = [
   ...skoleCalculators,
   ...fysikkCalculators,
   ...elektroCalculators,
+  ...statistikkCalculators,
 ];
 
 export function getCalculator(slug: string): Calculator | undefined {

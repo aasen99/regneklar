@@ -1013,6 +1013,755 @@ export const okonomiCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "regel-72",
+    title: "Regel 72",
+    description:
+      "Anslå hvor mange år det tar før pengene dobles ved gitt årlig avkastning.",
+    category: "okonomi",
+    tags: ["sparing", "dobling", "avkastning", "tommelfingerregel"],
+    popular: true,
+    fields: [
+      {
+        id: "rente",
+        label: "Årlig avkastning",
+        type: "number",
+        unit: "%",
+        defaultValue: 7,
+        step: 0.1,
+      },
+      {
+        id: "belop",
+        label: "Startbeløp (valgfritt)",
+        type: "number",
+        unit: "kr",
+        defaultValue: 100000,
+      },
+    ],
+    formula: "år ≈ 72 / r",
+    explanation:
+      "Regel 72 er en rask tilnærming for rentes rente. Ved 6 % tar det ca. 12 år å doble. Nøyaktig tid er ln(2)/ln(1+r).",
+    compute(input) {
+      const rente = num(input, "rente");
+      const belop = num(input, "belop");
+      if (!Number.isFinite(rente) || rente <= 0) return [];
+      const approx = 72 / rente;
+      const exact = Math.log(2) / Math.log(1 + rente / 100);
+      const out = [
+        result("aar", "År til dobling (regel 72)", approx, {
+          digits: 1,
+          unit: "år",
+          primary: true,
+        }),
+        result("eksakt", "Nøyaktig tid", exact, { digits: 2, unit: "år" }),
+      ];
+      if (Number.isFinite(belop) && belop > 0) {
+        out.push(
+          result("dobbelt", "Dobbelt beløp", belop * 2, { kind: "currency" }),
+        );
+      }
+      return out;
+    },
+  },
+  {
+    slug: "bsu",
+    title: "BSU-kalkulator",
+    shortTitle: "BSU",
+    description:
+      "Regn ut skattefradrag, total sparing og renter på BSU med årlige innskudd.",
+    category: "okonomi",
+    tags: ["bsu", "boligsparing", "skatt", "ungdom"],
+    popular: true,
+    fields: [
+      {
+        id: "innskudd",
+        label: "Årlig innskudd",
+        type: "number",
+        unit: "kr",
+        defaultValue: 27500,
+        hint: "Maks er vanligvis 27 500 kr per år.",
+      },
+      {
+        id: "aar",
+        label: "Antall år",
+        type: "number",
+        unit: "år",
+        defaultValue: 8,
+      },
+      {
+        id: "rente",
+        label: "Årlig rente",
+        type: "number",
+        unit: "%",
+        defaultValue: 4.5,
+        step: 0.1,
+      },
+      {
+        id: "fradrag",
+        label: "Skattefradrag av innskudd",
+        type: "number",
+        unit: "%",
+        defaultValue: 10,
+        hint: "Sjekk gjeldende sats hos Skatteetaten (ofte 10 %).",
+      },
+      {
+        id: "tak",
+        label: "Totaltaket på BSU",
+        type: "number",
+        unit: "kr",
+        defaultValue: 300000,
+      },
+    ],
+    formula: "skattefordel = innskudd · sats     slutt ≈ innskudd · ((1+r)ⁿ − 1) / r",
+    explanation:
+      "BSU har årlige og totale tak. Skattefradraget beregnes av årets innskudd. Renteanslaget forutsetter innskudd ved starten av hvert år.",
+    disclaimer:
+      "Regler for BSU, alder og skattefradrag endres. Sjekk bank og Skatteetaten. Ikke skatteråd.",
+    compute(input) {
+      const innskudd = num(input, "innskudd");
+      const aar = num(input, "aar");
+      const rente = num(input, "rente");
+      const fradrag = num(input, "fradrag");
+      const tak = num(input, "tak");
+      if (!allNumbers([innskudd, aar, rente, fradrag, tak]) || aar <= 0) {
+        return [];
+      }
+      const years = Math.min(Math.floor(aar), 99);
+      let saldo = 0;
+      let innskutt = 0;
+      let skatteTot = 0;
+      const r = rente / 100;
+      for (let i = 0; i < years; i++) {
+        const room = Math.max(0, tak - saldo);
+        const dep = Math.min(innskudd, room);
+        if (dep <= 0) break;
+        saldo = (saldo + dep) * (1 + r);
+        innskutt += dep;
+        skatteTot += dep * (fradrag / 100);
+      }
+      return [
+        result("slutt", "Estimert saldo", saldo, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("innskutt", "Totalt innskutt", innskutt, { kind: "currency" }),
+        result("renter", "Renter totalt", saldo - innskutt, {
+          kind: "currency",
+        }),
+        result("skatt", "Skattefradrag totalt", skatteTot, {
+          kind: "currency",
+        }),
+        result("effekt", "Saldo + skattefordel", saldo + skatteTot, {
+          kind: "currency",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "million-sparing",
+    title: "Millionkalkulator",
+    shortTitle: "1 million",
+    description:
+      "Finn tid, månedlig sparing eller nødvendig avkastning for å nå et sparemål.",
+    category: "okonomi",
+    tags: ["million", "sparing", "mål", "fond"],
+    popular: true,
+    fields: [
+      {
+        id: "mal",
+        label: "Sparemål",
+        type: "number",
+        unit: "kr",
+        defaultValue: 1000000,
+      },
+      {
+        id: "start",
+        label: "Startbeløp",
+        type: "number",
+        unit: "kr",
+        defaultValue: 50000,
+      },
+      {
+        id: "maaned",
+        label: "Månedlig sparing",
+        type: "number",
+        unit: "kr",
+        defaultValue: 5000,
+      },
+      {
+        id: "rente",
+        label: "Årlig avkastning",
+        type: "number",
+        unit: "%",
+        defaultValue: 7,
+        step: 0.1,
+      },
+    ],
+    formula: "FV = P(1+r)ⁿ + PMT · ((1+r)ⁿ − 1) / r",
+    explanation:
+      "Kalkulatoren løser for antall måneder til målet nås med startbeløp, faste innskudd og rentes rente.",
+    compute(input) {
+      const mal = num(input, "mal");
+      const start = num(input, "start");
+      const pmt = num(input, "maaned");
+      const rente = num(input, "rente");
+      if (!allNumbers([mal, start, pmt, rente]) || mal <= 0) return [];
+      if (start >= mal) {
+        return [
+          result("status", "Status", "Du har allerede nådd målet.", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      const r = rente / 100 / 12;
+      let n: number;
+      if (r === 0) {
+        if (pmt <= 0) return [];
+        n = (mal - start) / pmt;
+      } else {
+        // mal = start*(1+r)^n + pmt*((1+r)^n - 1)/r
+        // (mal + pmt/r) = (start + pmt/r)*(1+r)^n
+        const a = start + pmt / r;
+        const b = mal + pmt / r;
+        if (a <= 0 || b / a <= 0) return [];
+        n = Math.log(b / a) / Math.log(1 + r);
+      }
+      if (!Number.isFinite(n) || n < 0) {
+        return [
+          result(
+            "status",
+            "Status",
+            "Med denne avkastningen og sparing nås ikke målet.",
+            { kind: "text", primary: true },
+          ),
+        ];
+      }
+      const innskutt = start + pmt * n;
+      return [
+        result("tid", "Tid til mål", n, {
+          digits: 1,
+          unit: "måneder",
+          primary: true,
+        }),
+        result("aar", "I år", n / 12, { digits: 1, unit: "år" }),
+        result("innskutt", "Totalt innskutt", innskutt, { kind: "currency" }),
+        result("gevinst", "Avkastning underveis", mal - innskutt, {
+          kind: "currency",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "effektiv-rente",
+    title: "Effektiv rente",
+    description:
+      "Omregn nominell rente til effektiv årsrente ved gitt antall terminer.",
+    category: "okonomi",
+    tags: ["rente", "effektiv", "nominell", "lån"],
+    fields: [
+      {
+        id: "nominell",
+        label: "Nominell årsrente",
+        type: "number",
+        unit: "%",
+        defaultValue: 5.5,
+        step: 0.1,
+      },
+      {
+        id: "terminer",
+        label: "Terminer per år",
+        type: "select",
+        defaultValue: "12",
+        options: [
+          { value: "1", label: "1 (årlig)" },
+          { value: "4", label: "4 (kvartal)" },
+          { value: "12", label: "12 (månedlig)" },
+          { value: "365", label: "365 (daglig)" },
+        ],
+      },
+    ],
+    formula: "effektiv = (1 + r/m)ᵐ − 1",
+    explanation:
+      "Jo oftere rentene legges til, desto høyere blir den effektive renten. Banker oppgir ofte effektiv rente inkludert gebyrer – her er bare renten.",
+    disclaimer: "Uten etableringsgebyr og termingebyr. Se bankens effektive rente for full kostnad.",
+    compute(input) {
+      const nominell = num(input, "nominell");
+      const m = Number(input.terminer) || 12;
+      if (!Number.isFinite(nominell) || nominell < 0 || m <= 0) return [];
+      const r = nominell / 100;
+      const eff = (Math.pow(1 + r / m, m) - 1) * 100;
+      return [
+        result("eff", "Effektiv årsrente", eff, {
+          kind: "percent",
+          digits: 3,
+          primary: true,
+        }),
+        result("diff", "Differanse mot nominell", eff - nominell, {
+          kind: "percent",
+          digits: 3,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "cagr",
+    title: "Årlig gjennomsnittlig avkastning (CAGR)",
+    shortTitle: "CAGR",
+    description:
+      "Finn den jevne årlige vekstraten mellom startverdi og sluttverdi.",
+    category: "okonomi",
+    tags: ["cagr", "avkastning", "fond", "investering"],
+    fields: [
+      {
+        id: "start",
+        label: "Startverdi",
+        type: "number",
+        unit: "kr",
+        defaultValue: 100000,
+      },
+      {
+        id: "slutt",
+        label: "Sluttverdi",
+        type: "number",
+        unit: "kr",
+        defaultValue: 180000,
+      },
+      {
+        id: "aar",
+        label: "Antall år",
+        type: "number",
+        unit: "år",
+        defaultValue: 7,
+        step: 0.1,
+      },
+    ],
+    formula: "CAGR = (slutt / start)^(1/n) − 1",
+    explanation:
+      "CAGR glatter ut svingninger og viser hvilken fast årlig rente som ville gitt samme resultat.",
+    compute(input) {
+      const start = num(input, "start");
+      const slutt = num(input, "slutt");
+      const aar = num(input, "aar");
+      if (!allNumbers([start, slutt, aar]) || start <= 0 || aar <= 0) return [];
+      const cagr = (Math.pow(slutt / start, 1 / aar) - 1) * 100;
+      return [
+        result("cagr", "CAGR", cagr, {
+          kind: "percent",
+          digits: 2,
+          primary: true,
+        }),
+        result("total", "Total avkastning", ((slutt - start) / start) * 100, {
+          kind: "percent",
+          digits: 2,
+        }),
+        result("gevinst", "Gevinst / tap", slutt - start, { kind: "currency" }),
+      ];
+    },
+  },
+  {
+    slug: "leieavkastning",
+    title: "Leieavkastning",
+    description:
+      "Regn ut brutto og netto leieavkastning for en utleiebolig.",
+    category: "okonomi",
+    tags: ["utleie", "yield", "bolig", "avkastning"],
+    fields: [
+      {
+        id: "pris",
+        label: "Kjøpspris / verdi",
+        type: "number",
+        unit: "kr",
+        defaultValue: 3500000,
+      },
+      {
+        id: "leie",
+        label: "Månedlig leie",
+        type: "number",
+        unit: "kr",
+        defaultValue: 16000,
+      },
+      {
+        id: "kostnader",
+        label: "Årlige driftskostnader",
+        type: "number",
+        unit: "kr",
+        defaultValue: 35000,
+        hint: "Felleskostnader, forsikring, vedlikehold, kommunale avgifter m.m.",
+      },
+    ],
+    formula: "brutto = (12 · leie) / pris     netto = (12 · leie − kostnader) / pris",
+    explanation:
+      "Brutto yield ignorerer kostnader. Netto yield er mer realistisk, men tar ikke hensyn til skatt, tomgang eller verdistigning.",
+    disclaimer: "Forenklet modell. Skatt på leieinntekt og finansieringskostnader er ikke med.",
+    compute(input) {
+      const pris = num(input, "pris");
+      const leie = num(input, "leie");
+      const kostnader = num(input, "kostnader");
+      if (!allNumbers([pris, leie, kostnader]) || pris <= 0) return [];
+      const aarLeie = leie * 12;
+      const netto = aarLeie - kostnader;
+      return [
+        result("brutto", "Brutto avkastning", (aarLeie / pris) * 100, {
+          kind: "percent",
+          digits: 2,
+          primary: true,
+        }),
+        result("netto", "Netto avkastning", (netto / pris) * 100, {
+          kind: "percent",
+          digits: 2,
+        }),
+        result("kontant", "Netto årlig kontantstrøm", netto, {
+          kind: "currency",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "ekstra-innbetaling-lan",
+    title: "Ekstra innbetaling på lån",
+    shortTitle: "Ekstra innbetaling",
+    description:
+      "Se hvor mye du sparer i renter og tid ved å betale ekstra hver måned på et annuitetslån.",
+    category: "okonomi",
+    tags: ["lån", "ekstraordinært", "avdrag", "renter"],
+    fields: [
+      {
+        id: "belop",
+        label: "Lånebeløp",
+        type: "number",
+        unit: "kr",
+        defaultValue: 3000000,
+      },
+      {
+        id: "rente",
+        label: "Nominell rente",
+        type: "number",
+        unit: "%",
+        defaultValue: 5.5,
+        step: 0.1,
+      },
+      {
+        id: "aar",
+        label: "Nedbetalingstid",
+        type: "number",
+        unit: "år",
+        defaultValue: 25,
+      },
+      {
+        id: "ekstra",
+        label: "Ekstra per måned",
+        type: "number",
+        unit: "kr",
+        defaultValue: 2000,
+      },
+    ],
+    formula: "n = ln(PMT / (PMT − P · r)) / ln(1 + r)",
+    explanation:
+      "Sammenligner standard annuitet med samme lån pluss ekstra månedlig beløp. Ekstra går til avdrag og kutter rentene.",
+    disclaimer: "Forenklet uten gebyrer. Sjekk om banken tillater ekstraordinære innbetalinger uten kostnad.",
+    compute(input) {
+      const P = num(input, "belop");
+      const rente = num(input, "rente");
+      const aar = num(input, "aar");
+      const ekstra = num(input, "ekstra");
+      if (!allNumbers([P, rente, aar, ekstra]) || P <= 0 || aar <= 0) return [];
+      const n0 = aar * 12;
+      const r = rente / 100 / 12;
+      const M =
+        r === 0 ? P / n0 : (P * r * Math.pow(1 + r, n0)) / (Math.pow(1 + r, n0) - 1);
+      const total0 = M * n0;
+      const pmt = M + Math.max(0, ekstra);
+      if (r > 0 && pmt <= P * r) {
+        return [
+          result("status", "Status", "Betalingen dekker ikke rentene.", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      const n1 =
+        r === 0
+          ? P / pmt
+          : Math.log(pmt / (pmt - P * r)) / Math.log(1 + r);
+      const total1 = pmt * n1;
+      return [
+        result("spart", "Sparte renter", total0 - total1, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("tid", "Måneder spart", n0 - n1, { digits: 1 }),
+        result("nyTid", "Ny nedbetalingstid", n1 / 12, {
+          digits: 1,
+          unit: "år",
+        }),
+        result("termin", "Ny månedlig betaling", pmt, { kind: "currency" }),
+      ];
+    },
+  },
+  {
+    slug: "laneramme",
+    title: "Låneramme (5× inntekt)",
+    shortTitle: "Låneramme",
+    description:
+      "Anslå maks boliglån ut fra inntekt, egenkapital og belåningsgrad.",
+    category: "okonomi",
+    tags: ["boliglån", "låneramme", "belåningsgrad", "finanstilsynet"],
+    fields: [
+      {
+        id: "inntekt",
+        label: "Brutto årsinntekt",
+        type: "number",
+        unit: "kr",
+        defaultValue: 650000,
+      },
+      {
+        id: "multipel",
+        label: "Maks gjeld / inntekt",
+        type: "number",
+        defaultValue: 5,
+        step: 0.1,
+        hint: "Finanstilsynets utgangspunkt er ofte 5 ganger inntekt.",
+      },
+      {
+        id: "ek",
+        label: "Egenkapital",
+        type: "number",
+        unit: "kr",
+        defaultValue: 600000,
+      },
+      {
+        id: "belaning",
+        label: "Maks belåningsgrad",
+        type: "number",
+        unit: "%",
+        defaultValue: 85,
+      },
+    ],
+    formula: "lån ≤ min(multipel · inntekt, verdi · belåningsgrad)",
+    explanation:
+      "To tak begrenser ofte boliglånet: gjeldsgrad (f.eks. 5× inntekt) og belåningsgrad (f.eks. 85 %). Den laveste rammen gjelder.",
+    disclaimer:
+      "Banken vurderer betjeningsevne, annen gjeld og livsopphold. Dette er et grovt overslag.",
+    compute(input) {
+      const inntekt = num(input, "inntekt");
+      const multipel = num(input, "multipel");
+      const ek = num(input, "ek");
+      const belaning = num(input, "belaning");
+      if (!allNumbers([inntekt, multipel, ek, belaning]) || belaning <= 0) {
+        return [];
+      }
+      const fraInntekt = inntekt * multipel;
+      // verdi = ek / (1 - LTV) when loan = LTV * verdi and ek = verdi - loan
+      const ltv = belaning / 100;
+      const maksVerdiFraEk = ltv < 1 ? ek / (1 - ltv) : ek;
+      const lanFraEk = maksVerdiFraEk - ek;
+      const maksLan = Math.min(fraInntekt, lanFraEk);
+      const maksBolig = maksLan + ek;
+      return [
+        result("lan", "Estimert maks lån", maksLan, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("bolig", "Maks boligpris (lån + EK)", maksBolig, {
+          kind: "currency",
+        }),
+        result("inntektstak", "Tak fra inntekt", fraInntekt, {
+          kind: "currency",
+        }),
+        result("ektak", "Tak fra egenkapital/LTV", lanFraEk, {
+          kind: "currency",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "pris-per-kvm",
+    title: "Pris per kvadratmeter",
+    shortTitle: "kr/m²",
+    description: "Regn ut kvadratmeterpris, eller finn totalpris fra kr/m².",
+    category: "okonomi",
+    tags: ["bolig", "kvm", "kvadratmeter", "pris"],
+    fields: [
+      {
+        id: "retning",
+        label: "Jeg vil",
+        type: "select",
+        defaultValue: "per_kvm",
+        options: [
+          { value: "per_kvm", label: "Finne pris per m²" },
+          { value: "total", label: "Finne totalpris" },
+        ],
+      },
+      {
+        id: "pris",
+        label: "Totalpris",
+        type: "number",
+        unit: "kr",
+        defaultValue: 4500000,
+      },
+      {
+        id: "kvm",
+        label: "Areal",
+        type: "number",
+        unit: "m²",
+        defaultValue: 78,
+      },
+      {
+        id: "kvmpris",
+        label: "Pris per m²",
+        type: "number",
+        unit: "kr",
+        defaultValue: 55000,
+      },
+    ],
+    formula: "kr/m² = pris / areal     pris = kr/m² · areal",
+    explanation:
+      "Sammenlign boliger på kvadratmeterpris, men husk planløsning, standard, fellesgjeld og beliggenhet.",
+    compute(input) {
+      const kvm = num(input, "kvm");
+      if (!Number.isFinite(kvm) || kvm <= 0) return [];
+      if (input.retning === "total") {
+        const kvmpris = num(input, "kvmpris");
+        if (!Number.isFinite(kvmpris)) return [];
+        return [
+          result("total", "Totalpris", kvmpris * kvm, {
+            kind: "currency",
+            primary: true,
+          }),
+        ];
+      }
+      const pris = num(input, "pris");
+      if (!Number.isFinite(pris)) return [];
+      return [
+        result("kvm", "Pris per m²", pris / kvm, {
+          kind: "currency",
+          digits: 0,
+          primary: true,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "annuitet-vs-serie",
+    title: "Annuitet vs. serielån",
+    shortTitle: "Annuitet vs. serie",
+    description:
+      "Sammenlign månedlig beløp og totale renter for annuitetslån og serielån.",
+    category: "okonomi",
+    tags: ["annuitet", "serielån", "sammenligning", "lån"],
+    fields: [
+      {
+        id: "belop",
+        label: "Lånebeløp",
+        type: "number",
+        unit: "kr",
+        defaultValue: 2500000,
+      },
+      {
+        id: "rente",
+        label: "Nominell rente",
+        type: "number",
+        unit: "%",
+        defaultValue: 5.5,
+        step: 0.1,
+      },
+      {
+        id: "aar",
+        label: "Nedbetalingstid",
+        type: "number",
+        unit: "år",
+        defaultValue: 25,
+      },
+    ],
+    formula: "annuitet: fast termin     serie: fast avdrag",
+    explanation:
+      "Serielån koster normalt mindre i renter totalt, men første termin er høyere. Annuitet er jevnere for budsjettet.",
+    compute(input) {
+      const P = num(input, "belop");
+      const rente = num(input, "rente");
+      const aar = num(input, "aar");
+      if (!allNumbers([P, rente, aar]) || P <= 0 || aar <= 0) return [];
+      const n = aar * 12;
+      const r = rente / 100 / 12;
+      const annM =
+        r === 0 ? P / n : (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      const annTotal = annM * n;
+      const avdrag = P / n;
+      const serieForste = avdrag + P * r;
+      const serieSiste = avdrag + avdrag * r;
+      const serieRenter = (r * n * (2 * P - (n - 1) * avdrag)) / 2;
+      return [
+        result("annM", "Annuitet per måned", annM, {
+          kind: "currency",
+          primary: true,
+        }),
+        result("serieF", "Serie første måned", serieForste, {
+          kind: "currency",
+        }),
+        result("serieS", "Serie siste måned", serieSiste, {
+          kind: "currency",
+        }),
+        result("annR", "Renter annuitet", annTotal - P, { kind: "currency" }),
+        result("serieR", "Renter serie", serieRenter, { kind: "currency" }),
+        result("diff", "Serielån sparer", annTotal - P - serieRenter, {
+          kind: "currency",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "lonnsokning",
+    title: "Lønnsøkning",
+    description:
+      "Se ny lønn, økning i kroner og kjøpekraft etter inflasjon.",
+    category: "okonomi",
+    tags: ["lønn", "økning", "inflasjon", "reallønn"],
+    fields: [
+      {
+        id: "lonn",
+        label: "Nåværende årslønn",
+        type: "number",
+        unit: "kr",
+        defaultValue: 550000,
+      },
+      {
+        id: "okning",
+        label: "Lønnsøkning",
+        type: "number",
+        unit: "%",
+        defaultValue: 4.5,
+        step: 0.1,
+      },
+      {
+        id: "inflasjon",
+        label: "Forventet inflasjon",
+        type: "number",
+        unit: "%",
+        defaultValue: 2.5,
+        step: 0.1,
+      },
+    ],
+    formula: "ny = gammel · (1 + p)     reelt ≈ p − inflasjon",
+    explanation:
+      "Nominell økning er det som står i kontrakten. Reell økning trekker fra inflasjonen og sier mer om kjøpekraft.",
+    compute(input) {
+      const lonn = num(input, "lonn");
+      const okning = num(input, "okning");
+      const inflasjon = num(input, "inflasjon");
+      if (!allNumbers([lonn, okning, inflasjon])) return [];
+      const ny = lonn * (1 + okning / 100);
+      const reell = ((1 + okning / 100) / (1 + inflasjon / 100) - 1) * 100;
+      return [
+        result("ny", "Ny årslønn", ny, { kind: "currency", primary: true }),
+        result("kroner", "Økning i kroner", ny - lonn, { kind: "currency" }),
+        result("maaned", "Ny månedslønn (brutto/12)", ny / 12, {
+          kind: "currency",
+        }),
+        result("reell", "Reell økning", reell, { kind: "percent", digits: 2 }),
+      ];
+    },
+  },
 ];
 
 function formatPlain(n: number): string {

@@ -35,6 +35,22 @@ export default async function CategoryPage({ params }: Props) {
       <h1 className="mt-2 font-serif text-4xl">{category.title}</h1>
       <p className="mt-3 max-w-2xl text-lg text-ink-soft">{category.description}</p>
 
+      {id === "okonomi" ? (
+        <p className="mt-5 max-w-2xl text-sm leading-relaxed text-ink-soft">
+          For personlig økonomi, guider og mer avanserte verktøy (flere lån,
+          SIFO-budsjett, eie vs. leie m.m.) se også{" "}
+          <a
+            href="https://pengerifokus.no"
+            className="text-pine hover:underline"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Penger i Fokus
+          </a>
+          .
+        </p>
+      ) : null}
+
       <h2 className="mt-10 font-serif text-2xl">Kalkulatorer</h2>
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {calcs.map((calculator) => (

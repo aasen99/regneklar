@@ -4,7 +4,7 @@ export const categories: Category[] = [
   {
     id: "okonomi",
     title: "Økonomi",
-    description: "Lån, renter, MVA, lønn, sparing og prosent.",
+    description: "Lån, BSU, sparing, bolig, renter, MVA, lønn og prosent.",
     blurb: "Penger, renter og priser",
   },
   {
@@ -23,7 +23,7 @@ export const categories: Category[] = [
   {
     id: "matematikk",
     title: "Matematikk",
-    description: "Areal, volum, Pythagoras, brøk, ligninger og statistikk.",
+    description: "Areal, volum, Pythagoras, brøk, ligninger og prosent.",
     blurb: "Tall, figurer og formler",
   },
   {
@@ -69,6 +69,13 @@ export const categories: Category[] = [
     description:
       "Ohm, motstand, spenningsfall, transformator, vekselstrøm og trefase.",
     blurb: "Strøm, spenning og kretser",
+  },
+  {
+    id: "statistikk",
+    title: "Statistikk",
+    description:
+      "Snitt, standardavvik, normalfordeling, konfidensintervall og kombinatorikk.",
+    blurb: "Data, sannsynlighet og utvalg",
   },
 ];
 
