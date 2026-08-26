@@ -1,6 +1,5 @@
 export type CategoryId =
   | "okonomi"
-  | "helse"
   | "matematikk"
   | "enheter"
   | "hverdag"

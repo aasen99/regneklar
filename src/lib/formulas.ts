@@ -73,7 +73,7 @@ export const formulas: Formula[] = [
   {
     slug: "bmi-formel",
     title: "Kroppsmasseindeks (BMI)",
-    category: "helse",
+    category: "sport",
     expression: "BMI = m / h²",
     variables: [
       { symbol: "m", meaning: "Kroppsvekt i kilogram" },
@@ -86,7 +86,7 @@ export const formulas: Formula[] = [
   {
     slug: "new-bmi-formel",
     title: "New BMI (Trefethen)",
-    category: "helse",
+    category: "sport",
     expression: "New BMI = 1,3 · m / h^2,5",
     variables: [
       { symbol: "m", meaning: "Kroppsvekt i kilogram" },
@@ -99,7 +99,7 @@ export const formulas: Formula[] = [
   {
     slug: "mifflin-st-jeor",
     title: "Mifflin–St Jeor (BMR)",
-    category: "helse",
+    category: "sport",
     expression: "BMR = 10m + 6,25h − 5a + s",
     variables: [
       { symbol: "m", meaning: "Vekt i kg" },
@@ -114,7 +114,7 @@ export const formulas: Formula[] = [
   {
     slug: "naegele",
     title: "Naegele-regelen",
-    category: "helse",
+    category: "sport",
     expression: "termin = LMP + 280 dager + (syklus − 28)",
     variables: [
       { symbol: "LMP", meaning: "Første dag i siste menstruasjon" },
@@ -126,7 +126,7 @@ export const formulas: Formula[] = [
   {
     slug: "mosteller",
     title: "Kroppsoverflate (Mosteller)",
-    category: "helse",
+    category: "sport",
     expression: "BSA = √(høyde(cm) · vekt(kg) / 3600)",
     variables: [
       { symbol: "BSA", meaning: "Body surface area i m²" },

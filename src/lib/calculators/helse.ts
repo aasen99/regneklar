@@ -9,7 +9,7 @@ export const helseCalculators: Calculator[] = [
     shortTitle: "BMI",
     description:
       "Regn ut kroppsmasseindeks fra vekt og høyde, med vanlige vektklasser.",
-    category: "helse",
+    category: "sport",
     tags: ["bmi", "vekt", "helse"],
     popular: true,
     fields: [
@@ -56,7 +56,7 @@ export const helseCalculators: Calculator[] = [
     shortTitle: "New BMI",
     description:
       "Trefethens New BMI: vekt delt på høyde opphøyd i 2,5. Mindre skjev for korte og høye enn klassisk BMI.",
-    category: "helse",
+    category: "sport",
     tags: ["bmi", "new bmi", "trefethen", "vekt", "helse"],
     fields: [
       {
@@ -106,7 +106,7 @@ export const helseCalculators: Calculator[] = [
     shortTitle: "Kalorier",
     description:
       "Estimer hvileforbrenning og daglig kaloribehov med Mifflin–St Jeor.",
-    category: "helse",
+    category: "sport",
     tags: ["kalorier", "bmr", "tdee", "forbrenning"],
     popular: true,
     fields: [
@@ -178,7 +178,7 @@ export const helseCalculators: Calculator[] = [
     slug: "ideell-vekt",
     title: "Vekt ved gitt BMI",
     description: "Finn vekten som tilsvarer en ønsket BMI for din høyde.",
-    category: "helse",
+    category: "sport",
     tags: ["bmi", "vekt"],
     fields: [
       {
@@ -216,7 +216,7 @@ export const helseCalculators: Calculator[] = [
     title: "Terminkalkulator",
     description:
       "Estimer termin fra siste menstruasjons første dag (Naegele-regelen).",
-    category: "helse",
+    category: "sport",
     tags: ["gravid", "termin", "svangerskap"],
     fields: [
       {
@@ -264,7 +264,7 @@ export const helseCalculators: Calculator[] = [
     slug: "makspuls",
     title: "Makspuls",
     description: "Estimer makspuls og treningssoner fra alder.",
-    category: "helse",
+    category: "sport",
     tags: ["puls", "trening", "hjerte"],
     fields: [
       { id: "alder", label: "Alder", type: "number", unit: "år", defaultValue: 32 },
@@ -297,7 +297,7 @@ export const helseCalculators: Calculator[] = [
     slug: "kroppsoverflate",
     title: "Kroppsoverflate (BSA)",
     description: "Regn ut kroppsoverflate med Mosteller-formelen.",
-    category: "helse",
+    category: "sport",
     tags: ["bsa", "overflate", "medisin"],
     fields: [
       { id: "kg", label: "Vekt", type: "number", unit: "kg", defaultValue: 75 },
@@ -330,7 +330,7 @@ export const helseCalculators: Calculator[] = [
     slug: "vanninntak",
     title: "Væskebehov",
     description: "Et grovt anslag på daglig væskebehov ut fra vekt.",
-    category: "helse",
+    category: "sport",
     tags: ["vann", "drikke", "væske"],
     fields: [
       { id: "kg", label: "Vekt", type: "number", unit: "kg", defaultValue: 75 },
@@ -370,7 +370,7 @@ export const helseCalculators: Calculator[] = [
     title: "Tid til vektreduksjon",
     description:
       "Se omtrent hvor lang tid et kaloriunderskudd tar for å nå en målvekt.",
-    category: "helse",
+    category: "sport",
     tags: ["vekt", "kalorier", "underskudd"],
     fields: [
       {
@@ -433,7 +433,7 @@ export const helseCalculators: Calculator[] = [
     shortTitle: "Midje/høyde",
     description:
       "Midjemål delt på høyde – et enkelt mål som ofte treffer helserisiko bedre enn BMI alene.",
-    category: "helse",
+    category: "sport",
     tags: ["midje", "høyde", "helse", "mage"],
     fields: [
       {
@@ -476,7 +476,7 @@ export const helseCalculators: Calculator[] = [
     title: "Makrofordeling",
     description:
       "Fordel kalorier på protein, karbohydrat og fett i gram og prosent.",
-    category: "helse",
+    category: "sport",
     tags: ["makro", "protein", "kalorier", "kosthold"],
     fields: [
       {
@@ -541,7 +541,7 @@ export const helseCalculators: Calculator[] = [
     title: "Graviditetsuke",
     description:
       "Finn svangerskapsuke og gjenstående dager fra siste menstruasjons første dag.",
-    category: "helse",
+    category: "sport",
     tags: ["gravid", "uke", "termin", "svangerskap"],
     fields: [
       {

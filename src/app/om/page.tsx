@@ -20,7 +20,7 @@ export default function AboutPage() {
       </p>
       <p className="mt-4 leading-relaxed text-ink-soft">
         Nettstedet samler {calculators.length} kalkulatorer og{" "}
-        {formulas.length} formler innen økonomi, helse, sport, matematikk,
+        {formulas.length} formler innen økonomi, sport og helse, matematikk,
         enheter, hverdag, bygg, mat, skole, fysikk, elektro og statistikk.
         Flere kommer.
       </p>

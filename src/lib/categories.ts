@@ -8,17 +8,11 @@ export const categories: Category[] = [
     blurb: "Penger, renter og priser",
   },
   {
-    id: "helse",
-    title: "Helse",
-    description: "BMI, kalorier, vekt, termin og kroppsmål.",
-    blurb: "Kropp, kost og form",
-  },
-  {
     id: "sport",
-    title: "Sport",
+    title: "Sport og helse",
     description:
-      "Løpetempo, 400 m-runde, sluttid, split og treningssoner.",
-    blurb: "Løping, tempo og runder",
+      "Løpetempo, BMI, kalorier, pulssoner, styrke, termin og trening.",
+    blurb: "Trening, kropp og form",
   },
   {
     id: "matematikk",

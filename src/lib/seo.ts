@@ -4,7 +4,7 @@ import type { Calculator } from "./types";
 export const SITE_URL = "https://regneklar.no";
 export const SITE_NAME = "REGNEKLAR";
 export const SITE_DESCRIPTION =
-  "Kalkulatorer og formler for økonomi, helse, sport, skole, elektro, statistikk, bygg, hverdag og matematikk. På norsk, med forklaring.";
+  "Kalkulatorer og formler for økonomi, sport, skole, elektro, statistikk, bygg, hverdag og matematikk. På norsk, med forklaring.";
 
 export type FaqItem = { question: string; answer: string };
 
