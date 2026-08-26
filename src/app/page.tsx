@@ -33,9 +33,8 @@ export default function HomePage() {
             <span className="text-pine"> Klart forklart.</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">
-            Lån, BMI, løpetempo, prosent, maling, strøm, Pythagoras og resten.
-            REGNEKLAR samler utregningene folk faktisk trenger – på norsk, uten
-            støy.
+            Fra løpetempo og BMI til BPM, blender, Pythagoras og maling – ikke
+            bare lån og skatt. REGNEKLAR er bredden med formelen under svaret.
           </p>
           <div className="mt-8 max-w-xl">
             <SearchForm large />

@@ -1574,6 +1574,99 @@ export const formulas: Formula[] = [
       "Rund alltid opp til nærmeste hele tall. Mindre E eller høyere konfidens krever større n.",
     calculatorSlug: "utvalgsstorrelse",
   },
+  {
+    slug: "bpm-formel",
+    title: "BPM og tid",
+    category: "musikk",
+    expression: "tid = takter · slag/takt · 60 / BPM",
+    variables: [
+      { symbol: "BPM", meaning: "Slag per minutt" },
+    ],
+    explanation: "Flere slag eller lavere tempo gir lengre varighet.",
+    calculatorSlug: "bpm-tid",
+  },
+  {
+    slug: "note-frekvens-formel",
+    title: "Note og frekvens",
+    category: "musikk",
+    expression: "f = 440 · 2^((n − 69)/12)",
+    variables: [
+      { symbol: "n", meaning: "MIDI-notennummer (69 = A4)" },
+      { symbol: "f", meaning: "Frekvens i Hz" },
+    ],
+    explanation: "Likestemt temperering med tolv like store halvtoner per oktav.",
+    calculatorSlug: "note-frekvens",
+  },
+  {
+    slug: "capo-formel",
+    title: "Capo",
+    category: "musikk",
+    expression: "klingende = (form + capo) mod 12",
+    variables: [
+      { symbol: "form", meaning: "Grepsform som halvtonenummer" },
+      { symbol: "capo", meaning: "Båndnummer" },
+    ],
+    explanation: "Capo flytter alle grepsformer opp like mange halvtoner.",
+    calculatorSlug: "capo",
+  },
+  {
+    slug: "ev-formel",
+    title: "Eksponeringsverdi (EV)",
+    category: "foto",
+    expression: "EV ≈ log₂(N² / t) − log₂(ISO/100)",
+    variables: [
+      { symbol: "N", meaning: "Blenderåpning (f-tall)" },
+      { symbol: "t", meaning: "Lukkertid i sekunder" },
+    ],
+    explanation: "Ett stopp tilsvarer dobling eller halvering av lysmengde.",
+    calculatorSlug: "eksponeringstrekant",
+  },
+  {
+    slug: "crop-formel",
+    title: "Crop-faktor",
+    category: "foto",
+    expression: "FF-ekvivalent = f · crop",
+    variables: [
+      { symbol: "f", meaning: "Faktisk brennvidde" },
+      { symbol: "crop", meaning: "Crop-faktor" },
+    ],
+    explanation: "Gir omtrent samme synsfelt som angitt fullformat-brennvidde.",
+    calculatorSlug: "crop-faktor",
+  },
+  {
+    slug: "dpi-formel",
+    title: "Utskrift og DPI",
+    category: "foto",
+    expression: "tommer = piksler / DPI",
+    variables: [
+      { symbol: "DPI", meaning: "Dots per inch" },
+    ],
+    explanation: "300 dpi er vanlig mål for skarp foto på nært hold.",
+    calculatorSlug: "utskriftsstorrelse",
+  },
+  {
+    slug: "hundealder-formel",
+    title: "Hundealder",
+    category: "dyr",
+    expression: "1. år ≈ 15     2. år ≈ 24     deretter +5–7 / år",
+    variables: [
+      { symbol: "år", meaning: "Hundens alder" },
+    ],
+    explanation: "Store hunder får flere menneskeår per kalenderår enn små etter år 2.",
+    calculatorSlug: "hundealder",
+  },
+  {
+    slug: "akvarium-formel",
+    title: "Akvarievolum",
+    category: "dyr",
+    expression: "V = L · B · H / 1000",
+    variables: [
+      { symbol: "L,B,H", meaning: "Mål i cm" },
+      { symbol: "V", meaning: "Volum i liter" },
+    ],
+    explanation: "1000 cm³ = 1 liter. Juster for fyllingsgrad og dekor.",
+    calculatorSlug: "akvarium-volum",
+  },
 ];
 
 export function getFormula(slug: string): Formula | undefined {

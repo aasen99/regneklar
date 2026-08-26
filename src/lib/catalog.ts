@@ -8,6 +8,9 @@ import { matCalculators } from "./calculators/mat";
 import { matematikkCalculators } from "./calculators/matematikk";
 import { okonomiCalculators } from "./calculators/okonomi";
 import { skoleCalculators } from "./calculators/skole";
+import { dyrCalculators } from "./calculators/dyr";
+import { fotoCalculators } from "./calculators/foto";
+import { musikkCalculators } from "./calculators/musikk";
 import { sportCalculators } from "./calculators/sport";
 import { statistikkCalculators } from "./calculators/statistikk";
 import type { Calculator, CategoryId } from "./types";
@@ -25,6 +28,9 @@ export const calculators: Calculator[] = [
   ...fysikkCalculators,
   ...elektroCalculators,
   ...statistikkCalculators,
+  ...musikkCalculators,
+  ...fotoCalculators,
+  ...dyrCalculators,
 ];
 
 export function getCalculator(slug: string): Calculator | undefined {

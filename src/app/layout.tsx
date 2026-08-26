@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s · REGNEKLAR",
   },
   description:
-    "Kalkulatorer og formler for økonomi, sport, skole, elektro, statistikk, bygg, hverdag og matematikk. På norsk, med forklaring.",
+    "Kalkulatorer og formler for sport, matte, fysikk, musikk, foto, bygg, statistikk og mer – ikke bare penger. På norsk, med forklaring.",
   keywords: [
     "kalkulator",
     "formel",
@@ -35,6 +35,11 @@ export const metadata: Metadata = {
     "MVA",
     "statistikk",
     "standardavvik",
+    "musikk",
+    "BPM",
+    "foto",
+    "Pythagoras",
+    "fysikk",
     "enheter",
     "matematikk",
   ],

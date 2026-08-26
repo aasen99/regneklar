@@ -20,9 +20,10 @@ export default function AboutPage() {
       </p>
       <p className="mt-4 leading-relaxed text-ink-soft">
         Nettstedet samler {calculators.length} kalkulatorer og{" "}
-        {formulas.length} formler innen økonomi, sport og helse, matematikk,
-        enheter, hverdag, bygg, mat, skole, fysikk, elektro og statistikk.
-        Flere kommer.
+        {formulas.length} formler innen sport og helse, matematikk, fysikk,
+        elektro, statistikk, musikk, foto, dyr, bygg, mat, skole, enheter,
+        hverdag og økonomi. Poenget er bredde og forståelse – ikke bare
+        pengeutregninger.
       </p>
       <h2 className="mt-10 font-serif text-2xl">Slik bruker du det</h2>
       <ul className="mt-3 list-disc space-y-2 pl-5 text-ink-soft">

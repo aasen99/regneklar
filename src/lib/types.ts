@@ -9,7 +9,10 @@ export type CategoryId =
   | "fysikk"
   | "elektro"
   | "sport"
-  | "statistikk";
+  | "statistikk"
+  | "musikk"
+  | "foto"
+  | "dyr";
 
 export type FieldType = "number" | "select" | "date" | "text";
 

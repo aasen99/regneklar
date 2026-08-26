@@ -71,6 +71,24 @@ export const categories: Category[] = [
       "Snitt, standardavvik, normalfordeling, konfidensintervall og kombinatorikk.",
     blurb: "Data, sannsynlighet og utvalg",
   },
+  {
+    id: "musikk",
+    title: "Musikk",
+    description: "BPM, noter, capo, intervaller og notelengder.",
+    blurb: "Tempo, stemming og teori",
+  },
+  {
+    id: "foto",
+    title: "Foto",
+    description: "Eksponering, crop-faktor, DPI, lukkertid og dybdeskarphet.",
+    blurb: "Kamera og utskrift",
+  },
+  {
+    id: "dyr",
+    title: "Dyr",
+    description: "Hunde- og kattealder, fôr og akvarievolum.",
+    blurb: "Kjæledyr og akvarium",
+  },
 ];
 
 export function getCategory(id: string): Category | undefined {
