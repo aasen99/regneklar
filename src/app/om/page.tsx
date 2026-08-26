@@ -6,7 +6,8 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata(
   "Om REGNEKLAR",
-  "Hva REGNEKLAR er, og hvordan kalkulatorene er tenkt brukt.",
+  "REGNEKLAR er gratis kalkulatorer og formler på norsk – bredde fra sport og matte til mat, skole og fysikk, med forklaring under svaret.",
+  { path: "/om" },
 );
 
 export default function AboutPage() {

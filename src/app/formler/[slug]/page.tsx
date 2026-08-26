@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getCategory } from "@/lib/categories";
 import { getCalculator } from "@/lib/catalog";
 import { formulas, getFormula } from "@/lib/formulas";
-import { pageMetadata } from "@/lib/seo";
+import { formulaMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const formula = getFormula(slug);
   if (!formula) return { title: "Ikke funnet" };
-  return pageMetadata(formula.title, formula.explanation);
+  return formulaMetadata(formula);
 }
 
 export default async function FormulaPage({ params }: Props) {

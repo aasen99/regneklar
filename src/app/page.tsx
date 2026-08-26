@@ -10,9 +10,9 @@ import { formulas } from "@/lib/formulas";
 import { pageMetadata, SITE_DESCRIPTION, websiteJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata(
-  "REGNEKLAR – kalkulatorer og formler for alle",
+  "REGNEKLAR – gratis kalkulatorer og formler for alle",
   SITE_DESCRIPTION,
-  { absoluteTitle: true },
+  { absoluteTitle: true, path: "/" },
 );
 
 export default function HomePage() {

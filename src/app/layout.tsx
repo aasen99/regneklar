@@ -3,6 +3,7 @@ import { Figtree, Fraunces } from "next/font/google";
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SITE_DESCRIPTION } from "@/lib/seo";
 import "./globals.css";
 
 const sans = Figtree({
@@ -18,30 +19,30 @@ const serif = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL("https://regneklar.no"),
   title: {
-    default: "REGNEKLAR – kalkulatorer og formler",
+    default: "REGNEKLAR – gratis kalkulatorer og formler",
     template: "%s · REGNEKLAR",
   },
-  description:
-    "Kalkulatorer og formler for sport, matte, fysikk, musikk, foto, bygg, statistikk og mer – ikke bare penger. På norsk, med forklaring.",
+  description: SITE_DESCRIPTION,
   keywords: [
     "kalkulator",
     "formel",
-    "lån",
+    "gratis kalkulator",
     "BMI",
     "løping",
     "tempo",
-    "min/km",
     "prosent",
-    "MVA",
+    "matematikk",
+    "trigonometri",
+    "fysikk",
     "statistikk",
-    "standardavvik",
     "musikk",
     "BPM",
     "foto",
+    "kaffe",
+    "studiepoeng",
+    "karakter",
+    "bygg",
     "Pythagoras",
-    "fysikk",
-    "enheter",
-    "matematikk",
   ],
   applicationName: "REGNEKLAR",
   manifest: "/site.webmanifest",
@@ -53,9 +54,17 @@ export const metadata: Metadata = {
     locale: "nb_NO",
     type: "website",
     siteName: "REGNEKLAR",
+    title: "REGNEKLAR – gratis kalkulatorer og formler",
+    description: SITE_DESCRIPTION,
+    url: "https://regneklar.no",
   },
   twitter: {
     card: "summary_large_image",
+    title: "REGNEKLAR – gratis kalkulatorer og formler",
+    description: SITE_DESCRIPTION,
+  },
+  alternates: {
+    canonical: "/",
   },
 };
 

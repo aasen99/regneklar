@@ -758,6 +758,383 @@ export const matematikkCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "trigonometri",
+    title: "Trigonometri (sin, cos, tan)",
+    shortTitle: "Trigonometri",
+    description:
+      "Regn sinus, cosinus og tangens, eller finn vinkel fra verdi (invers).",
+    category: "matematikk",
+    tags: ["sin", "cos", "tan", "vinkel", "trigonometri"],
+    popular: true,
+    fields: [
+      {
+        id: "modus",
+        label: "Retning",
+        type: "select",
+        defaultValue: "fra_vinkel",
+        options: [
+          { value: "fra_vinkel", label: "Vinkel → sin/cos/tan" },
+          { value: "arcsin", label: "Tall → arcsin" },
+          { value: "arccos", label: "Tall → arccos" },
+          { value: "arctan", label: "Tall → arctan" },
+        ],
+      },
+      {
+        id: "vinkel",
+        label: "Vinkel",
+        type: "number",
+        unit: "°",
+        defaultValue: 30,
+      },
+      {
+        id: "verdi",
+        label: "Verdi",
+        type: "number",
+        defaultValue: 0.5,
+        step: 0.01,
+      },
+    ],
+    formula: "sin²θ + cos²θ = 1     tan θ = sin θ / cos θ",
+    explanation:
+      "Vinkler i grader. Invers funksjon gir hovedverdi (arcsin −90°…90°, arccos 0°…180°).",
+    compute(input) {
+      if (input.modus === "fra_vinkel") {
+        const deg = num(input, "vinkel");
+        if (!Number.isFinite(deg)) return [];
+        const r = (deg * Math.PI) / 180;
+        return [
+          result("sin", "sin", Math.sin(r), { digits: 6, primary: true }),
+          result("cos", "cos", Math.cos(r), { digits: 6 }),
+          result("tan", "tan", Math.tan(r), { digits: 6 }),
+        ];
+      }
+      const v = num(input, "verdi");
+      if (!Number.isFinite(v)) return [];
+      let rad: number;
+      if (input.modus === "arcsin") {
+        if (v < -1 || v > 1) return [];
+        rad = Math.asin(v);
+      } else if (input.modus === "arccos") {
+        if (v < -1 || v > 1) return [];
+        rad = Math.acos(v);
+      } else {
+        rad = Math.atan(v);
+      }
+      return [
+        result("deg", "Vinkel", (rad * 180) / Math.PI, {
+          digits: 4,
+          unit: "°",
+          primary: true,
+        }),
+        result("rad", "Radianer", rad, { digits: 6 }),
+      ];
+    },
+  },
+  {
+    slug: "prosentpoeng",
+    title: "Prosentpoeng vs. prosent",
+    shortTitle: "Prosentpoeng",
+    description:
+      "Skill mellom endring i prosentpoeng og relativ prosentendring.",
+    category: "matematikk",
+    tags: ["prosentpoeng", "prosent", "endring"],
+    popular: true,
+    fields: [
+      {
+        id: "fra",
+        label: "Fra",
+        type: "number",
+        unit: "%",
+        defaultValue: 40,
+      },
+      {
+        id: "til",
+        label: "Til",
+        type: "number",
+        unit: "%",
+        defaultValue: 50,
+      },
+    ],
+    formula: "pp = til − fra     relativ % = (til − fra) / fra · 100",
+    explanation:
+      "Fra 40 % til 50 % er +10 prosentpoeng, men +25 % relativ økning. Medier blander ofte begrepene.",
+    compute(input) {
+      const fra = num(input, "fra");
+      const til = num(input, "til");
+      if (!allNumbers([fra, til])) return [];
+      const pp = til - fra;
+      return [
+        result("pp", "Prosentpoeng", pp, {
+          digits: 2,
+          unit: "pp",
+          primary: true,
+        }),
+        ...(fra !== 0
+          ? [
+              result("rel", "Relativ endring", (pp / fra) * 100, {
+                kind: "percent",
+                digits: 2,
+              }),
+            ]
+          : []),
+      ];
+    },
+  },
+  {
+    slug: "sirkelbue",
+    title: "Sirkelbue og sektor",
+    shortTitle: "Sirkelbue",
+    description: "Regn ut buelengde og sektorareal fra radius og vinkel.",
+    category: "matematikk",
+    tags: ["sirkel", "bue", "sektor", "geometri"],
+    popular: true,
+    fields: [
+      {
+        id: "r",
+        label: "Radius",
+        type: "number",
+        defaultValue: 5,
+      },
+      {
+        id: "vinkel",
+        label: "Sentrvinkel",
+        type: "number",
+        unit: "°",
+        defaultValue: 60,
+      },
+    ],
+    formula: "bue = 2πr · θ/360     sektor = πr² · θ/360",
+    explanation:
+      "Hele sirkelen er 360°. En 90° sektor er en fjerdedel av arealet.",
+    compute(input) {
+      const r = num(input, "r");
+      const v = num(input, "vinkel");
+      if (!allNumbers([r, v]) || r < 0) return [];
+      const andel = v / 360;
+      return [
+        result("bue", "Buelengde", 2 * Math.PI * r * andel, {
+          digits: 4,
+          primary: true,
+        }),
+        result("sektor", "Sektorareal", Math.PI * r * r * andel, {
+          digits: 4,
+        }),
+        result("korda", "Korde", 2 * r * Math.sin((v * Math.PI) / 360), {
+          digits: 4,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "vektor-2d",
+    title: "Vektorer i planet",
+    shortTitle: "Vektorer",
+    description:
+      "Finn lengde, prikkprodukt, vinkel og sum for to 2D-vektorer.",
+    category: "matematikk",
+    tags: ["vektor", "prikkprodukt", "geometri"],
+    fields: [
+      { id: "ax", label: "aₓ", type: "number", defaultValue: 3 },
+      { id: "ay", label: "aᵧ", type: "number", defaultValue: 4 },
+      { id: "bx", label: "bₓ", type: "number", defaultValue: 1 },
+      { id: "by", label: "bᵧ", type: "number", defaultValue: 0 },
+    ],
+    formula: "|a| = √(aₓ² + aᵧ²)     a·b = aₓbₓ + aᵧbᵧ",
+    explanation:
+      "Prikkprodukt null betyr ortogonale vektorer. Vinkelen finnes via cos θ = (a·b) / (|a||b|).",
+    compute(input) {
+      const ax = num(input, "ax");
+      const ay = num(input, "ay");
+      const bx = num(input, "bx");
+      const by = num(input, "by");
+      if (!allNumbers([ax, ay, bx, by])) return [];
+      const la = Math.hypot(ax, ay);
+      const lb = Math.hypot(bx, by);
+      const dot = ax * bx + ay * by;
+      const out = [
+        result("la", "|a|", la, { digits: 4, primary: true }),
+        result("lb", "|b|", lb, { digits: 4 }),
+        result("dot", "a · b", dot, { digits: 4 }),
+        result("sum", "a + b", `(${ax + bx}, ${ay + by})`, { kind: "text" }),
+      ];
+      if (la > 0 && lb > 0) {
+        const cos = Math.min(1, Math.max(-1, dot / (la * lb)));
+        out.push(
+          result("vinkel", "Vinkel mellom", (Math.acos(cos) * 180) / Math.PI, {
+            digits: 2,
+            unit: "°",
+          }),
+        );
+      }
+      return out;
+    },
+  },
+  {
+    slug: "heron",
+    title: "Herons formel (trekantareal)",
+    shortTitle: "Heron",
+    description: "Finn arealet av en trekant når du kjenner alle tre sidene.",
+    category: "matematikk",
+    tags: ["heron", "areal", "trekant"],
+    fields: [
+      { id: "a", label: "Side a", type: "number", defaultValue: 5 },
+      { id: "b", label: "Side b", type: "number", defaultValue: 6 },
+      { id: "c", label: "Side c", type: "number", defaultValue: 7 },
+    ],
+    formula: "s = (a+b+c)/2     A = √(s(s−a)(s−b)(s−c))",
+    explanation:
+      "Sidene må oppfylle trekantulikheten. s er semiperimeteret (halve omkretsen).",
+    compute(input) {
+      const a = num(input, "a");
+      const b = num(input, "b");
+      const c = num(input, "c");
+      if (!allNumbers([a, b, c]) || a <= 0 || b <= 0 || c <= 0) return [];
+      if (a + b <= c || a + c <= b || b + c <= a) {
+        return [
+          result("feil", "Ugyldig", "Sidene danner ikke en trekant.", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      const s = (a + b + c) / 2;
+      const A = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+      return [
+        result("areal", "Areal", A, { digits: 4, primary: true }),
+        result("s", "Semiperimeter s", s, { digits: 4 }),
+        result("omkrets", "Omkrets", a + b + c, { digits: 4 }),
+      ];
+    },
+  },
+  {
+    slug: "avstand-punkt",
+    title: "Avstand mellom to punkter",
+    shortTitle: "Avstand",
+    description: "Regn ut avstand i planet mellom (x₁, y₁) og (x₂, y₂).",
+    category: "matematikk",
+    tags: ["avstand", "koordinater", "geometri"],
+    fields: [
+      { id: "x1", label: "x₁", type: "number", defaultValue: 0 },
+      { id: "y1", label: "y₁", type: "number", defaultValue: 0 },
+      { id: "x2", label: "x₂", type: "number", defaultValue: 3 },
+      { id: "y2", label: "y₂", type: "number", defaultValue: 4 },
+    ],
+    formula: "d = √((x₂−x₁)² + (y₂−y₁)²)",
+    explanation: "Pythagoras i koordinatsystemet. Midtpunktet er gjennomsnittet av koordinatene.",
+    compute(input) {
+      const x1 = num(input, "x1");
+      const y1 = num(input, "y1");
+      const x2 = num(input, "x2");
+      const y2 = num(input, "y2");
+      if (!allNumbers([x1, y1, x2, y2])) return [];
+      const d = Math.hypot(x2 - x1, y2 - y1);
+      return [
+        result("d", "Avstand", d, { digits: 4, primary: true }),
+        result("mid", "Midtpunkt", `((${(x1 + x2) / 2}, ${(y1 + y2) / 2}))`, {
+          kind: "text",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "compound-prosent",
+    title: "Sammensatt prosentendring",
+    shortTitle: "Sammensatt %",
+    description:
+      "Hva blir total endring etter flere prosentøkninger/-nedganger etter hverandre?",
+    category: "matematikk",
+    tags: ["prosent", "sammensatt", "faktor"],
+    fields: [
+      {
+        id: "start",
+        label: "Startverdi",
+        type: "number",
+        defaultValue: 100,
+      },
+      {
+        id: "endringer",
+        label: "Prosentendringer",
+        type: "text",
+        defaultValue: "10, -20, 5",
+        hint: "Skill med komma. Negativ = nedgang.",
+      },
+    ],
+    formula: "slutt = start · Π (1 + pᵢ/100)",
+    explanation:
+      "+10 % og deretter −10 % er ikke tilbake til start. Rekkefølgen av relative endringer multipliseres.",
+    compute(input) {
+      const start = num(input, "start");
+      if (!Number.isFinite(start)) return [];
+      const ps = (input.endringer ?? "")
+        .split(/[,;\s]+/)
+        .map((p) => Number(p.replace(",", ".")))
+        .filter((n) => Number.isFinite(n));
+      if (ps.length === 0) return [];
+      let verdi = start;
+      for (const p of ps) verdi *= 1 + p / 100;
+      return [
+        result("slutt", "Sluttverdi", verdi, { digits: 4, primary: true }),
+        result("total", "Total endring", ((verdi - start) / start) * 100, {
+          kind: "percent",
+          digits: 2,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "primtallsfaktorisering",
+    title: "Primtallsfaktorisering",
+    shortTitle: "Faktorisering",
+    description: "Skriv et positivt heltall som produkt av primtall.",
+    category: "matematikk",
+    tags: ["primtall", "faktorisering", "tallteori"],
+    fields: [
+      {
+        id: "n",
+        label: "Tall",
+        type: "number",
+        defaultValue: 360,
+      },
+    ],
+    formula: "n = p₁^a₁ · p₂^a₂ · …",
+    explanation:
+      "Hvert heltall > 1 har en unik primtallsfaktorisering (fundamentalsatsen).",
+    compute(input) {
+      const raw = num(input, "n");
+      if (!Number.isFinite(raw) || raw < 2 || !Number.isInteger(raw)) {
+        return [
+          result("hint", "Krav", "Oppgi et heltall ≥ 2.", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      let n = raw;
+      const factors: number[] = [];
+      for (let p = 2; p * p <= n; p++) {
+        while (n % p === 0) {
+          factors.push(p);
+          n /= p;
+        }
+      }
+      if (n > 1) factors.push(n);
+      const counts = new Map<number, number>();
+      for (const f of factors) counts.set(f, (counts.get(f) ?? 0) + 1);
+      const pretty = [...counts.entries()]
+        .map(([p, a]) => (a === 1 ? `${p}` : `${p}^${a}`))
+        .join(" · ");
+      return [
+        result("fakt", "Faktorisering", pretty, {
+          kind: "text",
+          primary: true,
+        }),
+        result("liste", "Primfaktorer", factors.join(" × "), {
+          kind: "text",
+        }),
+      ];
+    },
+  },
 ];
 
 function gcd(a: number, b: number): number {

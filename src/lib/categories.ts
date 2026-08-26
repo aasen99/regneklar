@@ -17,7 +17,7 @@ export const categories: Category[] = [
   {
     id: "matematikk",
     title: "Matematikk",
-    description: "Areal, volum, Pythagoras, brøk, ligninger og prosent.",
+    description: "Areal, volum, trigonometri, vektorer, brøk, ligninger og prosent.",
     blurb: "Tall, figurer og formler",
   },
   {
@@ -41,13 +41,13 @@ export const categories: Category[] = [
   {
     id: "mat",
     title: "Mat",
-    description: "Oppskriftsskalering, mål og porsjoner.",
+    description: "Oppskrift, kaffe, saltlake, baking, pasta/ris og matsvinn.",
     blurb: "Kjøkken og porsjoner",
   },
   {
     id: "skole",
     title: "Skole",
-    description: "Karaktersnitt, karakterbehov og studiebelastning.",
+    description: "Karakterer, studiepoeng, fravær, lesetid og skalaomregning.",
     blurb: "Karakterer og studier",
   },
   {

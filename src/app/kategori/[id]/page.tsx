@@ -5,7 +5,7 @@ import { FormulaCard } from "@/components/FormulaCard";
 import { categories, getCategory, isCategoryId } from "@/lib/categories";
 import { calculatorsByCategory } from "@/lib/catalog";
 import { formulasByCategory } from "@/lib/formulas";
-import { pageMetadata } from "@/lib/seo";
+import { categoryMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const category = getCategory(id);
   if (!category) return { title: "Ikke funnet" };
-  return pageMetadata(category.title, category.description);
+  return categoryMetadata(category.title, category.description, category.id);
 }
 
 export default async function CategoryPage({ params }: Props) {

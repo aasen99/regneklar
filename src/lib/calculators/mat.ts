@@ -270,4 +270,456 @@ export const matCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "kaffe-ratio",
+    title: "Kaffe-ratio",
+    shortTitle: "Kaffe",
+    description:
+      "Finn kaffe- og vannmengde fra bryggeratio (f.eks. 1:16).",
+    category: "mat",
+    tags: ["kaffe", "ratio", "brygg", "v60"],
+    popular: true,
+    fields: [
+      {
+        id: "modus",
+        label: "Jeg kjenner",
+        type: "select",
+        defaultValue: "kaffe",
+        options: [
+          { value: "kaffe", label: "Kaffemengde → vann" },
+          { value: "vann", label: "Vannmengde → kaffe" },
+        ],
+      },
+      {
+        id: "ratio",
+        label: "Ratio (1:x)",
+        type: "number",
+        defaultValue: 16,
+        hint: "1:15–1:17 er vanlig for filter. Espresso er helt annerledes.",
+      },
+      {
+        id: "kaffe",
+        label: "Kaffe",
+        type: "number",
+        unit: "g",
+        defaultValue: 18,
+      },
+      {
+        id: "vann",
+        label: "Vann",
+        type: "number",
+        unit: "g",
+        defaultValue: 300,
+      },
+    ],
+    formula: "vann = kaffe · ratio     kaffe = vann / ratio",
+    explanation:
+      "Ratio 1:16 betyr 16 g vann per 1 g kaffe. 1 ml vann ≈ 1 g. Juster etter smak og metode.",
+    compute(input) {
+      const ratio = num(input, "ratio");
+      if (!Number.isFinite(ratio) || ratio <= 0) return [];
+      if (input.modus === "vann") {
+        const vann = num(input, "vann");
+        if (!Number.isFinite(vann) || vann <= 0) return [];
+        return [
+          result("kaffe", "Kaffe", vann / ratio, {
+            digits: 1,
+            unit: "g",
+            primary: true,
+          }),
+          result("ratio", "Ratio", `1:${ratio}`, { kind: "text" }),
+        ];
+      }
+      const kaffe = num(input, "kaffe");
+      if (!Number.isFinite(kaffe) || kaffe <= 0) return [];
+      return [
+        result("vann", "Vann", kaffe * ratio, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+        }),
+        result("ml", "Vann (ml)", kaffe * ratio, { digits: 0, unit: "ml" }),
+      ];
+    },
+  },
+  {
+    slug: "saltlake",
+    title: "Saltlake / saltprosent",
+    shortTitle: "Saltlake",
+    description:
+      "Regn ut saltmengde for lake, eller saltprosent i en blanding.",
+    category: "mat",
+    tags: ["salt", "lake", "brine", "sylting"],
+    fields: [
+      {
+        id: "modus",
+        label: "Jeg vil",
+        type: "select",
+        defaultValue: "salt",
+        options: [
+          { value: "salt", label: "Finne saltmengde" },
+          { value: "prosent", label: "Finne saltprosent" },
+        ],
+      },
+      {
+        id: "vaeske",
+        label: "Væske",
+        type: "number",
+        unit: "g",
+        defaultValue: 1000,
+        hint: "1 liter vann ≈ 1000 g.",
+      },
+      {
+        id: "prosent",
+        label: "Ønsket saltprosent",
+        type: "number",
+        unit: "%",
+        defaultValue: 5,
+        hint: "Ofte 3–6 % for lake, 2 % for deig.",
+      },
+      {
+        id: "salt",
+        label: "Salt",
+        type: "number",
+        unit: "g",
+        defaultValue: 50,
+      },
+    ],
+    formula: "salt = væske · % / 100     % = salt / væske · 100",
+    explanation:
+      "Prosenten er vektprosent av væsken. Noen regner salt av total (væske+salt) – her er det av væsken.",
+    compute(input) {
+      const vaeske = num(input, "vaeske");
+      if (!Number.isFinite(vaeske) || vaeske <= 0) return [];
+      if (input.modus === "prosent") {
+        const salt = num(input, "salt");
+        if (!Number.isFinite(salt) || salt < 0) return [];
+        return [
+          result("p", "Saltprosent", (salt / vaeske) * 100, {
+            kind: "percent",
+            digits: 2,
+            primary: true,
+          }),
+        ];
+      }
+      const p = num(input, "prosent");
+      if (!Number.isFinite(p) || p < 0) return [];
+      const salt = (vaeske * p) / 100;
+      return [
+        result("salt", "Salt", salt, { digits: 1, unit: "g", primary: true }),
+        result("total", "Lake totalt", vaeske + salt, { digits: 0, unit: "g" }),
+      ];
+    },
+  },
+  {
+    slug: "matsvinn",
+    title: "Matsvinn / råvekt",
+    shortTitle: "Matsvinn",
+    description:
+      "Regn om mellom råvekt og spiselig vekt med svinnprosent (skrell, bein, fett).",
+    category: "mat",
+    tags: ["svinn", "råvekt", "porsjon", "innkjøp"],
+    fields: [
+      {
+        id: "modus",
+        label: "Jeg vil",
+        type: "select",
+        defaultValue: "kjope",
+        options: [
+          { value: "kjope", label: "Finne råvekt å kjøpe" },
+          { value: "spiselig", label: "Finne spiselig mengde" },
+        ],
+      },
+      {
+        id: "mengde",
+        label: "Mengde",
+        type: "number",
+        unit: "g",
+        defaultValue: 500,
+      },
+      {
+        id: "svinn",
+        label: "Svinn",
+        type: "number",
+        unit: "%",
+        defaultValue: 20,
+        hint: "Potet ca. 20 %, laks med skinn/bein ofte 30–40 %.",
+      },
+    ],
+    formula: "spiselig = rå · (1 − svinn)     rå = spiselig / (1 − svinn)",
+    explanation:
+      "Svinn er det som kuttes bort. Kjøper du til 400 g spiselig med 20 % svinn, trenger du 500 g råvare.",
+    compute(input) {
+      const mengde = num(input, "mengde");
+      const svinn = num(input, "svinn");
+      if (!allNumbers([mengde, svinn]) || svinn >= 100 || svinn < 0) return [];
+      const behold = 1 - svinn / 100;
+      if (input.modus === "spiselig") {
+        return [
+          result("spis", "Spiselig mengde", mengde * behold, {
+            digits: 0,
+            unit: "g",
+            primary: true,
+          }),
+          result("bort", "Svinn", mengde * (svinn / 100), {
+            digits: 0,
+            unit: "g",
+          }),
+        ];
+      }
+      return [
+        result("raa", "Råvekt å kjøpe", mengde / behold, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+        }),
+        result("bort", "Forventet svinn", mengde / behold - mengde, {
+          digits: 0,
+          unit: "g",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "ovn-temperatur",
+    title: "Ovn: vanlig ↔ over-/undervarme",
+    shortTitle: "Ovnstemperatur",
+    description:
+      "Tommelfingerregel for å justere temperatur mellom vanlig ovn og varmluft.",
+    category: "mat",
+    tags: ["ovn", "varmluft", "temperatur", "baking"],
+    fields: [
+      {
+        id: "retning",
+        label: "Fra",
+        type: "select",
+        defaultValue: "vanlig",
+        options: [
+          { value: "vanlig", label: "Vanlig / over-undervarme → varmluft" },
+          { value: "vifte", label: "Varmluft → vanlig" },
+        ],
+      },
+      {
+        id: "temp",
+        label: "Temperatur",
+        type: "number",
+        unit: "°C",
+        defaultValue: 200,
+      },
+    ],
+    formula: "varmluft ≈ vanlig − 20 °C",
+    explanation:
+      "Varmluft sirkulerer og baker ofte fortere/varmere. 20 °C lavere er vanlig råd – sjekk alltid oppskrift og ovn.",
+    compute(input) {
+      const temp = num(input, "temp");
+      if (!Number.isFinite(temp)) return [];
+      if (input.retning === "vifte") {
+        return [
+          result("ny", "Vanlig ovn (ca.)", temp + 20, {
+            digits: 0,
+            unit: "°C",
+            primary: true,
+          }),
+        ];
+      }
+      return [
+        result("ny", "Varmluft (ca.)", temp - 20, {
+          digits: 0,
+          unit: "°C",
+          primary: true,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "pasta-ris",
+    title: "Pasta og ris",
+    description: "Anslå tørrvare og vann til pasta eller ris for et antall personer.",
+    category: "mat",
+    tags: ["pasta", "ris", "porsjon"],
+    popular: true,
+    fields: [
+      {
+        id: "type",
+        label: "Type",
+        type: "select",
+        defaultValue: "pasta",
+        options: [
+          { value: "pasta", label: "Pasta (tørr)" },
+          { value: "ris", label: "Ris (tørr)" },
+        ],
+      },
+      {
+        id: "personer",
+        label: "Personer",
+        type: "number",
+        defaultValue: 4,
+      },
+      {
+        id: "porsjon",
+        label: "Gram per person",
+        type: "number",
+        unit: "g",
+        defaultValue: 100,
+        hint: "Pasta ofte 80–100 g, ris 60–80 g tørt som tilbehør.",
+      },
+    ],
+    formula: "tørrvare = personer · g/person     risvann ≈ 1,5–2 × ris",
+    explanation:
+      "Pasta kokes i rikelig vann. Ris: ca. 1:1,5 til 1:2 vann avhengig av type.",
+    compute(input) {
+      const personer = num(input, "personer");
+      const porsjon = num(input, "porsjon");
+      if (!allNumbers([personer, porsjon]) || personer <= 0) return [];
+      const torr = personer * porsjon;
+      if (input.type === "ris") {
+        return [
+          result("ris", "Tørr ris", torr, {
+            digits: 0,
+            unit: "g",
+            primary: true,
+          }),
+          result("vann", "Vann (ca. 1:1,75)", torr * 1.75, {
+            digits: 0,
+            unit: "ml",
+          }),
+        ];
+      }
+      return [
+        result("pasta", "Tørr pasta", torr, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+        }),
+        result("vann", "Kokevann (anslag)", Math.max(2, personer) * 1000, {
+          digits: 0,
+          unit: "ml",
+          hint: "Rikelig vann – minst 1 l per 100 g er vanlig råd.",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "egg-vekt",
+    title: "Egg etter vekt",
+    shortTitle: "Egg",
+    description: "Regn om mellom antall egg og gram (L ≈ 63 g med skall).",
+    category: "mat",
+    tags: ["egg", "baking", "vekt"],
+    fields: [
+      {
+        id: "modus",
+        label: "Retning",
+        type: "select",
+        defaultValue: "antall",
+        options: [
+          { value: "antall", label: "Antall → gram" },
+          { value: "gram", label: "Gram → antall" },
+        ],
+      },
+      {
+        id: "antall",
+        label: "Antall egg",
+        type: "number",
+        defaultValue: 3,
+      },
+      {
+        id: "gram",
+        label: "Gram",
+        type: "number",
+        unit: "g",
+        defaultValue: 189,
+      },
+      {
+        id: "storrelse",
+        label: "Størrelse",
+        type: "select",
+        defaultValue: "L",
+        options: [
+          { value: "S", label: "S (ca. 53 g)" },
+          { value: "M", label: "M (ca. 58 g)" },
+          { value: "L", label: "L (ca. 63 g)" },
+          { value: "XL", label: "XL (ca. 73 g)" },
+        ],
+      },
+    ],
+    formula: "gram ≈ antall · vekt per egg",
+    explanation:
+      "EU-størrelser er vekt med skall. I baking er det greit å veie ut når nøyaktighet teller.",
+    compute(input) {
+      const w: Record<string, number> = { S: 53, M: 58, L: 63, XL: 73 };
+      const per = w[input.storrelse ?? "L"] ?? 63;
+      if (input.modus === "gram") {
+        const gram = num(input, "gram");
+        if (!Number.isFinite(gram) || gram < 0) return [];
+        return [
+          result("n", "Antall egg (ca.)", gram / per, {
+            digits: 1,
+            primary: true,
+          }),
+          result("per", "Per egg", per, { digits: 0, unit: "g" }),
+        ];
+      }
+      const antall = num(input, "antall");
+      if (!Number.isFinite(antall) || antall < 0) return [];
+      return [
+        result("g", "Totalvekt (ca.)", antall * per, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+        }),
+        result("per", "Per egg", per, { digits: 0, unit: "g" }),
+      ];
+    },
+  },
+  {
+    slug: "hevetid",
+    title: "Hevetid og temperatur",
+    shortTitle: "Heving",
+    description:
+      "Anslå hvordan hevetiden endrer seg når temperaturen endres (tommelfingerregel).",
+    category: "mat",
+    tags: ["heving", "gjær", "baking", "temperatur"],
+    fields: [
+      {
+        id: "tid",
+        label: "Kjent hevetid",
+        type: "number",
+        unit: "min",
+        defaultValue: 60,
+      },
+      {
+        id: "t1",
+        label: "Ved temperatur",
+        type: "number",
+        unit: "°C",
+        defaultValue: 22,
+      },
+      {
+        id: "t2",
+        label: "Ny temperatur",
+        type: "number",
+        unit: "°C",
+        defaultValue: 28,
+      },
+    ],
+    formula: "tid₂ ≈ tid₁ · 2^((t₁ − t₂)/10)",
+    explanation:
+      "Q₁₀-regel: ca. dobbel hastighet for hver +10 °C (innenfor rimelig gjærområde). Deig over ~35 °C kan smake off.",
+    compute(input) {
+      const tid = num(input, "tid");
+      const t1 = num(input, "t1");
+      const t2 = num(input, "t2");
+      if (!allNumbers([tid, t1, t2]) || tid <= 0) return [];
+      const ny = tid * Math.pow(2, (t1 - t2) / 10);
+      return [
+        result("ny", "Estimert hevetid", ny, {
+          digits: 0,
+          unit: "min",
+          primary: true,
+        }),
+        result("faktor", "Tidsfaktor", ny / tid, { digits: 2 }),
+      ];
+    },
+  },
 ];

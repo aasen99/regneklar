@@ -12,8 +12,9 @@ import {
 import { formulas } from "@/lib/formulas";
 import {
   calculatorFaqItems,
+  calculatorJsonLd,
+  calculatorMetadata,
   faqJsonLd,
-  pageMetadata,
 } from "@/lib/seo";
 import Link from "next/link";
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const calculator = getCalculator(slug);
   if (!calculator) return { title: "Ikke funnet" };
-  return pageMetadata(calculator.title, calculator.description);
+  return calculatorMetadata(calculator);
 }
 
 export default async function CalculatorPage({ params }: Props) {
@@ -44,6 +45,7 @@ export default async function CalculatorPage({ params }: Props) {
 
   return (
     <article className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <JsonLd data={calculatorJsonLd(calculator)} />
       <JsonLd data={faqJsonLd(faqs)} />
       <p className="text-xs uppercase tracking-[0.16em] text-pine">
         <Link href={`/kategori/${calculator.category}`} className="hover:underline">
