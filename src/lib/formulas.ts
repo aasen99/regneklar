@@ -521,6 +521,554 @@ export const formulas: Formula[] = [
     calculatorSlug: "varmeenergi",
   },
   {
+    slug: "akselerasjon-formel",
+    title: "Akselerasjon",
+    category: "fysikk",
+    expression: "a = Δv / Δt",
+    variables: [
+      { symbol: "a", meaning: "Akselerasjon i m/s²" },
+      { symbol: "Δv", meaning: "Endring i fart" },
+      { symbol: "Δt", meaning: "Tidsintervall" },
+    ],
+    explanation:
+      "Positiv akselerasjon øker farten i bevegelsesretningen. Negativ akselerasjon (retardasjon) bremser. g ≈ 9,81 m/s² nær bakken.",
+    calculatorSlug: "bevegelse",
+  },
+  {
+    slug: "bevegelsesligning-v",
+    title: "Fart ved konstant akselerasjon",
+    category: "fysikk",
+    expression: "v = v₀ + a · t",
+    variables: [
+      { symbol: "v", meaning: "Sluttfart" },
+      { symbol: "v₀", meaning: "Startfart" },
+      { symbol: "a", meaning: "Konstant akselerasjon" },
+      { symbol: "t", meaning: "Tid" },
+    ],
+    explanation: "Gjelder når akselerasjonen er konstant. Bruk samme enheter, f.eks. m/s og m/s².",
+    calculatorSlug: "bevegelse",
+  },
+  {
+    slug: "bevegelsesligning-s",
+    title: "Strekning ved konstant akselerasjon",
+    category: "fysikk",
+    expression: "s = v₀ · t + ½ a · t²",
+    variables: [
+      { symbol: "s", meaning: "Strekning" },
+      { symbol: "v₀", meaning: "Startfart" },
+      { symbol: "a", meaning: "Akselerasjon" },
+      { symbol: "t", meaning: "Tid" },
+    ],
+    explanation:
+      "Utgangspunkt i hvile: s = ½at². Alternativ form uten tid: v² = v₀² + 2as.",
+    calculatorSlug: "bevegelse",
+  },
+  {
+    slug: "bevegelsesligning-v2",
+    title: "Fart uten tid",
+    category: "fysikk",
+    expression: "v² = v₀² + 2 · a · s",
+    variables: [
+      { symbol: "v", meaning: "Sluttfart" },
+      { symbol: "v₀", meaning: "Startfart" },
+      { symbol: "a", meaning: "Akselerasjon" },
+      { symbol: "s", meaning: "Strekning" },
+    ],
+    explanation: "Nyttig når du kjenner strekning, men ikke tid – for eksempel bremselengde.",
+    calculatorSlug: "bevegelse",
+  },
+  {
+    slug: "tyngdekraft",
+    title: "Tyngdekraft",
+    category: "fysikk",
+    expression: "G = m · g",
+    variables: [
+      { symbol: "G", meaning: "Tyngde i newton" },
+      { symbol: "m", meaning: "Masse i kg" },
+      { symbol: "g", meaning: "Tyngdeakselerasjon ≈ 9,81 m/s²" },
+    ],
+    explanation:
+      "Tyngden er jordas tiltrekning på massen. På månen er g mindre, så samme masse veier mindre.",
+    calculatorSlug: "kraft",
+  },
+  {
+    slug: "newtons-gravitasjon",
+    title: "Newtons gravitasjonslov",
+    category: "fysikk",
+    expression: "F = G · m₁ m₂ / r²",
+    variables: [
+      { symbol: "F", meaning: "Tiltrekningskraft" },
+      { symbol: "G", meaning: "6,67·10⁻¹¹ N·m²/kg²" },
+      { symbol: "m₁, m₂", meaning: "Massene" },
+      { symbol: "r", meaning: "Avstand mellom massesentrene" },
+    ],
+    explanation:
+      "Kraften avtar med kvadratet av avstanden. Nær jordoverflaten forenkles dette til mg.",
+  },
+  {
+    slug: "bevegelsesmengde",
+    title: "Bevegelsesmengde (impuls)",
+    category: "fysikk",
+    expression: "p = m · v     I = F · Δt = Δp",
+    variables: [
+      { symbol: "p", meaning: "Bevegelsesmengde i kg·m/s" },
+      { symbol: "I", meaning: "Impuls" },
+      { symbol: "Δp", meaning: "Endring i bevegelsesmengde" },
+    ],
+    explanation:
+      "Impuls er kraft ganger tid og lik endringen i bevegelsesmengde. I støt bevares ofte total p når ytre krefter er små.",
+    calculatorSlug: "impuls",
+  },
+  {
+    slug: "arbeid-formel",
+    title: "Arbeid",
+    category: "fysikk",
+    expression: "W = F · s · cos θ",
+    variables: [
+      { symbol: "W", meaning: "Arbeid i joule" },
+      { symbol: "F", meaning: "Kraft" },
+      { symbol: "s", meaning: "Strekning" },
+      { symbol: "θ", meaning: "Vinkel mellom kraft og bevegelse" },
+    ],
+    explanation:
+      "Når kraften er parallell med bevegelsen, er cos θ = 1 og W = F·s. Arbeid endrer mekanisk energi.",
+    calculatorSlug: "arbeid-effekt",
+  },
+  {
+    slug: "mekanisk-effekt",
+    title: "Mekanisk effekt",
+    category: "fysikk",
+    expression: "P = W / t = F · v",
+    variables: [
+      { symbol: "P", meaning: "Effekt i watt" },
+      { symbol: "W", meaning: "Arbeid" },
+      { symbol: "t", meaning: "Tid" },
+    ],
+    explanation: "1 W = 1 J/s. Ved konstant fart er P = F·v når kraften er parallell med farten.",
+    calculatorSlug: "arbeid-effekt",
+  },
+  {
+    slug: "potensiell-energi",
+    title: "Potensiell energi",
+    category: "fysikk",
+    expression: "Eₚ = m · g · h",
+    variables: [
+      { symbol: "Eₚ", meaning: "Stillingsenergi" },
+      { symbol: "h", meaning: "Høyde over referansenivå" },
+    ],
+    explanation:
+      "Referansenivået kan velges fritt, men må være det samme gjennom hele regnestykket. Faller noe fritt, blir Eₚ til Eₖ.",
+    calculatorSlug: "kinetisk-energi",
+  },
+  {
+    slug: "mekanisk-energi",
+    title: "Bevaring av mekanisk energi",
+    category: "fysikk",
+    expression: "Eₖ + Eₚ = konstant     (uten friksjon)",
+    variables: [
+      { symbol: "Eₖ", meaning: "½mv²" },
+      { symbol: "Eₚ", meaning: "mgh" },
+    ],
+    explanation:
+      "Uten luftmotstand og friksjon er summen av kinetisk og potensiell energi konstant. Med friksjon blir noe til varme.",
+  },
+  {
+    slug: "friksjon",
+    title: "Friksjon",
+    category: "fysikk",
+    expression: "R = μ · N",
+    variables: [
+      { symbol: "R", meaning: "Friksjonskraft" },
+      { symbol: "μ", meaning: "Friksjonstall" },
+      { symbol: "N", meaning: "Normalkraft, ofte mg på vannrett flate" },
+    ],
+    explanation:
+      "μₛ er statisk (før glidning), μₖ er kinetisk (under glidning). μₖ er vanligvis litt lavere.",
+    calculatorSlug: "friksjon",
+  },
+  {
+    slug: "hooke",
+    title: "Hookes lov",
+    category: "fysikk",
+    expression: "F = k · x     E = ½ k · x²",
+    variables: [
+      { symbol: "k", meaning: "Fjærkonstant i N/m" },
+      { symbol: "x", meaning: "Forlengelse eller sammentrykking" },
+      { symbol: "E", meaning: "Elastisk energi i fjæra" },
+    ],
+    explanation:
+      "Kraften er proporsjonal med forskyvningen innenfor det elastiske området. Stivere fjær har større k.",
+    calculatorSlug: "hooke",
+  },
+  {
+    slug: "sentripetal",
+    title: "Sentripetalkraft",
+    category: "fysikk",
+    expression: "F = m · v² / r = m · ω² · r",
+    variables: [
+      { symbol: "v", meaning: "Banefart" },
+      { symbol: "r", meaning: "Radius" },
+      { symbol: "ω", meaning: "Vinkelhastighet i rad/s" },
+    ],
+    explanation:
+      "Kraften peker inn mot sentrum og holder gjenstanden i sirkelbevegelse. Uten den fortsetter den rett fram.",
+    calculatorSlug: "sentripetal",
+  },
+  {
+    slug: "dreiemoment",
+    title: "Dreiemoment",
+    category: "fysikk",
+    expression: "M = F · r · sin θ",
+    variables: [
+      { symbol: "M", meaning: "Moment i N·m" },
+      { symbol: "r", meaning: "Arm / avstand til dreieakse" },
+      { symbol: "θ", meaning: "Vinkel mellom kraft og arm" },
+    ],
+    explanation:
+      "Størst moment når kraften står vinkelrett på armen (sin 90° = 1). Likevekt: summen av momentene er null.",
+  },
+  {
+    slug: "trykk-vaeske",
+    title: "Hydrostatisk trykk",
+    category: "fysikk",
+    expression: "p = ρ · g · h",
+    variables: [
+      { symbol: "p", meaning: "Trykkøkning med dyp" },
+      { symbol: "ρ", meaning: "Tetthet av væsken" },
+      { symbol: "h", meaning: "Dyp under overflaten" },
+    ],
+    explanation:
+      "Trykket øker lineært med dypet. I 10 m vann er økningen omtrent 1 atm (ca. 100 kPa).",
+    calculatorSlug: "hydrostatisk",
+  },
+  {
+    slug: "archimedes",
+    title: "Archimedes’ lov (oppdrift)",
+    category: "fysikk",
+    expression: "F_opp = ρ_væske · V_fordrengt · g",
+    variables: [
+      { symbol: "F_opp", meaning: "Oppdrift" },
+      { symbol: "V_fordrengt", meaning: "Volum av fortrengt væske" },
+    ],
+    explanation:
+      "Oppdriften er lik tyngden av den fortrengte væsken. Flyter når oppdrift = tyngde, synker når tyngde er større.",
+    calculatorSlug: "oppdrift",
+  },
+  {
+    slug: "bolgelengde",
+    title: "Bølgefart",
+    category: "fysikk",
+    expression: "v = f · λ",
+    variables: [
+      { symbol: "v", meaning: "Bølgefart" },
+      { symbol: "f", meaning: "Frekvens" },
+      { symbol: "λ", meaning: "Bølgelengde" },
+    ],
+    explanation:
+      "Gjelder for lyd, lys og vannbølger. Lyd i luft ≈ 340 m/s. Lys i vakuum = 3,00·10⁸ m/s.",
+    calculatorSlug: "bolge",
+  },
+  {
+    slug: "periode-frekvens-fysikk",
+    title: "Periode og frekvens",
+    category: "fysikk",
+    expression: "T = 1 / f     f = 1 / T",
+    variables: [
+      { symbol: "T", meaning: "Periode i sekunder" },
+      { symbol: "f", meaning: "Frekvens i hertz" },
+    ],
+    explanation: "En svingning per sekund er 1 Hz. Perioden er tiden for én full svingning.",
+    calculatorSlug: "bolge",
+  },
+  {
+    slug: "lydintensitet",
+    title: "Lydnivå (desibel)",
+    category: "fysikk",
+    expression: "L = 10 · log₁₀(I / I₀)",
+    variables: [
+      { symbol: "L", meaning: "Lydnivå i dB" },
+      { symbol: "I", meaning: "Intensitet i W/m²" },
+      { symbol: "I₀", meaning: "10⁻¹² W/m² (høreterskel)" },
+    ],
+    explanation:
+      "En økning på 10 dB er ti ganger så høy intensitet. 0 dB er høreterskelen, 120 dB er smertegrensen.",
+    calculatorSlug: "desibel",
+  },
+  {
+    slug: "snells-lov",
+    title: "Snells lov (bryting)",
+    category: "fysikk",
+    expression: "n₁ · sin θ₁ = n₂ · sin θ₂",
+    variables: [
+      { symbol: "n", meaning: "Brytningsindeks" },
+      { symbol: "θ₁", meaning: "Innfallsvinkel" },
+      { symbol: "θ₂", meaning: "Brytningsvinkel" },
+    ],
+    explanation:
+      "Lys brytes mot normalen når det går inn i et tettere medium (høyere n). Totalrefleksjon kan skje den andre veien.",
+    calculatorSlug: "snell",
+  },
+  {
+    slug: "brytningsindeks",
+    title: "Brytningsindeks",
+    category: "fysikk",
+    expression: "n = c / v",
+    variables: [
+      { symbol: "c", meaning: "Lysfart i vakuum" },
+      { symbol: "v", meaning: "Lysfart i mediet" },
+    ],
+    explanation: "Luft ≈ 1,00, vann ≈ 1,33, glass typisk 1,5. Høyere n betyr lavere fart i stoffet.",
+  },
+  {
+    slug: "linseformel",
+    title: "Linseformelen",
+    category: "fysikk",
+    expression: "1/f = 1/a + 1/b",
+    variables: [
+      { symbol: "f", meaning: "Brennvidde" },
+      { symbol: "a", meaning: "Gjenstandsavstand" },
+      { symbol: "b", meaning: "Bildavstand" },
+    ],
+    explanation:
+      "For konveks linse er f positiv. Forstørrelse m = −b/a. Negativt bilde betyr omvendt bilde.",
+    calculatorSlug: "linse",
+  },
+  {
+    slug: "speillov",
+    title: "Refleksjonsloven",
+    category: "fysikk",
+    expression: "θᵢ = θᵣ",
+    variables: [
+      { symbol: "θᵢ", meaning: "Innfallsvinkel mot normalen" },
+      { symbol: "θᵣ", meaning: "Refleksjonsvinkel" },
+    ],
+    explanation:
+      "Innfallende og reflektert stråle ligger i samme plan som normalen. Gjelder speil og glatte flater.",
+  },
+  {
+    slug: "ideell-gass",
+    title: "Ideell gasslov",
+    category: "fysikk",
+    expression: "p · V = n · R · T",
+    variables: [
+      { symbol: "p", meaning: "Trykk i pascal" },
+      { symbol: "V", meaning: "Volum i m³" },
+      { symbol: "n", meaning: "Stoffmengde i mol" },
+      { symbol: "R", meaning: "8,314 J/(mol·K)" },
+      { symbol: "T", meaning: "Absolutt temperatur i kelvin" },
+    ],
+    explanation:
+      "T = t(°C) + 273,15. God tilnærming for mange gasser ved romtemperatur og lavt trykk.",
+    calculatorSlug: "ideell-gass",
+  },
+  {
+    slug: "celsius-kelvin",
+    title: "Celsius og kelvin",
+    category: "fysikk",
+    expression: "T(K) = t(°C) + 273,15",
+    variables: [
+      { symbol: "T", meaning: "Absolutt temperatur" },
+      { symbol: "t", meaning: "Celsius-temperatur" },
+    ],
+    explanation:
+      "Kelvin og Celsius har like store grader. Absolutt nullpunkt er 0 K = −273,15 °C.",
+    calculatorSlug: "ideell-gass",
+  },
+  {
+    slug: "fasovergang",
+    title: "Smelte- og fordampningsvarme",
+    category: "fysikk",
+    expression: "Q = m · L",
+    variables: [
+      { symbol: "Q", meaning: "Energi til faseovergang" },
+      { symbol: "L", meaning: "Spesifikk smelte- eller fordampningsvarme" },
+    ],
+    explanation:
+      "Temperaturen er konstant under smelting/fordamping. For vann: L_smelte ≈ 334 kJ/kg, L_fordamp ≈ 2260 kJ/kg.",
+    calculatorSlug: "faseovergang",
+  },
+  {
+    slug: "termisk-utvidelse",
+    title: "Lengdeutvidelse",
+    category: "fysikk",
+    expression: "Δℓ = α · ℓ₀ · ΔT",
+    variables: [
+      { symbol: "α", meaning: "Lengdeutvidelseskoeffisient" },
+      { symbol: "ℓ₀", meaning: "Opprinnelig lengde" },
+      { symbol: "ΔT", meaning: "Temperaturendring" },
+    ],
+    explanation:
+      "Metaller utvider seg mer enn glass. Broer og skinner har ekspansjonsfuger av den grunn.",
+  },
+  {
+    slug: "virkningsgrad",
+    title: "Virkningsgrad",
+    category: "fysikk",
+    expression: "η = E_nyttig / E_tilført     (eller P_nyttig / P_tilført)",
+    variables: [
+      { symbol: "η", meaning: "Virkningsgrad, ofte i prosent" },
+    ],
+    explanation:
+      "Alltid mellom 0 og 1 (0–100 %). Resten går til tap, typisk varme. En elmotor kan ha η over 90 %.",
+    calculatorSlug: "virkningsgrad",
+  },
+  {
+    slug: "stoffmengde",
+    title: "Stoffmengde",
+    category: "fysikk",
+    expression: "n = m / M",
+    variables: [
+      { symbol: "n", meaning: "Stoffmengde i mol" },
+      { symbol: "m", meaning: "Masse i gram" },
+      { symbol: "M", meaning: "Molar masse i g/mol" },
+    ],
+    explanation:
+      "1 mol inneholder N_A ≈ 6,022·10²³ partikler. M for vann er 18 g/mol, for O₂ 32 g/mol.",
+    calculatorSlug: "stoffmengde",
+  },
+  {
+    slug: "konsentrasjon",
+    title: "Konsentrasjon (molaritet)",
+    category: "fysikk",
+    expression: "c = n / V",
+    variables: [
+      { symbol: "c", meaning: "Konsentrasjon i mol/L" },
+      { symbol: "n", meaning: "Stoffmengde i mol" },
+      { symbol: "V", meaning: "Volum av løsningen i liter" },
+    ],
+    explanation:
+      "Fortyynning: c₁V₁ = c₂V₂ når stoffmengden er den samme før og etter.",
+    calculatorSlug: "konsentrasjon",
+  },
+  {
+    slug: "fortynning",
+    title: "Fortyynning",
+    category: "fysikk",
+    expression: "c₁ · V₁ = c₂ · V₂",
+    variables: [
+      { symbol: "c₁, V₁", meaning: "Konsentrasjon og volum før" },
+      { symbol: "c₂, V₂", meaning: "Konsentrasjon og volum etter" },
+    ],
+    explanation:
+      "Stoffmengden er konstant. Tilsett løsemiddel for å øke V og senke c.",
+    calculatorSlug: "konsentrasjon",
+  },
+  {
+    slug: "avogadro",
+    title: "Avogadros tall",
+    category: "fysikk",
+    expression: "N = n · N_A     N_A ≈ 6,022·10²³ mol⁻¹",
+    variables: [
+      { symbol: "N", meaning: "Antall partikler" },
+      { symbol: "n", meaning: "Stoffmengde i mol" },
+    ],
+    explanation: "Binder sammen makroskopisk stoffmengde og antall atomer eller molekyler.",
+    calculatorSlug: "stoffmengde",
+  },
+  {
+    slug: "fotonenergi",
+    title: "Fotonenergi",
+    category: "fysikk",
+    expression: "E = h · f = h · c / λ",
+    variables: [
+      { symbol: "h", meaning: "6,626·10⁻³⁴ J·s (Plancks konstant)" },
+      { symbol: "f", meaning: "Frekvens" },
+      { symbol: "λ", meaning: "Bølgelengde" },
+    ],
+    explanation:
+      "Kortere bølgelengde gir høyere energi. UV og røntgen har mer energi per foton enn synlig lys.",
+    calculatorSlug: "foton",
+  },
+  {
+    slug: "einstein-masse-energi",
+    title: "Masse–energi (Einstein)",
+    category: "fysikk",
+    expression: "E = m · c²",
+    variables: [
+      { symbol: "E", meaning: "Hvileenergi" },
+      { symbol: "m", meaning: "Masse" },
+      { symbol: "c", meaning: "3,00·10⁸ m/s" },
+    ],
+    explanation:
+      "Svært liten massedefekt i kjernereaksjoner frigjør enorm energi. 1 u tilsvarer ca. 931 MeV.",
+  },
+  {
+    slug: "halvveringstid",
+    title: "Halvveringstid",
+    category: "fysikk",
+    expression: "N = N₀ · (½)^(t / T½)     A = A₀ · (½)^(t / T½)",
+    variables: [
+      { symbol: "T½", meaning: "Halvveringstid" },
+      { symbol: "N₀", meaning: "Startantall kjerner" },
+      { symbol: "A", meaning: "Aktivitet" },
+    ],
+    explanation:
+      "Etter én halvveringstid er halvparten igjen, etter to er en firedel igjen. Aktiviteten følger samme lov.",
+    calculatorSlug: "halvveringstid",
+  },
+  {
+    slug: "aktivitet",
+    title: "Radioaktiv aktivitet",
+    category: "fysikk",
+    expression: "A = λ · N     λ = ln 2 / T½",
+    variables: [
+      { symbol: "A", meaning: "Aktivitet i becquerel (Bq)" },
+      { symbol: "λ", meaning: "Henfallskonstant" },
+    ],
+    explanation: "1 Bq = ett henfall per sekund. λ er større når halvveringstiden er kort.",
+    calculatorSlug: "halvveringstid",
+  },
+  {
+    slug: "pendel",
+    title: "Matematisk pendel",
+    category: "fysikk",
+    expression: "T ≈ 2π · √(ℓ / g)",
+    variables: [
+      { symbol: "T", meaning: "Svingetid" },
+      { symbol: "ℓ", meaning: "Pendellengde" },
+    ],
+    explanation:
+      "Gjelder for små utslag. Perioden avhenger ikke av massen, bare av lengden og g.",
+  },
+  {
+    slug: "fjarsvingning",
+    title: "Fjærpendel (masse–fjær)",
+    category: "fysikk",
+    expression: "T = 2π · √(m / k)",
+    variables: [
+      { symbol: "m", meaning: "Masse" },
+      { symbol: "k", meaning: "Fjærkonstant" },
+    ],
+    explanation: "Stivere fjær eller mindre masse gir raskere svingninger (kortere T).",
+    calculatorSlug: "hooke",
+  },
+  {
+    slug: "doppler",
+    title: "Dopplereffekt (lyd)",
+    category: "fysikk",
+    expression: "f' = f · (v ± v_obs) / (v ± v_kilde)",
+    variables: [
+      { symbol: "f'", meaning: "Oppfattet frekvens" },
+      { symbol: "v", meaning: "Lydfart" },
+      { symbol: "v_obs, v_kilde", meaning: "Fart for observatør og kilde" },
+    ],
+    explanation:
+      "Sirenen høres høyere når den nærmer seg. Bruk +/− etter om bevegelsen er mot eller fra.",
+  },
+  {
+    slug: "effekt-energi-fysikk",
+    title: "Effekt og energi",
+    category: "fysikk",
+    expression: "E = P · t",
+    variables: [
+      { symbol: "E", meaning: "Energi" },
+      { symbol: "P", meaning: "Effekt" },
+      { symbol: "t", meaning: "Tid" },
+    ],
+    explanation: "1 kWh = 3,6·10⁶ J. Brukes både for mekanikk og elektrisitet.",
+    calculatorSlug: "effekt",
+  },
+  {
     slug: "seriekopling",
     title: "Seriekopling av motstander",
     category: "elektro",

@@ -59,7 +59,8 @@ export const categories: Category[] = [
   {
     id: "fysikk",
     title: "Fysikk",
-    description: "Hastighet, kraft, energi, tetthet og effekt.",
+    description:
+      "Bevegelse, energi, bølger, optikk, gasslov, kjemi og radioaktivitet.",
     blurb: "Naturfag og teknikk",
   },
   {
