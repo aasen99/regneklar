@@ -11,7 +11,7 @@ export const categories: Category[] = [
     id: "sport",
     title: "Sport og helse",
     description:
-      "Løpetempo, BMI, kalorier, pulssoner, styrke, termin og trening.",
+      "Løping, styrke, BMI, kalorier, pulssoner, VO₂-max, triathlon og restitusjon.",
     blurb: "Trening, kropp og form",
   },
   {

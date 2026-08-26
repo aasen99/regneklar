@@ -589,4 +589,224 @@ export const helseCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "kroppsfett-navy",
+    title: "Kroppsfett (Navy-metoden)",
+    shortTitle: "Kroppsfett %",
+    description:
+      "Anslå kroppsfettprosent fra midje, nakke og høyde (US Navy).",
+    category: "sport",
+    tags: ["kroppsfett", "navy", "målebånd", "helse"],
+    popular: true,
+    fields: [
+      {
+        id: "kjonn",
+        label: "Kjønn",
+        type: "select",
+        defaultValue: "mann",
+        options: [
+          { value: "mann", label: "Mann" },
+          { value: "kvinne", label: "Kvinne" },
+        ],
+      },
+      {
+        id: "hoyde",
+        label: "Høyde",
+        type: "number",
+        unit: "cm",
+        defaultValue: 178,
+      },
+      {
+        id: "nakke",
+        label: "Nakkeomkrets",
+        type: "number",
+        unit: "cm",
+        defaultValue: 38,
+      },
+      {
+        id: "midje",
+        label: "Midjeomkrets",
+        type: "number",
+        unit: "cm",
+        defaultValue: 84,
+      },
+      {
+        id: "hofte",
+        label: "Hofteomkrets",
+        type: "number",
+        unit: "cm",
+        defaultValue: 98,
+        hint: "Kun nødvendig for kvinner.",
+      },
+    ],
+    formula:
+      "menn: 495/(1,0324−0,19077·log10(midje−nakke)+0,15456·log10(h))−450",
+    explanation:
+      "US Navy-formelen bruker logaritmer av omkretsmål. Den er et anslag – DEXA og Bod Pod er mer nøyaktige.",
+    disclaimer: "Ikke medisinsk diagnose. Mål på samme måte hver gang.",
+    compute(input) {
+      const h = num(input, "hoyde");
+      const nakke = num(input, "nakke");
+      const midje = num(input, "midje");
+      if (!allNumbers([h, nakke, midje]) || h <= 0 || nakke <= 0 || midje <= 0) {
+        return [];
+      }
+      let bf: number;
+      if (input.kjonn === "kvinne") {
+        const hofte = num(input, "hofte");
+        if (!Number.isFinite(hofte) || hofte <= 0) return [];
+        const x = midje + hofte - nakke;
+        if (x <= 0) return [];
+        bf =
+          495 /
+            (1.29579 -
+              0.35004 * Math.log10(x) +
+              0.221 * Math.log10(h)) -
+          450;
+      } else {
+        const x = midje - nakke;
+        if (x <= 0) return [];
+        bf =
+          495 /
+            (1.0324 -
+              0.19077 * Math.log10(x) +
+              0.15456 * Math.log10(h)) -
+          450;
+      }
+      return [
+        result("bf", "Kroppsfett", bf, {
+          kind: "percent",
+          digits: 1,
+          primary: true,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "sovnbehov",
+    title: "Søvnbehov",
+    shortTitle: "Søvn",
+    description:
+      "Anslå søvnbehov etter alder, med justering for hard trening.",
+    category: "sport",
+    tags: ["søvn", "restitusjon", "helse"],
+    fields: [
+      {
+        id: "alder",
+        label: "Alder",
+        type: "number",
+        unit: "år",
+        defaultValue: 30,
+      },
+      {
+        id: "trening",
+        label: "Treningsmengde",
+        type: "select",
+        defaultValue: "moderat",
+        options: [
+          { value: "lav", label: "Lav / ingen" },
+          { value: "moderat", label: "Moderat" },
+          { value: "hoy", label: "Hard / høy volum" },
+        ],
+      },
+    ],
+    formula: "voksen ≈ 7–9 t     +0,5–1 t ved hard trening",
+    explanation:
+      "Basert på vanlige aldersanbefalinger. Hard trening øker ofte behovet litt – individuelt.",
+    disclaimer: "Generelt råd, ikke søvnmedisin.",
+    compute(input) {
+      const alder = num(input, "alder");
+      if (!Number.isFinite(alder) || alder < 0) return [];
+      let min = 7;
+      let max = 9;
+      if (alder < 1) {
+        min = 12;
+        max = 16;
+      } else if (alder < 3) {
+        min = 11;
+        max = 14;
+      } else if (alder < 6) {
+        min = 10;
+        max = 13;
+      } else if (alder < 13) {
+        min = 9;
+        max = 12;
+      } else if (alder < 18) {
+        min = 8;
+        max = 10;
+      } else if (alder >= 65) {
+        min = 7;
+        max = 8;
+      }
+      const ekstra =
+        input.trening === "hoy" ? 1 : input.trening === "moderat" ? 0.5 : 0;
+      return [
+        result(
+          "anbefalt",
+          "Anbefalt søvn",
+          `${min + ekstra / 2}–${max + ekstra} timer`,
+          { kind: "text", primary: true },
+        ),
+        result("mid", "Midtpunkt", (min + max) / 2 + ekstra / 2, {
+          digits: 1,
+          unit: "t",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "hviletid-sett",
+    title: "Hviletid mellom sett",
+    shortTitle: "Hviletid",
+    description:
+      "Tommelfingerregel for pause mellom sett etter mål (styrke, hypertrofi, utholdenhet).",
+    category: "sport",
+    tags: ["hvile", "sett", "styrke", "hypertrofi"],
+    fields: [
+      {
+        id: "mal",
+        label: "Treningsmål",
+        type: "select",
+        defaultValue: "hypertrofi",
+        options: [
+          { value: "styrke", label: "Maksstyrke (lave reps)" },
+          { value: "hypertrofi", label: "Muskelvekst" },
+          { value: "utholdenhet", label: "Muskulær utholdenhet" },
+        ],
+      },
+      {
+        id: "reps",
+        label: "Reps i settet",
+        type: "number",
+        defaultValue: 8,
+      },
+    ],
+    formula: "styrke 3–5 min     hypertrofi 1–2 min     utholdenhet 30–90 s",
+    explanation:
+      "Tyngre sett og lavere reps trenger lengre pause for å holde kvaliteten. Dette er utgangspunkt, ikke fasit.",
+    compute(input) {
+      const reps = num(input, "reps");
+      const ranges: Record<string, [number, number]> = {
+        styrke: [180, 300],
+        hypertrofi: [60, 120],
+        utholdenhet: [30, 90],
+      };
+      const [lo, hi] = ranges[input.mal ?? "hypertrofi"] ?? [60, 120];
+      let justert = lo;
+      if (Number.isFinite(reps) && reps <= 5) justert = Math.max(lo, 180);
+      if (Number.isFinite(reps) && reps >= 15) justert = Math.min(hi, 60);
+      return [
+        result(
+          "anbefalt",
+          "Anbefalt pause",
+          `${Math.round(lo / 60)}–${Math.round(hi / 60)} min (${lo}–${hi} s)`,
+          { kind: "text", primary: true },
+        ),
+        result("hint", "Utgangspunkt", justert, {
+          digits: 0,
+          unit: "s",
+        }),
+      ];
+    },
+  },
 ];

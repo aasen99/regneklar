@@ -1049,6 +1049,651 @@ export const sportCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "vo2max",
+    title: "VO₂-max-estimat",
+    shortTitle: "VO₂-max",
+    description:
+      "Anslå maksimalt oksygenopptak fra Cooper-test, 5 km-tid eller hvilepuls.",
+    category: "sport",
+    tags: ["vo2", "kondisjon", "cooper", "utholdenhet"],
+    popular: true,
+    fields: [
+      {
+        id: "metode",
+        label: "Metode",
+        type: "select",
+        defaultValue: "cooper",
+        options: [
+          { value: "cooper", label: "Cooper 12 min (meter)" },
+          { value: "5km", label: "5 km-tid" },
+          { value: "hvilepuls", label: "Hvilepuls og alder" },
+        ],
+      },
+      {
+        id: "meter",
+        label: "Distanse på 12 min",
+        type: "number",
+        unit: "m",
+        defaultValue: 2800,
+      },
+      {
+        id: "tid5",
+        label: "5 km-tid",
+        type: "text",
+        defaultValue: "25:00",
+        hint: "mm:ss eller m:ss",
+      },
+      {
+        id: "hvile",
+        label: "Hvilepuls",
+        type: "number",
+        unit: "slag/min",
+        defaultValue: 60,
+      },
+      {
+        id: "alder",
+        label: "Alder",
+        type: "number",
+        unit: "år",
+        defaultValue: 30,
+      },
+    ],
+    formula:
+      "Cooper: VO₂ ≈ d₁₂/1000·22,351 − 11,288     Uth: VO₂ ≈ 15 · HRmax/HRhvile",
+    explanation:
+      "Cooper-formelen er klassisk felttest. Hvilepulsmetoden (Uth–Sørensen) er grovere. Alle er estimater – labtest er mer nøyaktig.",
+    disclaimer: "Ikke medisinsk vurdering. Avbryt hard testing ved ubehag.",
+    compute(input) {
+      if (input.metode === "cooper") {
+        const d = num(input, "meter");
+        if (!Number.isFinite(d) || d <= 0) return [];
+        const vo2 = (d / 1000) * 22.351 - 11.288;
+        return [
+          result("vo2", "Estimert VO₂-max", vo2, {
+            digits: 1,
+            unit: "ml/kg/min",
+            primary: true,
+          }),
+          result("km", "Distanse", d / 1000, { digits: 2, unit: "km" }),
+        ];
+      }
+      if (input.metode === "5km") {
+        const sek = parseRaceSeconds(input.tid5 ?? "");
+        if (sek == null || sek <= 0) return [];
+        const v = 5000 / sek; // m/s
+        // Simplified Daniels-like estimate from velocity
+        const vo2 = -4.6 + 0.182258 * (v * 60) + 0.000104 * (v * 60) ** 2;
+        return [
+          result("vo2", "Estimert VO₂-max", vo2, {
+            digits: 1,
+            unit: "ml/kg/min",
+            primary: true,
+          }),
+          result("fart", "Snittfart", v * 3.6, { digits: 2, unit: "km/t" }),
+        ];
+      }
+      const hvile = num(input, "hvile");
+      const alder = num(input, "alder");
+      if (!allNumbers([hvile, alder]) || hvile <= 0) return [];
+      const hrmax = 208 - 0.7 * alder;
+      const vo2 = 15.3 * (hrmax / hvile);
+      return [
+        result("vo2", "Estimert VO₂-max", vo2, {
+          digits: 1,
+          unit: "ml/kg/min",
+          primary: true,
+        }),
+        result("hrmax", "Estimert makspuls", hrmax, {
+          digits: 0,
+          unit: "slag/min",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "treningsvolum",
+    title: "Treningsvolum",
+    shortTitle: "Volum",
+    description:
+      "Regn ut total tonnasje: sett × reps × vekt, med valgfri flere øvelser.",
+    category: "sport",
+    tags: ["styrke", "volum", "tonnasje", "gym"],
+    popular: true,
+    fields: [
+      {
+        id: "sett",
+        label: "Sett",
+        type: "number",
+        defaultValue: 4,
+      },
+      {
+        id: "reps",
+        label: "Reps per sett",
+        type: "number",
+        defaultValue: 8,
+      },
+      {
+        id: "kg",
+        label: "Vekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 60,
+      },
+      {
+        id: "ovelser",
+        label: "Antall like øvelser",
+        type: "number",
+        defaultValue: 1,
+        hint: "Hvis flere øvelser med samme sett/reps/vekt.",
+      },
+    ],
+    formula: "volum = sett · reps · vekt · øvelser",
+    explanation:
+      "Tonnasje er et enkelt mål på treningsmengde. Økt volum over tid er en vanlig måte å progressere på – så lenge teknikken holder.",
+    compute(input) {
+      const sett = num(input, "sett");
+      const reps = num(input, "reps");
+      const kg = num(input, "kg");
+      const ovelser = num(input, "ovelser");
+      if (!allNumbers([sett, reps, kg, ovelser]) || sett < 0 || reps < 0) {
+        return [];
+      }
+      const per = sett * reps * kg;
+      const total = per * ovelser;
+      return [
+        result("total", "Total tonnasje", total, {
+          digits: 0,
+          unit: "kg",
+          primary: true,
+        }),
+        result("per", "Per øvelse", per, { digits: 0, unit: "kg" }),
+        result("reps", "Totalt reps", sett * reps * ovelser, {
+          kind: "integer",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "skivekalkulator",
+    title: "Skivekalkulator",
+    shortTitle: "Skiver",
+    description:
+      "Finn hvilke skiver du trenger på hver side for ønsket totalvekt.",
+    category: "sport",
+    tags: ["skiver", "stang", "styrke", "gym"],
+    popular: true,
+    fields: [
+      {
+        id: "mal",
+        label: "Ønsket totalvekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 100,
+      },
+      {
+        id: "stang",
+        label: "Stang",
+        type: "select",
+        defaultValue: "20",
+        options: [
+          { value: "20", label: "OL-stang 20 kg" },
+          { value: "15", label: "Teknikkstang 15 kg" },
+          { value: "10", label: "Ez/annen 10 kg" },
+          { value: "0", label: "Uten stang (kun skiver)" },
+        ],
+      },
+    ],
+    formula: "per side = (total − stang) / 2",
+    explanation:
+      "Standard skivesett: 25, 20, 15, 10, 5, 2,5, 1,25 kg. Algoritmen bruker færrest store skiver først.",
+    compute(input) {
+      const mal = num(input, "mal");
+      const stang = Number(input.stang);
+      if (!Number.isFinite(mal) || !Number.isFinite(stang) || mal < stang) {
+        return [
+          result("feil", "Ugyldig", "Totalvekt må være minst stangvekten.", {
+            kind: "text",
+            primary: true,
+          }),
+        ];
+      }
+      let perSide = (mal - stang) / 2;
+      const plates = [25, 20, 15, 10, 5, 2.5, 1.25];
+      const used: string[] = [];
+      for (const p of plates) {
+        const n = Math.floor(perSide / p + 1e-9);
+        if (n > 0) {
+          used.push(`${n}× ${p} kg`);
+          perSide -= n * p;
+        }
+      }
+      const rest = Math.round(perSide * 1000) / 1000;
+      return [
+        result(
+          "sider",
+          "Per side",
+          used.length ? used.join(" + ") : "Ingen skiver",
+          { kind: "text", primary: true },
+        ),
+        result("last", "Last totalt (uten stang)", mal - stang, {
+          digits: 2,
+          unit: "kg",
+        }),
+        ...(rest > 0.01
+          ? [
+              result("rest", "Mangler per side", rest, {
+                digits: 2,
+                unit: "kg",
+                hint: "Finnes ikke i standardsettet.",
+              }),
+            ]
+          : []),
+      ];
+    },
+  },
+  {
+    slug: "met-kalorier",
+    title: "MET-kalorier",
+    shortTitle: "MET",
+    description:
+      "Anslå energiforbruk fra MET-verdi, kroppsvekt og varighet.",
+    category: "sport",
+    tags: ["met", "kalorier", "aktivitet", "forbrenning"],
+    popular: true,
+    fields: [
+      {
+        id: "met",
+        label: "MET",
+        type: "number",
+        defaultValue: 7,
+        step: 0.1,
+        hint: "Gange ca. 3–4, jogge 7–10, sykle hardt 10–12.",
+      },
+      {
+        id: "kg",
+        label: "Kroppsvekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 75,
+      },
+      {
+        id: "min",
+        label: "Varighet",
+        type: "number",
+        unit: "min",
+        defaultValue: 45,
+      },
+    ],
+    formula: "kcal ≈ MET · kg · timer",
+    explanation:
+      "1 MET er omtrent hvileforbrenning. Formelen er et praktisk anslag; faktisk forbruk varierer med intensitet og økonomi.",
+    compute(input) {
+      const met = num(input, "met");
+      const kg = num(input, "kg");
+      const min = num(input, "min");
+      if (!allNumbers([met, kg, min]) || met <= 0 || kg <= 0 || min <= 0) {
+        return [];
+      }
+      const timer = min / 60;
+      const kcal = met * kg * timer;
+      return [
+        result("kcal", "Estimert forbruk", kcal, {
+          digits: 0,
+          unit: "kcal",
+          primary: true,
+        }),
+        result("perTime", "Per time", met * kg, { digits: 0, unit: "kcal/t" }),
+      ];
+    },
+  },
+  {
+    slug: "kritisk-hastighet",
+    title: "Kritisk hastighet",
+    shortTitle: "CV",
+    description:
+      "Finn kritisk hastighet og anaerob reserve fra to løpsresultater.",
+    category: "sport",
+    tags: ["kritisk hastighet", "terskel", "løping", "cv"],
+    fields: [
+      {
+        id: "d1",
+        label: "Distanse 1",
+        type: "number",
+        unit: "m",
+        defaultValue: 1200,
+      },
+      {
+        id: "t1",
+        label: "Tid 1",
+        type: "text",
+        defaultValue: "4:00",
+      },
+      {
+        id: "d2",
+        label: "Distanse 2",
+        type: "number",
+        unit: "m",
+        defaultValue: 3000,
+      },
+      {
+        id: "t2",
+        label: "Tid 2",
+        type: "text",
+        defaultValue: "11:00",
+      },
+    ],
+    formula: "d = CV · t + D' ",
+    explanation:
+      "To tidsserier gir en rett linje: stigningstallet er kritisk hastighet (CV), skjæringen er anaerob distansereserve (D′). CV ligger ofte nær terskelfart.",
+    compute(input) {
+      const d1 = num(input, "d1");
+      const d2 = num(input, "d2");
+      const t1 = parseRaceSeconds(input.t1 ?? "");
+      const t2 = parseRaceSeconds(input.t2 ?? "");
+      if (!allNumbers([d1, d2]) || t1 == null || t2 == null || t1 === t2) {
+        return [];
+      }
+      const cv = (d2 - d1) / (t2 - t1); // m/s
+      const dPrime = d1 - cv * t1;
+      if (cv <= 0) return [];
+      const pace = 1000 / cv / 60; // min/km
+      return [
+        result("cv", "Kritisk hastighet", cv * 3.6, {
+          digits: 2,
+          unit: "km/t",
+          primary: true,
+        }),
+        result("tempo", "Som tempo", `${formatPace(pace)} /km`, {
+          kind: "text",
+        }),
+        result("dprime", "D′ (anaerob reserve)", Math.max(0, dPrime), {
+          digits: 0,
+          unit: "m",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "sykkel-kadens",
+    title: "Sykkelkadens og fart",
+    shortTitle: "Kadens",
+    description:
+      "Regn ut fart fra kadens og gir, eller nødvendig kadens for ønsket fart.",
+    category: "sport",
+    tags: ["sykkel", "kadens", "gir", "fart"],
+    fields: [
+      {
+        id: "modus",
+        label: "Jeg vil",
+        type: "select",
+        defaultValue: "fart",
+        options: [
+          { value: "fart", label: "Finne fart" },
+          { value: "kadens", label: "Finne kadens" },
+        ],
+      },
+      {
+        id: "kadens",
+        label: "Kadens",
+        type: "number",
+        unit: "rpm",
+        defaultValue: 90,
+      },
+      {
+        id: "fart",
+        label: "Fart",
+        type: "number",
+        unit: "km/t",
+        defaultValue: 30,
+      },
+      {
+        id: "fortann",
+        label: "Tenn foran",
+        type: "number",
+        defaultValue: 50,
+      },
+      {
+        id: "baktann",
+        label: "Tenn bak",
+        type: "number",
+        defaultValue: 17,
+      },
+      {
+        id: "omkrets",
+        label: "Hjulomkrets",
+        type: "number",
+        unit: "mm",
+        defaultValue: 2105,
+        hint: "Ca. 2105 mm for 700×25C.",
+      },
+    ],
+    formula: "fart = kadens · (fortann/baktann) · omkrets · 60 / 10³",
+    explanation:
+      "Utvikling = fortann/baktann. Gang med hjulomkrets og kadens for meter per minutt, omregnet til km/t.",
+    compute(input) {
+      const fortann = num(input, "fortann");
+      const baktann = num(input, "baktann");
+      const omkrets = num(input, "omkrets");
+      if (
+        !allNumbers([fortann, baktann, omkrets]) ||
+        baktann <= 0 ||
+        omkrets <= 0
+      ) {
+        return [];
+      }
+      const gear = fortann / baktann;
+      const mPerRev = gear * (omkrets / 1000);
+      if (input.modus === "kadens") {
+        const fart = num(input, "fart");
+        if (!Number.isFinite(fart) || fart <= 0) return [];
+        const mPerMin = (fart * 1000) / 60;
+        const kadens = mPerMin / mPerRev;
+        return [
+          result("kadens", "Nødvendig kadens", kadens, {
+            digits: 1,
+            unit: "rpm",
+            primary: true,
+          }),
+          result("gir", "Gearing", gear, { digits: 2 }),
+        ];
+      }
+      const kadens = num(input, "kadens");
+      if (!Number.isFinite(kadens) || kadens <= 0) return [];
+      const kmh = (kadens * mPerRev * 60) / 1000;
+      return [
+        result("fart", "Fart", kmh, {
+          digits: 1,
+          unit: "km/t",
+          primary: true,
+        }),
+        result("gir", "Gearing", gear, { digits: 2 }),
+        result("m", "Meter per pedalomdreining", mPerRev, {
+          digits: 2,
+          unit: "m",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "triathlon-tid",
+    title: "Triathlon-tid",
+    shortTitle: "Triathlon",
+    description:
+      "Summer svøm, sykkel, løp og vekseltider til estimert totaltid.",
+    category: "sport",
+    tags: ["triathlon", "swim", "bike", "run", "transition"],
+    fields: [
+      {
+        id: "swim",
+        label: "Svømmetid",
+        type: "text",
+        defaultValue: "35:00",
+      },
+      {
+        id: "t1",
+        label: "Veksel 1 (T1)",
+        type: "text",
+        defaultValue: "3:00",
+      },
+      {
+        id: "bike",
+        label: "Sykkelttid",
+        type: "text",
+        defaultValue: "1:20:00",
+      },
+      {
+        id: "t2",
+        label: "Veksel 2 (T2)",
+        type: "text",
+        defaultValue: "2:00",
+      },
+      {
+        id: "run",
+        label: "Løpstid",
+        type: "text",
+        defaultValue: "55:00",
+      },
+    ],
+    formula: "total = svøm + T1 + sykkel + T2 + løp",
+    explanation:
+      "Vekseltidene spiser ofte mer enn folk tror – spesielt i sprint og olympisk distanse.",
+    compute(input) {
+      const parts = ["swim", "t1", "bike", "t2", "run"].map((id) =>
+        parseRaceSeconds(input[id] ?? ""),
+      );
+      if (parts.some((p) => p == null)) return [];
+      const [swim, t1, bike, t2, run] = parts as number[];
+      const total = swim + t1 + bike + t2 + run;
+      return [
+        result("total", "Totaltid", formatHms(total), {
+          kind: "text",
+          primary: true,
+        }),
+        result("disk", "Kun disipliner", formatHms(swim + bike + run), {
+          kind: "text",
+        }),
+        result("veksler", "Veksler totalt", formatHms(t1 + t2), {
+          kind: "text",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "dots-styrkeloft",
+    title: "DOTS (styrkeløft)",
+    shortTitle: "DOTS",
+    description:
+      "Regn ut DOTS-score fra total og kroppsvekt – sammenlign på tvers av vektklasser.",
+    category: "sport",
+    tags: ["dots", "styrkeløft", "ipf", "total"],
+    fields: [
+      {
+        id: "total",
+        label: "Total (kg)",
+        type: "number",
+        unit: "kg",
+        defaultValue: 500,
+      },
+      {
+        id: "bw",
+        label: "Kroppsvekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 83,
+      },
+      {
+        id: "kjonn",
+        label: "Kjønn",
+        type: "select",
+        defaultValue: "mann",
+        options: [
+          { value: "mann", label: "Mann" },
+          { value: "kvinne", label: "Kvinne" },
+        ],
+      },
+    ],
+    formula: "DOTS = total · 500 / (a + b·bw + c·bw² + d·bw³ + e·bw⁴)",
+    explanation:
+      "IPF DOTS erstattet Wilks. Høyere score er bedre. Koeffisientene er offisielle IPF-verdier.",
+    compute(input) {
+      const total = num(input, "total");
+      const bw = num(input, "bw");
+      if (!allNumbers([total, bw]) || bw <= 0 || total <= 0) return [];
+      // IPF DOTS: score = total * 500 / (a + b·bw + c·bw² + d·bw³ + e·bw⁴)
+      const [a, b, c2, d, e] =
+        input.kjonn === "kvinne"
+          ? [-57.96288, 13.6175032, -0.112665186, 0.00051585678, -1.0706e-6]
+          : [-307.75076, 24.0900756, -0.1918759225, 0.00073932828, -1.093e-6];
+      const denom =
+        a + b * bw + c2 * bw ** 2 + d * bw ** 3 + e * bw ** 4;
+      if (denom <= 0) return [];
+      const dots = (total * 500) / denom;
+      return [
+        result("dots", "DOTS", dots, { digits: 2, primary: true }),
+        result("perKg", "Total / kroppsvekt", total / bw, {
+          digits: 2,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "progresjon-styrke",
+    title: "Styrkeprogresjon",
+    shortTitle: "Progresjon",
+    description:
+      "Planlegg lineær økning: startvekt, økning per uke og vekt etter N uker.",
+    category: "sport",
+    tags: ["progresjon", "styrke", "linear progression"],
+    fields: [
+      {
+        id: "start",
+        label: "Startvekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 60,
+      },
+      {
+        id: "okning",
+        label: "Økning per uke",
+        type: "number",
+        unit: "kg",
+        defaultValue: 2.5,
+        step: 0.5,
+      },
+      {
+        id: "uker",
+        label: "Antall uker",
+        type: "number",
+        defaultValue: 8,
+      },
+    ],
+    formula: "vekt = start + økning · uker",
+    explanation:
+      "Klassisk lineær progresjon for nybegynnere. Når økningen stopper, trengs deload eller annet program.",
+    compute(input) {
+      const start = num(input, "start");
+      const okning = num(input, "okning");
+      const uker = num(input, "uker");
+      if (!allNumbers([start, okning, uker]) || uker < 0) return [];
+      const slutt = start + okning * uker;
+      return [
+        result("slutt", "Vekt etter perioden", slutt, {
+          digits: 1,
+          unit: "kg",
+          primary: true,
+        }),
+        result("total", "Total økning", okning * uker, {
+          digits: 1,
+          unit: "kg",
+        }),
+        result("prosent", "Økning", start > 0 ? (okning * uker) / start * 100 : 0, {
+          kind: "percent",
+          digits: 1,
+        }),
+      ];
+    },
+  },
 ];
 
 function resolveDistance(input: Record<string, string>): number | null {
