@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FormulaCard } from "@/components/FormulaCard";
+import { FormulaFilter } from "@/components/FormulaFilter";
 import { SearchForm } from "@/components/SearchForm";
 import { formulas } from "@/lib/formulas";
 import { pageMetadata } from "@/lib/seo";
@@ -21,11 +21,7 @@ export default function FormulasPage() {
       <div className="mt-6 max-w-xl">
         <SearchForm />
       </div>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        {formulas.map((formula) => (
-          <FormulaCard key={formula.slug} formula={formula} />
-        ))}
-      </div>
+      <FormulaFilter formulas={formulas} />
     </div>
   );
 }

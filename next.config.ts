@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/:path*",
+        has: [{ type: "host", value: "regneklar.no" }],
+        destination: "https://www.regneklar.no/:path*",
+        permanent: true,
+      },
+      {
         source: "/kategori/helse",
         destination: "/kategori/sport",
         permanent: true,

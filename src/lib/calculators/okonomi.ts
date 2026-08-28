@@ -1,6 +1,8 @@
 import type { Calculator } from "../types";
+import { effectiveLoanRate } from "../finance";
 import { num } from "../format";
 import { allNumbers, result } from "../helpers";
+import { reg, regPercent } from "../regulations";
 
 export const okonomiCalculators: Calculator[] = [
   {
@@ -41,6 +43,23 @@ export const okonomiCalculators: Calculator[] = [
       "Annuitetslån har samme terminbeløp hver måned. r er månedlig rente (årlig rente delt på 12), n er antall måneder, og P er lånebeløpet. I starten går mer til renter, mot slutten mer til avdrag.",
     disclaimer:
       "Forenklet modell uten gebyrer, rentebinding eller avdragsfrihet. Banken din kan ha andre vilkår.",
+    faqs: [
+      {
+        question: "Er gebyrer med i beregningen?",
+        answer:
+          "Nei. Månedlig beløp er ren avdrag og renter etter annuitetsformelen, uten etablerings- eller termingebyrer.",
+      },
+      {
+        question: "Brukes nominell eller effektiv rente?",
+        answer:
+          "Du legger inn nominell årsrente. For sammenligning med bankens effektive rente, bruk effektiv-rente-kalkulatoren.",
+      },
+      {
+        question: "Hvorfor går mest til renter i starten?",
+        answer:
+          "Terminbeløpet er likt hver måned, men renten beregnes av restgjelden. Når gjelden er høy, er renteandelen stor.",
+      },
+    ],
     compute(input) {
       const P = num(input, "belop");
       const rente = num(input, "rente");
@@ -272,9 +291,14 @@ export const okonomiCalculators: Calculator[] = [
     slug: "feriepenger",
     title: "Feriepenger",
     description:
-      "Regn ut feriepenger av feriepengegrunnlaget med 10,2 % eller 12 %.",
+      "Regn ut feriepenger av feriepengegrunnlaget med riktig sats etter ferielengde og alder.",
     category: "okonomi",
-    tags: ["lønn", "ferie", "arbeid"],
+    tags: ["lønn", "ferie", "arbeid", "feriepenger"],
+    source: {
+      label: "Arbeidstilsynet",
+      url: "https://www.arbeidstilsynet.no/arbeidstid-og-organisering/ferie/feriepenger/",
+      reviewedAt: "2026-08-28",
+    },
     fields: [
       {
         id: "grunnlag",
@@ -289,27 +313,35 @@ export const okonomiCalculators: Calculator[] = [
         type: "select",
         defaultValue: "10.2",
         options: [
-          { value: "10.2", label: "10,2 % – vanlig" },
-          { value: "12", label: "12 % – 60 år og eldre" },
+          { value: "10.2", label: "10,2 % – lovens minimum (4 uker + 1 dag)" },
+          { value: "12", label: "12 % – fem ukers ferie (avtale/tariff)" },
+          { value: "12.5", label: "12,5 % – over 60 år, lovens ferie" },
+          { value: "14.3", label: "14,3 % – over 60 år, fem ukers ferie" },
         ],
       },
     ],
     formula: "feriepenger = grunnlag · sats",
     explanation:
-      "Feriepenger opptjenes året før de utbetales. Vanlig sats er 10,2 %. Arbeidstakere over 60 år har som hovedregel 12 %. Tariffavtaler kan gi mer.",
-    disclaimer: "Sjekk arbeidsavtale og ferieloven for din situasjon.",
+      "Feriepenger opptjenes året før de utbetales. Satsen avhenger av ferielengde og om du er over 60 år – ikke bare alder alene.",
+    disclaimer: "Sjekk arbeidsavtale, tariff og ferieloven for din situasjon.",
     compute(input) {
       const grunnlag = num(input, "grunnlag");
       const sats = num(input, "sats");
       if (!allNumbers([grunnlag, sats])) return [];
       const belop = grunnlag * (sats / 100);
+      const labels: Record<string, string> = {
+        "10.2": "Lovens minimum",
+        "12": "Fem ukers ferie",
+        "12.5": "Over 60 år, lovens ferie",
+        "14.3": "Over 60 år, fem ukers ferie",
+      };
       return [
         result("ferie", "Feriepenger", belop, {
           kind: "currency",
           primary: true,
         }),
-        result("rest", "Grunnlag etter avsetning (illustrasjon)", grunnlag - belop, {
-          kind: "currency",
+        result("sats", "Valgt sats", labels[input.sats ?? "10.2"] ?? `${sats} %`, {
+          kind: "text",
         }),
       ];
     },
@@ -675,10 +707,15 @@ export const okonomiCalculators: Calculator[] = [
     title: "Egenkapital til bolig",
     shortTitle: "Egenkapital",
     description:
-      "Finn 15 % egenkapital, dokumentavgift og hvor mye du må ha klart til boligkjøp.",
+      "Finn egenkapital, dokumentavgift og lånebehov ved boligkjøp – med 10 % som hovedregel.",
     category: "okonomi",
     tags: ["bolig", "egenkapital", "dokumentavgift", "lån"],
     popular: true,
+    source: {
+      label: reg("mortgage_equity_requirement").sourceLabel,
+      url: reg("mortgage_equity_requirement").sourceUrl,
+      reviewedAt: reg("mortgage_equity_requirement").reviewedAt,
+    },
     fields: [
       {
         id: "pris",
@@ -692,34 +729,56 @@ export const okonomiCalculators: Calculator[] = [
         label: "Egenkapitalkrav",
         type: "number",
         unit: "%",
-        defaultValue: 15,
+        defaultValue: regPercent("mortgage_equity_requirement"),
+        hint: "Hovedregel 10 %. Banken kan kreve mer.",
       },
       {
-        id: "bruktbolig",
+        id: "doktype",
         label: "Dokumentavgift",
         type: "select",
-        defaultValue: "ja",
+        defaultValue: "selveier",
         options: [
-          { value: "ja", label: "Bruktbolig (2,5 %)" },
-          { value: "nei", label: "Nybygg / ingen dokumentavgift" },
+          { value: "selveier", label: "Selveier – 2,5 % av avgiftsgrunnlag" },
+          { value: "borettslag", label: "Borettslag – ingen dokumentavgift" },
+          { value: "nybygg", label: "Nybygg – eget avgiftsgrunnlag" },
+          { value: "egendefinert", label: "Egendefinert avgiftsgrunnlag" },
         ],
       },
+      {
+        id: "grunnlag",
+        label: "Avgiftsgrunnlag",
+        type: "number",
+        unit: "kr",
+        defaultValue: 4500000,
+        hint: "Brukes ved nybygg eller egendefinert. Ofte tomteverdi ved nybygg.",
+      },
     ],
-    formula: "egenkapital = pris · krav     dokumentavgift = 0,025 · pris",
+    formula: "egenkapital = pris · krav     dokumentavgift = sats · avgiftsgrunnlag",
     explanation:
-      "Finanstilsynet krever normalt minst 15 % egenkapital. Ved bruktbolig kommer dokumentavgift på 2,5 % av kjøpesummen i tillegg. Fellesgjeld og omkostninger til megler er ikke med her.",
+      "Utlånsforskriften krever minst 10 % egenkapital som hovedregel. Banken kan kreve mer, og tilleggssikkerhet kan påvirke. Dokumentavgift beregnes ved overføring av hjemmel – boligtype og avgiftsgrunnlag er viktigere enn bare ny eller brukt.",
     disclaimer:
-      "Banken kan ha andre krav. Sjekk belåningsgrad, fellesgjeld og omkostninger i salgsoppgaven.",
+      "Viser lånebehov, ikke bankens faktiske lånetilbud. Fellesgjeld, omkostninger og megler er ikke med.",
     compute(input) {
       const pris = num(input, "pris");
       const krav = num(input, "krav");
       if (!allNumbers([pris, krav]) || pris <= 0) return [];
       const ek = pris * (krav / 100);
-      const dok = input.bruktbolig === "ja" ? pris * 0.025 : 0;
+      let dokGrunnlag = pris;
+      let dokSats = reg("document_fee_rate").value;
+      if (input.doktype === "borettslag") {
+        dokSats = 0;
+      } else if (input.doktype === "nybygg" || input.doktype === "egendefinert") {
+        const g = num(input, "grunnlag");
+        dokGrunnlag = Number.isFinite(g) && g > 0 ? g : pris;
+      }
+      const dok = dokGrunnlag * dokSats;
       const lan = pris - ek;
       return [
         result("ek", "Egenkapital", ek, { kind: "currency", primary: true }),
-        result("lan", "Lån (maks)", lan, { kind: "currency" }),
+        result("lan", "Lånebehov", lan, {
+          kind: "currency",
+          hint: "Kjøpesum minus egenkapital – ikke bankens maks lån",
+        }),
         result("dok", "Dokumentavgift", dok, { kind: "currency" }),
         result("kontant", "Kontantbehov (EK + dok.)", ek + dok, {
           kind: "currency",
@@ -1078,8 +1137,8 @@ export const okonomiCalculators: Calculator[] = [
         label: "Årlig innskudd",
         type: "number",
         unit: "kr",
-        defaultValue: 27500,
-        hint: "Maks er vanligvis 27 500 kr per år.",
+        defaultValue: reg("bsu_annual_limit").value,
+        hint: `Maks er vanligvis ${reg("bsu_annual_limit").value.toLocaleString("nb-NO")} kr per år.`,
       },
       {
         id: "aar",
@@ -1101,15 +1160,15 @@ export const okonomiCalculators: Calculator[] = [
         label: "Skattefradrag av innskudd",
         type: "number",
         unit: "%",
-        defaultValue: 10,
-        hint: "Sjekk gjeldende sats hos Skatteetaten (ofte 10 %).",
+        defaultValue: regPercent("bsu_tax_deduction"),
+        hint: `Sjekk gjeldende sats hos Skatteetaten (ofte ${regPercent("bsu_tax_deduction")} %).`,
       },
       {
         id: "tak",
         label: "Totaltaket på BSU",
         type: "number",
         unit: "kr",
-        defaultValue: 300000,
+        defaultValue: reg("bsu_total_limit").value,
       },
     ],
     formula: "skattefordel = innskudd · sats     slutt ≈ innskudd · ((1+r)ⁿ − 1) / r",
@@ -1256,10 +1315,22 @@ export const okonomiCalculators: Calculator[] = [
     slug: "effektiv-rente",
     title: "Effektiv rente",
     description:
-      "Omregn nominell rente til effektiv årsrente ved gitt antall terminer.",
+      "Beregn effektiv årsrente på lån med gebyrer, basert på faktiske kontantstrømmer.",
     category: "okonomi",
-    tags: ["rente", "effektiv", "nominell", "lån"],
+    tags: ["rente", "effektiv", "nominell", "lån", "gebyr"],
+    source: {
+      label: "Forbrukerrådet",
+      url: "https://storage02.forbrukerradet.no/media/2025/03/forbrukerradet-pakket-og-uklart.pdf",
+      reviewedAt: "2026-08-28",
+    },
     fields: [
+      {
+        id: "belop",
+        label: "Lånebeløp",
+        type: "number",
+        unit: "kr",
+        defaultValue: 2000000,
+      },
       {
         id: "nominell",
         label: "Nominell årsrente",
@@ -1269,37 +1340,77 @@ export const okonomiCalculators: Calculator[] = [
         step: 0.1,
       },
       {
+        id: "aar",
+        label: "Nedbetalingstid",
+        type: "number",
+        unit: "år",
+        defaultValue: 25,
+      },
+      {
         id: "terminer",
         label: "Terminer per år",
         type: "select",
         defaultValue: "12",
         options: [
-          { value: "1", label: "1 (årlig)" },
-          { value: "4", label: "4 (kvartal)" },
           { value: "12", label: "12 (månedlig)" },
-          { value: "365", label: "365 (daglig)" },
+          { value: "4", label: "4 (kvartal)" },
         ],
       },
+      {
+        id: "etablering",
+        label: "Etableringsgebyr",
+        type: "number",
+        unit: "kr",
+        defaultValue: 3000,
+      },
+      {
+        id: "termin",
+        label: "Termingebyr",
+        type: "number",
+        unit: "kr",
+        defaultValue: 70,
+        hint: "Per termin, i tillegg til avdrag og renter.",
+      },
     ],
-    formula: "effektiv = (1 + r/m)ᵐ − 1",
+    formula: "IRR fra kontantstrømmer → effektiv årsrente",
     explanation:
-      "Jo oftere rentene legges til, desto høyere blir den effektive renten. Banker oppgir ofte effektiv rente inkludert gebyrer – her er bare renten.",
-    disclaimer: "Uten etableringsgebyr og termingebyr. Se bankens effektive rente for full kostnad.",
+      "Effektiv rente tar hensyn til når gebyrer betales og hvor ofte renten kapitaliseres. Dette er nærmere det banken oppgir enn ren omregning av nominell rente.",
+    disclaimer:
+      "Forenklet modell uten forsikring, avdragsfrihet eller renteendringer. Sammenlign med bankens oppgitte effektiv rente.",
     compute(input) {
+      const belop = num(input, "belop");
       const nominell = num(input, "nominell");
+      const aar = num(input, "aar");
+      const etablering = num(input, "etablering");
+      const termingebyr = num(input, "termin");
       const m = Number(input.terminer) || 12;
-      if (!Number.isFinite(nominell) || nominell < 0 || m <= 0) return [];
-      const r = nominell / 100;
-      const eff = (Math.pow(1 + r / m, m) - 1) * 100;
+      if (
+        !allNumbers([belop, nominell, aar, etablering, termingebyr]) ||
+        belop <= 0 ||
+        aar <= 0
+      ) {
+        return [];
+      }
+      const eff = effectiveLoanRate({
+        principal: belop,
+        annualRatePercent: nominell,
+        years: aar,
+        periodsPerYear: m,
+        establishmentFee: etablering,
+        termFee: termingebyr,
+      });
+      const nominellEff =
+        (Math.pow(1 + nominell / 100 / m, m) - 1) * 100;
       return [
         result("eff", "Effektiv årsrente", eff, {
           kind: "percent",
           digits: 3,
           primary: true,
         }),
-        result("diff", "Differanse mot nominell", eff - nominell, {
+        result("nom", "Nominell (uten gebyrer)", nominellEff, {
           kind: "percent",
           digits: 3,
+          hint: "Kun rentes rente, uten gebyrer",
         }),
       ];
     },
@@ -1501,12 +1612,17 @@ export const okonomiCalculators: Calculator[] = [
   },
   {
     slug: "laneramme",
-    title: "Låneramme (5× inntekt)",
+    title: "Låneramme",
     shortTitle: "Låneramme",
     description:
-      "Anslå maks boliglån ut fra inntekt, egenkapital og belåningsgrad.",
+      "Anslå teoretisk øvre låneramme ut fra inntekt, eksisterende gjeld, egenkapital og belåningsgrad.",
     category: "okonomi",
-    tags: ["boliglån", "låneramme", "belåningsgrad", "finanstilsynet"],
+    tags: ["boliglån", "låneramme", "belåningsgrad", "gjeldsgrad"],
+    source: {
+      label: reg("mortgage_max_ltv").sourceLabel,
+      url: reg("mortgage_max_ltv").sourceUrl,
+      reviewedAt: reg("mortgage_max_ltv").reviewedAt,
+    },
     fields: [
       {
         id: "inntekt",
@@ -1516,10 +1632,18 @@ export const okonomiCalculators: Calculator[] = [
         defaultValue: 650000,
       },
       {
+        id: "gjeld",
+        label: "Eksisterende gjeld",
+        type: "number",
+        unit: "kr",
+        defaultValue: 0,
+        hint: "Studielån, billån, kredittkort m.m.",
+      },
+      {
         id: "multipel",
         label: "Maks gjeld / inntekt",
         type: "number",
-        defaultValue: 5,
+        defaultValue: reg("debt_income_multiplier").value,
         step: 0.1,
         hint: "Finanstilsynets utgangspunkt er ofte 5 ganger inntekt.",
       },
@@ -1535,41 +1659,44 @@ export const okonomiCalculators: Calculator[] = [
         label: "Maks belåningsgrad",
         type: "number",
         unit: "%",
-        defaultValue: 85,
+        defaultValue: regPercent("mortgage_max_ltv"),
       },
     ],
-    formula: "lån ≤ min(multipel · inntekt, verdi · belåningsgrad)",
+    formula: "nytt lån ≤ min(inntekt · multipel − gjeld, boligpris · LTV − EK)",
     explanation:
-      "To tak begrenser ofte boliglånet: gjeldsgrad (f.eks. 5× inntekt) og belåningsgrad (f.eks. 85 %). Den laveste rammen gjelder.",
+      "Gjeldsgraden gjelder samlet gjeld, ikke bare nytt boliglån. Belåningsgrad begrenser hvor mye du kan låne mot boligens verdi. Banken vurderer også renter, betjeningsevne og livsopphold.",
     disclaimer:
-      "Banken vurderer betjeningsevne, annen gjeld og livsopphold. Dette er et grovt overslag.",
+      "Teoretisk øvre ramme – ikke et lånetilbud. Banken kan si nei selv om tallet ser høyt ut.",
     compute(input) {
       const inntekt = num(input, "inntekt");
+      const gjeld = num(input, "gjeld");
       const multipel = num(input, "multipel");
       const ek = num(input, "ek");
       const belaning = num(input, "belaning");
-      if (!allNumbers([inntekt, multipel, ek, belaning]) || belaning <= 0) {
+      if (
+        !allNumbers([inntekt, gjeld, multipel, ek, belaning]) ||
+        belaning <= 0
+      ) {
         return [];
       }
-      const fraInntekt = inntekt * multipel;
-      // verdi = ek / (1 - LTV) when loan = LTV * verdi and ek = verdi - loan
+      const fraInntekt = Math.max(0, inntekt * multipel - gjeld);
       const ltv = belaning / 100;
       const maksVerdiFraEk = ltv < 1 ? ek / (1 - ltv) : ek;
-      const lanFraEk = maksVerdiFraEk - ek;
+      const lanFraEk = Math.max(0, maksVerdiFraEk - ek);
       const maksLan = Math.min(fraInntekt, lanFraEk);
       const maksBolig = maksLan + ek;
       return [
-        result("lan", "Estimert maks lån", maksLan, {
+        result("lan", "Teoretisk øvre låneramme", maksLan, {
           kind: "currency",
           primary: true,
         }),
         result("bolig", "Maks boligpris (lån + EK)", maksBolig, {
           kind: "currency",
         }),
-        result("inntektstak", "Tak fra inntekt", fraInntekt, {
+        result("inntektstak", "Rom fra gjeldsgrad", fraInntekt, {
           kind: "currency",
         }),
-        result("ektak", "Tak fra egenkapital/LTV", lanFraEk, {
+        result("ektak", "Rom fra egenkapital/LTV", lanFraEk, {
           kind: "currency",
         }),
       ];

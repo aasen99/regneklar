@@ -4,8 +4,9 @@ import { CalculatorCard } from "@/components/CalculatorCard";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { JsonLd } from "@/components/JsonLd";
 import { SearchForm } from "@/components/SearchForm";
-import { calculators, featuredCalculators } from "@/lib/catalog";
+import { calculators } from "@/lib/catalog";
 import { categories } from "@/lib/categories";
+import { featuredCalculators } from "@/lib/featured";
 import { formulas } from "@/lib/formulas";
 import { pageMetadata, SITE_DESCRIPTION, websiteJsonLd } from "@/lib/seo";
 
@@ -57,10 +58,17 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
-        <h2 className="font-serif text-3xl">Mest brukt</h2>
-        <p className="mt-2 text-ink-soft">
-          Start her hvis du bare skal ha svaret – formelen ligger under.
-        </p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="font-serif text-3xl">Populære kalkulatorer</h2>
+            <p className="mt-2 text-ink-soft">
+              Start her hvis du bare skal ha svaret – formelen ligger under.
+            </p>
+          </div>
+          <Link href="/sok" className="text-sm text-pine hover:underline">
+            Søk alle kalkulatorer
+          </Link>
+        </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((calculator) => (
             <CalculatorCard key={calculator.slug} calculator={calculator} />

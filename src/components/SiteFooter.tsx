@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CookieSettingsButton } from "@/components/CookieConsent";
 import { categories } from "@/lib/categories";
 import { Logo } from "./Logo";
 
@@ -48,6 +49,14 @@ export function SiteFooter() {
               <Link href="/sok" className="hover:text-sand">
                 Søk
               </Link>
+            </li>
+            <li>
+              <Link href="/personvern" className="hover:text-sand">
+                Personvern og informasjonskapsler
+              </Link>
+            </li>
+            <li>
+              <CookieSettingsButton />
             </li>
           </ul>
         </div>

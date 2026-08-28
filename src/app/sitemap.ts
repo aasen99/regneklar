@@ -2,9 +2,10 @@ import type { MetadataRoute } from "next";
 import { calculators } from "@/lib/catalog";
 import { categories } from "@/lib/categories";
 import { formulas } from "@/lib/formulas";
+import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://regneklar.no";
+  const base = SITE_URL;
   const now = new Date();
   return [
     { url: base, lastModified: now, changeFrequency: "weekly", priority: 1 },
@@ -13,6 +14,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
+    },
+    {
+      url: `${base}/personvern`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.3,
     },
     {
       url: `${base}/om`,

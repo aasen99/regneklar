@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import type { Calculator, Formula } from "./types";
+import type { Calculator, FaqItem, Formula } from "./types";
 import { getCategory } from "./categories";
 
-export const SITE_URL = "https://regneklar.no";
+export const SITE_URL = "https://www.regneklar.no";
 export const SITE_NAME = "REGNEKLAR";
 export const SITE_DESCRIPTION =
   "Gratis kalkulatorer og formler på norsk – sport, matte, fysikk, mat, skole, musikk, foto, bygg, statistikk og mer. Ikke bare penger. Med forklaring.";
 
-export type FaqItem = { question: string; answer: string };
+export type { FaqItem } from "./types";
 
 export function pageMetadata(
   title: string,
@@ -124,21 +124,24 @@ export function calculatorJsonLd(calculator: Calculator) {
 }
 
 export function calculatorFaqItems(calculator: Calculator): FaqItem[] {
-  const items: FaqItem[] = [
-    {
-      question: `Hva kan jeg regne ut med ${calculator.title}?`,
-      answer: calculator.description,
-    },
-  ];
+  if (calculator.faqs?.length) return calculator.faqs;
+
+  const items: FaqItem[] = [];
   if (calculator.formula) {
     items.push({
       question: "Hvilken formel bruker kalkulatoren?",
       answer: calculator.formula,
     });
   }
-  if (calculator.explanation) {
+  if (calculator.disclaimer) {
     items.push({
-      question: "Hvordan virker utregningen?",
+      question: "Hva tar ikke kalkulatoren hensyn til?",
+      answer: calculator.disclaimer,
+    });
+  }
+  if (items.length === 0 && calculator.explanation) {
+    items.push({
+      question: "Hvordan skal resultatet forstås?",
       answer: calculator.explanation,
     });
   }

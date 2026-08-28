@@ -1,4 +1,5 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { CookieConsent } from "@/components/CookieConsent";
+import { ConditionalAnalytics } from "@/components/ConditionalAnalytics";
 import { Figtree, Fraunces } from "next/font/google";
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -17,7 +18,7 @@ const serif = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://regneklar.no"),
+  metadataBase: new URL("https://www.regneklar.no"),
   title: {
     default: "REGNEKLAR – gratis kalkulatorer og formler",
     template: "%s · REGNEKLAR",
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     siteName: "REGNEKLAR",
     title: "REGNEKLAR – gratis kalkulatorer og formler",
     description: SITE_DESCRIPTION,
-    url: "https://regneklar.no",
+    url: "https://www.regneklar.no",
   },
   twitter: {
     card: "summary_large_image",
@@ -87,8 +88,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <CookieConsent />
       </body>
-      <GoogleAnalytics gaId="G-HRZWPVKVPH" />
+      <ConditionalAnalytics gaId="G-HRZWPVKVPH" />
     </html>
   );
 }

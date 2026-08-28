@@ -43,6 +43,14 @@ export type ResultItem = {
   primary?: boolean;
 };
 
+export type SourceAttribution = {
+  label: string;
+  url: string;
+  reviewedAt: string;
+};
+
+export type FaqItem = { question: string; answer: string };
+
 export type Calculator = {
   slug: string;
   title: string;
@@ -55,6 +63,8 @@ export type Calculator = {
   explanation?: string;
   disclaimer?: string;
   popular?: boolean;
+  faqs?: FaqItem[];
+  source?: SourceAttribution;
   compute: (input: Record<string, string>) => ResultItem[];
 };
 
@@ -66,6 +76,10 @@ export type Formula = {
   variables: { symbol: string; meaning: string }[];
   explanation: string;
   calculatorSlug?: string;
+  example?: string;
+  prerequisites?: string;
+  commonMistakes?: string[];
+  source?: SourceAttribution;
 };
 
 export type Category = {

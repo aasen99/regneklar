@@ -41,23 +41,14 @@ export function calculatorsInCategory(id: CategoryId): Calculator[] {
   return calculators.filter((c) => c.category === id);
 }
 
-export function popularCalculators(): Calculator[] {
-  return calculators.filter((c) => c.popular);
-}
-
-export const featuredCalculators = popularCalculators;
 export const calculatorsByCategory = calculatorsInCategory;
 
 export function searchCalculators(query: string): Calculator[] {
   return searchItems(query);
 }
 
-export function relatedCalculators(slug: string, limit = 4): Calculator[] {
-  const current = getCalculator(slug);
-  if (!current) return [];
-  return calculators
-    .filter((c) => c.slug !== slug && c.category === current.category)
-    .slice(0, limit);
+export function popularCalculators(): Calculator[] {
+  return calculators.filter((c) => c.popular);
 }
 
 export function searchItems(query: string): Calculator[] {

@@ -7,8 +7,8 @@ import { getCategory } from "@/lib/categories";
 import {
   calculators,
   getCalculator,
-  relatedCalculators,
 } from "@/lib/catalog";
+import { PIF_LINKS, relatedCalculators } from "@/lib/related";
 import { formulas } from "@/lib/formulas";
 import {
   calculatorFaqItems,
@@ -42,6 +42,7 @@ export default async function CalculatorPage({ params }: Props) {
     (f) => f.calculatorSlug === calculator.slug,
   );
   const faqs = calculatorFaqItems(calculator);
+  const pifLink = PIF_LINKS[calculator.slug];
 
   return (
     <article className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -56,6 +57,33 @@ export default async function CalculatorPage({ params }: Props) {
       <p className="mt-3 max-w-2xl text-lg text-ink-soft">
         {calculator.description}
       </p>
+      {calculator.source ? (
+        <p className="mt-4 max-w-2xl text-sm text-ink-soft">
+          Sist faglig kontrollert:{" "}
+          {calculator.source.reviewedAt.split("-").reverse().join(".")}. Kilde:{" "}
+          <a
+            href={calculator.source.url}
+            className="text-pine hover:underline"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {calculator.source.label}
+          </a>
+          .
+        </p>
+      ) : null}
+      {pifLink ? (
+        <p className="mt-3 max-w-2xl text-sm text-ink-soft">
+          <a
+            href={pifLink.href}
+            className="text-pine hover:underline"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {pifLink.label}
+          </a>
+        </p>
+      ) : null}
 
       <div className="mt-8">
         <CalculatorForm slug={calculator.slug} />

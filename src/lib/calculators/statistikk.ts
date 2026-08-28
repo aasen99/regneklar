@@ -99,7 +99,6 @@ function normInv(p: number): number {
   const plow = 0.02425;
   const phigh = 1 - plow;
   let q: number;
-  let r: number;
   if (p < plow) {
     q = Math.sqrt(-2 * Math.log(p));
     return (
@@ -115,7 +114,7 @@ function normInv(p: number): number {
     );
   }
   q = p - 0.5;
-  r = q * q;
+  const r = q * q;
   return (
     ((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q) /
     (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)

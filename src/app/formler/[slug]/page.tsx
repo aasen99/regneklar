@@ -52,6 +52,45 @@ export default async function FormulaPage({ params }: Props) {
       </dl>
       <h2 className="mt-8 font-serif text-2xl">Forklaring</h2>
       <p className="mt-3 leading-relaxed text-ink-soft">{formula.explanation}</p>
+      {formula.example ? (
+        <>
+          <h2 className="mt-8 font-serif text-2xl">Eksempel</h2>
+          <p className="mt-3 leading-relaxed text-ink-soft">{formula.example}</p>
+        </>
+      ) : null}
+      {formula.prerequisites ? (
+        <>
+          <h2 className="mt-8 font-serif text-2xl">Forutsetninger</h2>
+          <p className="mt-3 leading-relaxed text-ink-soft">
+            {formula.prerequisites}
+          </p>
+        </>
+      ) : null}
+      {formula.commonMistakes && formula.commonMistakes.length > 0 ? (
+        <>
+          <h2 className="mt-8 font-serif text-2xl">Vanlige feil</h2>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-ink-soft">
+            {formula.commonMistakes.map((mistake) => (
+              <li key={mistake}>{mistake}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+      {formula.source ? (
+        <p className="mt-8 text-sm text-ink-soft">
+          Kilde:{" "}
+          <a
+            href={formula.source.url}
+            className="text-pine hover:underline"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {formula.source.label}
+          </a>{" "}
+          (kontrollert {formula.source.reviewedAt.split("-").reverse().join(".")}
+          ).
+        </p>
+      ) : null}
       {calculator ? (
         <p className="mt-8">
           <Link

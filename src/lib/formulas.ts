@@ -14,6 +14,14 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Et annuitetslån har samme beløp hver måned. Tidlig i perioden er rentene høye og avdragene små; mot slutten er det omvendt.",
+    example:
+      "1 000 000 kr til 5 % nominell rente over 25 år gir ca. 5 846 kr i månedlig termin (uten gebyrer).",
+    prerequisites:
+      "Fast nominell rente, like store terminer og ingen gebyrer eller avdragsfrihet.",
+    commonMistakes: [
+      "Bruke årlig rente direkte uten å dele på antall terminer.",
+      "Glemme at gebyrer ikke er med i denne forenklede formelen.",
+    ],
     calculatorSlug: "lanekalkulator",
   },
   {
@@ -29,6 +37,12 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Renter blir selv rentebærende. Jo oftere rentene legges til, desto raskere vokser beløpet.",
+    example: "100 000 kr til 6 % i ett år gir 106 000 kr uten nye innskudd.",
+    prerequisites: "Fast rente og ingen uttak underveis.",
+    commonMistakes: [
+      "Blande nominell og effektiv rente.",
+      "Glemme at sparing med månedlige innskudd krever annuitetsformel.",
+    ],
     calculatorSlug: "rentes-rente",
   },
   {
@@ -55,6 +69,12 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Prosent betyr hundredeler. Endring måles alltid mot den opprinnelige verdien.",
+    example: "15 % av 2 000 kr er 0,15 · 2 000 = 300 kr.",
+    prerequisites: "Du må vite om du regner andel, del eller helhet.",
+    commonMistakes: [
+      "Regne prosentvis endring mot ny verdi i stedet for gammel.",
+      "Blande prosentpoeng og prosentvis endring.",
+    ],
     calculatorSlug: "prosent",
   },
   {
@@ -81,6 +101,12 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "WHO-klassene for voksne: undervekt under 18,5, normal 18,5–24,9, overvekt 25–29,9, fedme fra 30. BMI skiller ikke muskler fra fett.",
+    example: "70 kg og 1,75 m gir BMI = 70 / 1,75² ≈ 22,9 (normalvekt).",
+    prerequisites: "Voksne. Høyde i meter, vekt i kilogram.",
+    commonMistakes: [
+      "Bruke centimeter i stedet for meter i formelen.",
+      "Tolke BMI som diagnose uten hensyn til muskelmasse og alder.",
+    ],
     calculatorSlug: "bmi",
   },
   {
@@ -146,6 +172,12 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Gjelder bare rettvinklede trekanter. Hypotenusen er alltid lengst.",
+    example: "Kateter 3 og 4 gir hypotenus c = √(3² + 4²) = 5.",
+    prerequisites: "Trekanten må ha en rett vinkel.",
+    commonMistakes: [
+      "Bruke formelen på trekanter uten rett vinkel.",
+      "Bytte om på hypotenus og katet.",
+    ],
     calculatorSlug: "pythagoras",
   },
   {
@@ -158,6 +190,9 @@ export const formulas: Formula[] = [
       { symbol: "π", meaning: "Pi ≈ 3,14159" },
     ],
     explanation: "Diameteren er 2r, omkretsen er 2πr.",
+    example: "Radius 2 m gir areal A = π · 2² ≈ 12,57 m².",
+    prerequisites: "Radius og areal i samme enhet.",
+    commonMistakes: ["Bruke diameter i stedet for radius i formelen."],
     calculatorSlug: "areal",
   },
   {
@@ -180,6 +215,9 @@ export const formulas: Formula[] = [
     expression: "V = ⁴⁄₃ πr³",
     variables: [{ symbol: "r", meaning: "Radius" }],
     explanation: "Overflatearealet av en kule er 4πr².",
+    example: "Radius 3 cm gir volum V = ⁴⁄₃ π · 3³ ≈ 113 cm³.",
+    prerequisites: "Radius i samme enhet som volumet skal uttrykkes i.",
+    commonMistakes: ["Glemme faktor ⁴⁄₃ foran πr³."],
     calculatorSlug: "volum-kule",
   },
   {
@@ -272,6 +310,12 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Gjelder for ohmske motstander der strøm og spenning er proporsjonale. De tre effektformlene er likeverdige når Ohms lov holder.",
+    example: "12 V over 6 Ω gir strøm I = 2 A og effekt P = 24 W.",
+    prerequisites: "Stabil temperatur og lineært forhold mellom U og I.",
+    commonMistakes: [
+      "Blande milliampere og ampere.",
+      "Bruke Ohms lov på LED og motorer uten hensyn til ikke-lineært oppførsel.",
+    ],
     calculatorSlug: "ohms-lov",
   },
   {
@@ -383,6 +427,12 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "12 km/t er 5:00 per km. 15 km/t er 4:00 per km. Tempo er den vanlige måten løpere snakker om fart.",
+    example: "10 km/t tilsvarer 6:00 min/km.",
+    prerequisites: "Jevn fart over hele distansen.",
+    commonMistakes: [
+      "Blande min/km og min/mile uten omregning.",
+      "Glemme at sluttid = tempo · distanse.",
+    ],
     calculatorSlug: "km-t-min-km",
   },
   {
@@ -456,13 +506,25 @@ export const formulas: Formula[] = [
     slug: "egenkapital-formel",
     title: "Egenkapitalkrav",
     category: "okonomi",
-    expression: "EK = pris · 0,15     dokumentavgift = 0,025 · pris",
+    expression: "EK = pris · 0,10     dokumentavgift = 0,025 · avgiftsgrunnlag",
     variables: [
       { symbol: "EK", meaning: "Egenkapital" },
       { symbol: "pris", meaning: "Kjøpesum" },
     ],
     explanation:
-      "Normalt boliglånskrav er 15 % egenkapital. Dokumentavgift på 2,5 % gjelder vanligvis bruktbolig, ikke nybygg.",
+      "Hovedregel er 10 % egenkapital på boliglån. Banken kan kreve mer. Dokumentavgift beregnes av avgiftsgrunnlaget ved overføring av hjemmel – ikke alltid lik kjøpesummen.",
+    example:
+      "Kjøpesum 4 500 000 kr med 10 % egenkapital gir 450 000 kr i egenkapital og 4 050 000 kr i lånebehov før øvrige kostnader.",
+    prerequisites: "Kjøpesum og valgt egenkapitalkrav. Eget avgiftsgrunnlag ved nybygg.",
+    commonMistakes: [
+      "Anta at dokumentavgift alltid er 2,5 % av kjøpesummen.",
+      "Tro at kjøpesum minus egenkapital er bankens maks lån.",
+    ],
+    source: {
+      label: "Regjeringen – utlånsforskriften",
+      url: "https://www.regjeringen.no/no/aktuelt/utlansforskriften-senker-kravet-til-egenkapital-for-boliglan/id3077641/",
+      reviewedAt: "2026-08-28",
+    },
     calculatorSlug: "egenkapital-bolig",
   },
   {
@@ -567,7 +629,7 @@ export const formulas: Formula[] = [
     expression: "lån ≤ min(k · inntekt, verdi · LTV)",
     variables: [
       { symbol: "k", meaning: "Gjeldsgrad, f.eks. 5" },
-      { symbol: "LTV", meaning: "Belåningsgrad, f.eks. 0,85" },
+      { symbol: "LTV", meaning: "Belåningsgrad, f.eks. 0,90" },
     ],
     explanation:
       "Inntektstak og belåningsgrad setter ofte hver sin øvre grense. Den laveste gjelder.",
@@ -1508,6 +1570,12 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Utvalg bruker n − 1 i nevneren. Standardavviket har samme enhet som dataene; variansen er enheten i annen.",
+    example: "Dataene 2, 4, 6 har snitt 4 og utvalgsstandardavvik s ≈ 2.",
+    prerequisites: "Velg utvalg (n − 1) eller populasjon (n) bevisst.",
+    commonMistakes: [
+      "Bruke n i nevneren når dataene er et utvalg.",
+      "Tolke standardavvik uten å se på enheten.",
+    ],
     calculatorSlug: "standardavvik",
   },
   {
