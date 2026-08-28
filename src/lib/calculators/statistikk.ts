@@ -825,4 +825,100 @@ export const statistikkCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "median-percentil",
+    title: "Median og percentiler",
+    shortTitle: "Percentiler",
+    description:
+      "Finn median, kvartiler og valgfri percentil fra en talliste.",
+    category: "statistikk",
+    tags: ["median", "percentil", "kvartil", "statistikk"],
+    fields: [
+      {
+        id: "liste",
+        label: "Tall",
+        type: "text",
+        defaultValue: "12, 15, 18, 21, 22, 25, 30, 35",
+        hint: "Skill med komma eller mellomrom.",
+      },
+      {
+        id: "p",
+        label: "Percentil",
+        type: "number",
+        unit: "%",
+        defaultValue: 90,
+      },
+    ],
+    formula: "Pₚ = verdi ved posisjon p/100 · (n − 1)",
+    explanation:
+      "Medianen (P50) deler data i to like store grupper. Percentiler brukes i lønn, tester og vekstkurver.",
+    compute(input) {
+      const xs = parseList(input.liste);
+      if (xs.length === 0) return [];
+      const s = [...xs].sort((a, b) => a - b);
+      const p = num(input, "p") ?? 50;
+      const pct = (q: number) => {
+        const pos = (q / 100) * (s.length - 1);
+        const lo = Math.floor(pos);
+        const hi = Math.ceil(pos);
+        if (lo === hi) return s[lo];
+        return s[lo] + (s[hi] - s[lo]) * (pos - lo);
+      };
+      return [
+        result("med", "Median (P50)", median(xs), { digits: 4, primary: true }),
+        result("q1", "Q1 (P25)", pct(25), { digits: 4 }),
+        result("q3", "Q3 (P75)", pct(75), { digits: 4 }),
+        result("pp", `P${p}`, pct(p), { digits: 4 }),
+        result("n", "Antall", xs.length, { kind: "integer" }),
+      ];
+    },
+  },
+  {
+    slug: "bayes-enkel",
+    title: "Bayes (enkel)",
+    shortTitle: "Bayes",
+    description:
+      "Finn sannsynligheten P(A|B) med Bayes' setning fra P(B|A), P(A) og P(B).",
+    category: "statistikk",
+    tags: ["bayes", "sannsynlighet", "statistikk", "betinget"],
+    fields: [
+      {
+        id: "pb_a",
+        label: "P(B|A)",
+        type: "number",
+        defaultValue: 0.9,
+        hint: "Sannsynlighet for B gitt at A har skjedd.",
+      },
+      {
+        id: "pa",
+        label: "P(A)",
+        type: "number",
+        defaultValue: 0.01,
+      },
+      {
+        id: "pb",
+        label: "P(B)",
+        type: "number",
+        defaultValue: 0.05,
+      },
+    ],
+    formula: "P(A|B) = P(B|A) · P(A) / P(B)",
+    explanation:
+      "Bayes snur betinget sannsynlighet. Eksempel: sjelden sykdom (lav P(A)) men positiv test (høy P(B|A)) – hva er sjansen for å faktisk være syk?",
+    compute(input) {
+      const pb_a = num(input, "pb_a");
+      const pa = num(input, "pa");
+      const pb = num(input, "pb");
+      if (!allNumbers([pb_a, pa, pb]) || pb <= 0 || pa < 0 || pb_a < 0 || pb_a > 1)
+        return [];
+      const pa_b = (pb_a * pa) / pb;
+      return [
+        result("pa_b", "P(A|B)", pa_b, {
+          digits: 4,
+          primary: true,
+        }),
+        result("prosent", "I prosent", pa_b * 100, { kind: "percent", digits: 2 }),
+      ];
+    },
+  },
 ];

@@ -362,4 +362,66 @@ export const musikkCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "delay-bpm",
+    title: "Delay fra BPM",
+    shortTitle: "Delay",
+    description:
+      "Finn delay-tid i ms for hel, halv, fjerdedels- og åttendelsnote ved gitt BPM.",
+    category: "musikk",
+    tags: ["delay", "bpm", "ms", "musikk", "produksjon"],
+    fields: [
+      { id: "bpm", label: "BPM", type: "number", defaultValue: 120 },
+    ],
+    formula: "ms = 60000 / BPM · note-verdi",
+    explanation:
+      "Hel note = 4 slag i 4/4. Brukes til å synce delay og reverb til tempo i opptak og live.",
+    compute(input) {
+      const bpm = num(input, "bpm");
+      if (!Number.isFinite(bpm) || bpm <= 0) return [];
+      const hel = 60000 / bpm;
+      return [
+        result("hel", "Hel note", hel * 4, { digits: 1, unit: "ms", primary: true }),
+        result("halv", "Halv note", hel * 2, { digits: 1, unit: "ms" }),
+        result("fjerde", "Fjerdedelsnote", hel, { digits: 1, unit: "ms" }),
+        result("åttende", "Åttendelsnote", hel / 2, { digits: 1, unit: "ms" }),
+      ];
+    },
+  },
+  {
+    slug: "stemming-a4",
+    title: "Stemming og A4",
+    shortTitle: "A4 Hz",
+    description:
+      "Finn frekvensen til en note når A4 er stemt annerledes enn 440 Hz.",
+    category: "musikk",
+    tags: ["stemming", "a4", "frekvens", "hz", "musikk"],
+    fields: [
+      { id: "a4", label: "A4-frekvens", type: "number", unit: "Hz", defaultValue: 440 },
+      {
+        id: "note",
+        label: "MIDI-note",
+        type: "number",
+        defaultValue: 69,
+        hint: "69 = A4. 60 = C4.",
+      },
+    ],
+    formula: "f = A4 · 2^((n − 69) / 12)",
+    explanation:
+      "Barokkstemming bruker ofte A4 = 415 Hz. Orkestre kan stemme 442–444 Hz. Hver halv tone er en faktor 2^(1/12).",
+    compute(input) {
+      const a4 = num(input, "a4");
+      const note = num(input, "note");
+      if (!allNumbers([a4, note]) || a4 <= 0) return [];
+      const f = a4 * Math.pow(2, (note - 69) / 12);
+      const cents = 1200 * Math.log2(a4 / 440);
+      return [
+        result("f", "Frekvens", f, { digits: 2, unit: "Hz", primary: true }),
+        result("cents", "Avvik fra 440 Hz A4", cents, {
+          digits: 1,
+          unit: "cent",
+        }),
+      ];
+    },
+  },
 ];

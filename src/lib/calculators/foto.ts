@@ -370,4 +370,94 @@ export const fotoCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "nd-filter",
+    title: "ND-filter",
+    shortTitle: "ND-filter",
+    description:
+      "Finn ny lukkertid eller blender når du bruker ND-filter (stop eller faktor).",
+    category: "foto",
+    tags: ["nd", "filter", "lukker", "eksponering", "foto"],
+    fields: [
+      {
+        id: "modus",
+        label: "Oppgi ND som",
+        type: "select",
+        defaultValue: "stop",
+        options: [
+          { value: "stop", label: "Stop (EV)" },
+          { value: "faktor", label: "Faktor (f.eks. ND64 = 64)" },
+        ],
+      },
+      { id: "nd", label: "ND-verdi", type: "number", defaultValue: 3 },
+      {
+        id: "lukker",
+        label: "Uten ND: lukkertid",
+        type: "number",
+        unit: "s",
+        defaultValue: 0.008,
+        hint: "1/125 s ≈ 0,008",
+      },
+    ],
+    formula: "ny lukkertid = gammel · 2^stop",
+    explanation:
+      "3 stop ND = 2³ = 8× lengre eksponering. Nyttig for lang eksponering på dagtid eller vide blender i sol.",
+    compute(input) {
+      const nd = num(input, "nd");
+      const lukker = num(input, "lukker");
+      if (!allNumbers([nd, lukker]) || lukker <= 0 || nd < 0) return [];
+      const faktor = input.modus === "faktor" ? nd : Math.pow(2, nd);
+      if (faktor <= 0) return [];
+      const ny = lukker * faktor;
+      return [
+        result("ny", "Ny lukkertid", ny, {
+          digits: 4,
+          unit: "s",
+          primary: true,
+        }),
+        result("faktor", "Lysreduksjon", faktor, { digits: 2 }),
+        result("stop", "Stop", Math.log2(faktor), { digits: 2 }),
+      ];
+    },
+  },
+  {
+    slug: "synsfelt-fov",
+    title: "Synsfelt (FOV)",
+    shortTitle: "FOV",
+    description:
+      "Finn horisontalt synsfelt fra brennvidde og sensorstørrelse (crop-faktor).",
+    category: "foto",
+    tags: ["synsfelt", "fov", "brennvidde", "vinkel", "foto"],
+    fields: [
+      { id: "f", label: "Brennvidde", type: "number", unit: "mm", defaultValue: 50 },
+      {
+        id: "sensor",
+        label: "Sensorbredde",
+        type: "number",
+        unit: "mm",
+        defaultValue: 36,
+        hint: "Fullformat ≈ 36 mm. APS-C ≈ 23,5 mm.",
+      },
+    ],
+    formula: "FOV = 2 · arctan(sensor / (2f))",
+    explanation:
+      "Kortere brennvidde gir bredere synsfelt. Samme objektiv på mindre sensor gir smalere FOV (crop).",
+    compute(input) {
+      const f = num(input, "f");
+      const sensor = num(input, "sensor");
+      if (!allNumbers([f, sensor]) || f <= 0 || sensor <= 0) return [];
+      const rad = 2 * Math.atan(sensor / (2 * f));
+      const deg = (rad * 180) / Math.PI;
+      const crop = 36 / sensor;
+      return [
+        result("fov", "Horisontalt FOV", deg, {
+          digits: 1,
+          unit: "°",
+          primary: true,
+        }),
+        result("crop", "Crop vs. fullformat", crop, { digits: 2 }),
+        result("eq", "Ekv. fullformat", f * crop, { digits: 0, unit: "mm" }),
+      ];
+    },
+  },
 ];

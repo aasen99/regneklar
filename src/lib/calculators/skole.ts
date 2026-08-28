@@ -607,4 +607,87 @@ export const skoleCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "pensum-timer",
+    title: "Pensum og studietimer",
+    shortTitle: "Studietimer",
+    description:
+      "Anslå ukentlig studietid fra studiepoeng og semesteruker (ECTS-tommelfinger).",
+    category: "skole",
+    tags: ["studiepoeng", "pensum", "timer", "universitet", "ects"],
+    fields: [
+      {
+        id: "sp",
+        label: "Studiepoeng per semester",
+        type: "number",
+        defaultValue: 30,
+      },
+      {
+        id: "uker",
+        label: "Semesteruker",
+        type: "number",
+        defaultValue: 15,
+      },
+      {
+        id: "faktor",
+        label: "Timer per SP per uke",
+        type: "number",
+        defaultValue: 1.67,
+        hint: "ECTS: 1 SP ≈ 25–30 timer totalt → ca. 1,7 t/uke over 15 uker.",
+      },
+    ],
+    formula: "timer/uke ≈ SP · faktor",
+    explanation:
+      "1 studiepoeng tilsvarer ca. 25–30 timers arbeid totalt i semesteret. Inkluderer forelesning, øvinger og egenstudium.",
+    compute(input) {
+      const sp = num(input, "sp");
+      const uker = num(input, "uker");
+      const faktor = num(input, "faktor");
+      if (!allNumbers([sp, uker, faktor]) || uker <= 0) return [];
+      const perUke = sp * faktor;
+      const totalt = perUke * uker;
+      return [
+        result("uke", "Timer per uke", perUke, {
+          digits: 1,
+          unit: "t",
+          primary: true,
+        }),
+        result("tot", "Totalt i semesteret", totalt, { digits: 0, unit: "t" }),
+      ];
+    },
+  },
+  {
+    slug: "skolestart-alder",
+    title: "Skolestart og alder",
+    shortTitle: "Skolestart",
+    description:
+      "Finn hvilket år barnet starter 1. trinn basert på fødselsår (norsk regel).",
+    category: "skole",
+    tags: ["skolestart", "1. trinn", "alder", "barn", "opptak"],
+    fields: [
+      {
+        id: "fodselsaar",
+        label: "Fødselsår",
+        type: "number",
+        defaultValue: 2019,
+      },
+    ],
+    formula: "1. trinn = året barnet fyller 6 (august)",
+    explanation:
+      "I Norge starter barn normalt på 1. trinn i august det året de fyller 6. Noen utsetter ett år – det avklares med skolen.",
+    disclaimer: "Gjelder ordinær norsk grunnskole. Sjekk kommunen for lokale frister.",
+    compute(input) {
+      const ar = num(input, "fodselsaar");
+      if (!Number.isFinite(ar) || ar < 1990 || ar > 2030) return [];
+      const start = ar + 6;
+      const alder = new Date().getFullYear() - ar;
+      return [
+        result("start", "Starter 1. trinn (ca.)", `August ${start}`, {
+          kind: "text",
+          primary: true,
+        }),
+        result("alder", "Alder nå", alder, { kind: "integer", unit: "år" }),
+      ];
+    },
+  },
 ];

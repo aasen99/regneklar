@@ -1184,4 +1184,69 @@ export const fysikkCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "pendel-periode",
+    title: "Pendelperiode",
+    shortTitle: "Pendel",
+    description:
+      "Finn svingetiden til en matematisk pendel fra lengde, eller lengde fra periode.",
+    category: "fysikk",
+    tags: ["pendel", "periode", "svingning", "gravitasjon", "naturfag"],
+    fields: [
+      {
+        id: "modus",
+        label: "Regn ut",
+        type: "select",
+        defaultValue: "periode",
+        options: [
+          { value: "periode", label: "Periode fra lengde" },
+          { value: "lengde", label: "Lengde fra periode" },
+        ],
+      },
+      {
+        id: "l",
+        label: "Pendellengde",
+        type: "number",
+        unit: "m",
+        defaultValue: 1,
+      },
+      {
+        id: "t",
+        label: "Periode T",
+        type: "number",
+        unit: "s",
+        defaultValue: 2,
+      },
+      {
+        id: "g",
+        label: "Tyngdeakselerasjon g",
+        type: "number",
+        unit: "m/s²",
+        defaultValue: 9.81,
+      },
+    ],
+    formula: "T = 2π √(L/g)",
+    explanation:
+      "Gjelder små utslag og punktmasse. Tyngre kule eller stor vinkel gir avvik. Perioden avhenger ikke av massen.",
+    compute(input) {
+      const g = num(input, "g");
+      if (!Number.isFinite(g) || g <= 0) return [];
+      if (input.modus === "lengde") {
+        const t = num(input, "t");
+        if (!Number.isFinite(t) || t <= 0) return [];
+        const l = (g * t * t) / (4 * Math.PI * Math.PI);
+        return [
+          result("l", "Pendellengde", l, { digits: 4, unit: "m", primary: true }),
+        ];
+      }
+      const l = num(input, "l");
+      if (!Number.isFinite(l) || l < 0) return [];
+      const t = 2 * Math.PI * Math.sqrt(l / g);
+      const f = 1 / t;
+      return [
+        result("t", "Periode T", t, { digits: 4, unit: "s", primary: true }),
+        result("f", "Frekvens", f, { digits: 4, unit: "Hz" }),
+      ];
+    },
+  },
 ];

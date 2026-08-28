@@ -621,4 +621,127 @@ export const elektroCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "led-motstand",
+    title: "LED-motstand",
+    shortTitle: "LED",
+    description:
+      "Finn seriemotstand for LED fra forsyningsspenning, LED-spenning og strøm.",
+    category: "elektro",
+    tags: ["led", "motstand", "elektronikk", "elektro"],
+    popular: true,
+    fields: [
+      {
+        id: "vs",
+        label: "Forsyningsspenning",
+        type: "number",
+        unit: "V",
+        defaultValue: 5,
+      },
+      {
+        id: "vf",
+        label: "LED-spenning Vf",
+        type: "number",
+        unit: "V",
+        defaultValue: 2.1,
+        hint: "Rød ca. 1,8 V. Hvit ca. 3,0 V.",
+      },
+      {
+        id: "i",
+        label: "LED-strøm",
+        type: "number",
+        unit: "mA",
+        defaultValue: 20,
+      },
+    ],
+    formula: "R = (Vs − Vf) / I",
+    explanation:
+      "Motstanden tar opp restspenningen slik at LED-en får riktig strøm. Uten motstand brenner LED-en ofte ut.",
+    compute(input) {
+      const vs = num(input, "vs");
+      const vf = num(input, "vf");
+      const iMa = num(input, "i");
+      if (!allNumbers([vs, vf, iMa]) || iMa <= 0 || vs <= vf) return [];
+      const i = iMa / 1000;
+      const r = (vs - vf) / i;
+      const p = (vs - vf) * i;
+      return [
+        result("r", "Motstand R", r, { digits: 1, unit: "Ω", primary: true }),
+        result("p", "Effekt i R", p * 1000, { digits: 1, unit: "mW" }),
+        result("e24", "Nærmeste E24", nearestE24(r), { kind: "integer", unit: "Ω" }),
+      ];
+    },
+  },
+  {
+    slug: "batteri-wh-ah",
+    title: "Batteri Wh og Ah",
+    shortTitle: "Wh / Ah",
+    description: "Omregn mellom Wh, Ah og kapasitet ved gitt spenning.",
+    category: "elektro",
+    tags: ["batteri", "wh", "ah", "kapasitet", "elektro"],
+    fields: [
+      {
+        id: "modus",
+        label: "Regn ut",
+        type: "select",
+        defaultValue: "wh",
+        options: [
+          { value: "wh", label: "Wh fra Ah" },
+          { value: "ah", label: "Ah fra Wh" },
+        ],
+      },
+      {
+        id: "u",
+        label: "Spenning",
+        type: "number",
+        unit: "V",
+        defaultValue: 12,
+      },
+      {
+        id: "verdi",
+        label: "Ah eller Wh",
+        type: "number",
+        defaultValue: 100,
+      },
+    ],
+    formula: "Wh = U · Ah     Ah = Wh / U",
+    explanation:
+      "Wh forteller energimengden. Ah alene sier ikke alt – et 12 V og 24 V batteri med samme Ah har ulik energi.",
+    compute(input) {
+      const u = num(input, "u");
+      const verdi = num(input, "verdi");
+      if (!allNumbers([u, verdi]) || u <= 0 || verdi < 0) return [];
+      if (input.modus === "ah") {
+        const ah = verdi / u;
+        return [
+          result("ah", "Kapasitet", ah, { digits: 2, unit: "Ah", primary: true }),
+          result("wh", "Energi", verdi, { digits: 1, unit: "Wh" }),
+        ];
+      }
+      const wh = u * verdi;
+      return [
+        result("wh", "Energi", wh, { digits: 1, unit: "Wh", primary: true }),
+        result("ah", "Kapasitet", verdi, { digits: 2, unit: "Ah" }),
+      ];
+    },
+  },
 ];
+
+function nearestE24(r: number): number {
+  const e24 = [
+    1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9,
+    4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1,
+  ];
+  const decade = Math.pow(10, Math.floor(Math.log10(r)));
+  const norm = r / decade;
+  let best = e24[0];
+  let diff = Infinity;
+  for (const v of e24) {
+    const d = Math.abs(v - norm);
+    if (d < diff) {
+      diff = d;
+      best = v;
+    }
+  }
+  return Math.round(best * decade);
+}

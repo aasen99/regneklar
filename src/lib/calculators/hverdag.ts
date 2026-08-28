@@ -662,6 +662,135 @@ export const hverdagCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "vaskemaskin-kostnad",
+    title: "Vaskemaskin-kostnad",
+    shortTitle: "Vask",
+    description:
+      "Anslå strøm- og vannkostnad per vask basert på program og priser.",
+    category: "hverdag",
+    tags: ["vaskemaskin", "strøm", "vann", "kostnad"],
+    fields: [
+      {
+        id: "kwh",
+        label: "Strømforbruk per vask",
+        type: "number",
+        unit: "kWh",
+        defaultValue: 1,
+        hint: "Typisk 0,5–1,5 kWh avhengig av program og temperatur.",
+      },
+      {
+        id: "strompris",
+        label: "Strømpris",
+        type: "number",
+        unit: "kr/kWh",
+        defaultValue: 1.2,
+      },
+      {
+        id: "liter",
+        label: "Vannforbruk",
+        type: "number",
+        unit: "L",
+        defaultValue: 50,
+      },
+      {
+        id: "vannpris",
+        label: "Vann + avløp",
+        type: "number",
+        unit: "kr/L",
+        defaultValue: 0.02,
+        hint: "Ca. 20 kr/m³ = 0,02 kr/L.",
+      },
+      {
+        id: "vaske",
+        label: "Vask per uke",
+        type: "number",
+        defaultValue: 3,
+      },
+    ],
+    formula: "kost = kWh · strømpris + liter · vannpris",
+    explanation:
+      "60 °C-program bruker mer strøm og vann enn 40 °C. Nettleie og fastbeløp er ikke med.",
+    compute(input) {
+      const kwh = num(input, "kwh");
+      const sp = num(input, "strompris");
+      const liter = num(input, "liter");
+      const vp = num(input, "vannpris");
+      const vaske = num(input, "vaske");
+      if (!allNumbers([kwh, sp, liter, vp, vaske])) return [];
+      const per = kwh * sp + liter * vp;
+      return [
+        result("per", "Kostnad per vask", per, {
+          kind: "currency",
+          digits: 2,
+          primary: true,
+        }),
+        result("uke", "Per uke", per * vaske, { kind: "currency", digits: 2 }),
+        result("ar", "Per år (52 uker)", per * vaske * 52, {
+          kind: "currency",
+          digits: 0,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "bompenger-reise",
+    title: "Bompenger på reise",
+    shortTitle: "Bompenger",
+    description: "Regn ut totale bompenger for en strekning med flere passeringer.",
+    category: "hverdag",
+    tags: ["bompenger", "bil", "reise", "kostnad"],
+    fields: [
+      {
+        id: "bom",
+        label: "Bompenger per passering",
+        type: "number",
+        unit: "kr",
+        defaultValue: 35,
+      },
+      {
+        id: "pass",
+        label: "Antall bomstasjoner tur/retur",
+        type: "number",
+        defaultValue: 4,
+      },
+      {
+        id: "turer",
+        label: "Antall turer",
+        type: "number",
+        defaultValue: 20,
+        hint: "F.eks. arbeidsdager per måned.",
+      },
+      {
+        id: "rabatt",
+        label: "AutoPASS-rabatt",
+        type: "number",
+        unit: "%",
+        defaultValue: 20,
+      },
+    ],
+    formula: "totalt = bom · pass · turer · (1 − rabatt/100)",
+    explanation:
+      "Med AutoPASS betaler du ofte 20 % mindre. Rushtidsbom og ferje er ikke med.",
+    compute(input) {
+      const bom = num(input, "bom");
+      const pass = num(input, "pass");
+      const turer = num(input, "turer");
+      const rabatt = num(input, "rabatt") ?? 0;
+      if (!allNumbers([bom, pass, turer, rabatt])) return [];
+      const faktor = 1 - rabatt / 100;
+      const perTur = bom * pass * faktor;
+      const totalt = perTur * turer;
+      return [
+        result("tot", "Totalt", totalt, {
+          kind: "currency",
+          digits: 0,
+          primary: true,
+        }),
+        result("tur", "Per tur", perTur, { kind: "currency", digits: 2 }),
+      ];
+    },
+  },
 ];
 
 function parseClock(value: string | undefined): number | null {

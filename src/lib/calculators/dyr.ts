@@ -1,5 +1,5 @@
 import type { Calculator } from "../types";
-import { num } from "../format";
+import { addDays, formatDate, num, parseDate } from "../format";
 import { allNumbers, result } from "../helpers";
 
 /** Approximate human-age equivalent for dogs (AAHA-inspired piecewise). */
@@ -205,6 +205,122 @@ export const dyrCalculators: Calculator[] = [
           primary: true,
         }),
         result("full", "Geometrisk volum", liter, { digits: 1, unit: "L" }),
+      ];
+    },
+  },
+  {
+    slug: "kaninalder",
+    title: "Kaninalder",
+    description: "Omregn kaninens alder til omtrentlige menneskeår.",
+    category: "dyr",
+    tags: ["kanin", "alder", "kjæledyr"],
+    fields: [
+      {
+        id: "aar",
+        label: "Kaninens alder",
+        type: "number",
+        unit: "år",
+        defaultValue: 4,
+        step: 0.5,
+      },
+    ],
+    formula: "1. år ≈ 21 menneskeår     deretter +5 per år",
+    explanation:
+      "Kaniner modnes raskt det første året. Regelen er grov – rase, helse og fôr påvirker biologisk alder.",
+    disclaimer: "Tommelfingerregel, ikke veterinærvurdering.",
+    compute(input) {
+      const aar = num(input, "aar");
+      if (!Number.isFinite(aar) || aar < 0) return [];
+      const human = aar <= 1 ? 21 * aar : 21 + (aar - 1) * 5;
+      return [
+        result("human", "Omtrentlig menneskeår", human, {
+          digits: 1,
+          unit: "år",
+          primary: true,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "hestealder",
+    title: "Hestealder",
+    description: "Omregn hestens alder til omtrentlige menneskeår.",
+    category: "dyr",
+    tags: ["hest", "alder", "dyr"],
+    fields: [
+      {
+        id: "aar",
+        label: "Hestens alder",
+        type: "number",
+        unit: "år",
+        defaultValue: 10,
+        step: 0.5,
+      },
+    ],
+    formula: "2 år ≈ 24 menneskeår     deretter +3 per år",
+    explanation:
+      "Hester er modne tidlig, men kan bli gamle. En 20 år gammel hest tilsvarer grovt et menneske på 70+.",
+    disclaimer: "Forenklet skala – ikke klinisk vurdering.",
+    compute(input) {
+      const aar = num(input, "aar");
+      if (!Number.isFinite(aar) || aar < 0) return [];
+      let human: number;
+      if (aar <= 1) human = 12 * aar;
+      else if (aar <= 2) human = 12 + 12 * (aar - 1);
+      else human = 24 + (aar - 2) * 3;
+      return [
+        result("human", "Omtrentlig menneskeår", human, {
+          digits: 1,
+          unit: "år",
+          primary: true,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "valpekull",
+    title: "Valpekull og fødsel",
+    shortTitle: "Valpekull",
+    description:
+      "Estimer forventet fødselstidspunkt etter paring (ca. 63 dager hos hund).",
+    category: "dyr",
+    tags: ["hund", "valp", "fødsel", "drektighet"],
+    fields: [
+      {
+        id: "paring",
+        label: "Siste paring",
+        type: "date",
+        defaultValue: "2026-06-01",
+      },
+      {
+        id: "dager",
+        label: "Drektighetslengde",
+        type: "number",
+        unit: "dager",
+        defaultValue: 63,
+        hint: "Hund: typisk 58–68 dager, ofte 63.",
+      },
+    ],
+    formula: "fødsel ≈ paring + 63 dager",
+    explanation:
+      "Ultralyd hos veterinær gir mer presis dato. Første uke etter fødsel bør valpene ikke flyttes unødvendig.",
+    disclaimer: "Kontakt veterinær ved bekymring under drektighet.",
+    compute(input) {
+      const paring = parseDate(input.paring);
+      const dager = num(input, "dager") ?? 63;
+      if (!paring || !Number.isFinite(dager) || dager < 50) return [];
+      const fodsel = addDays(paring, Math.round(dager));
+      const idag = new Date();
+      idag.setHours(0, 0, 0, 0);
+      const igjen = Math.round(
+        (fodsel.getTime() - idag.getTime()) / (1000 * 60 * 60 * 24),
+      );
+      return [
+        result("fodsel", "Forventet fødsel", formatDate(fodsel), {
+          kind: "text",
+          primary: true,
+        }),
+        result("igjen", "Dager igjen", igjen, { kind: "integer" }),
       ];
     },
   },

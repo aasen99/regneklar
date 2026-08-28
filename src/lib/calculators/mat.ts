@@ -722,4 +722,105 @@ export const matCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "marinering-tid",
+    title: "Marineringstid",
+    shortTitle: "Marinering",
+    description:
+      "Anslå marineringstid ut fra kjøtttykkelse og salt/sukker-andel i lake.",
+    category: "mat",
+    tags: ["marinering", "lake", "kjøtt", "fisk", "mat"],
+    fields: [
+      {
+        id: "tykkelse",
+        label: "Tykkelse",
+        type: "number",
+        unit: "cm",
+        defaultValue: 2,
+      },
+      {
+        id: "type",
+        label: "Type",
+        type: "select",
+        defaultValue: "kjott",
+        options: [
+          { value: "kjott", label: "Kjøtt" },
+          { value: "fisk", label: "Fisk" },
+          { value: "kylling", label: "Kylling" },
+        ],
+      },
+      {
+        id: "salt",
+        label: "Salt i lake",
+        type: "number",
+        unit: "%",
+        defaultValue: 5,
+        hint: "Andel salt i væsken.",
+      },
+    ],
+    formula: "tid ≈ tykkelse² · faktor / salt^0,5",
+    explanation:
+      "Tykkere stykker trenger lengre tid. Sterkere lake (mer salt) trekker raskere inn, men ikke lineært – smak jevnlig underveis.",
+    compute(input) {
+      const t = num(input, "tykkelse");
+      const salt = num(input, "salt");
+      if (!allNumbers([t, salt]) || t <= 0 || salt <= 0) return [];
+      const base =
+        input.type === "fisk" ? 15 : input.type === "kylling" ? 25 : 35;
+      const timer = (base * t * t) / Math.sqrt(salt);
+      const min = timer * 60;
+      return [
+        result("min", "Estimert tid", min, {
+          digits: 0,
+          unit: "min",
+          primary: true,
+        }),
+        result("timer", "I timer", timer, { digits: 1, unit: "t" }),
+      ];
+    },
+  },
+  {
+    slug: "sukker-sirup",
+    title: "Sukker til sirup",
+    shortTitle: "Sirup",
+    description:
+      "Regn ut hvor mye vann du trenger for ønsket sukkerkonsentrasjon i sirup.",
+    category: "mat",
+    tags: ["sukker", "sirup", "konsentrasjon", "baking", "dessert"],
+    fields: [
+      {
+        id: "sukker",
+        label: "Sukker",
+        type: "number",
+        unit: "g",
+        defaultValue: 500,
+      },
+      {
+        id: "prosent",
+        label: "Ønsket konsentrasjon",
+        type: "number",
+        unit: "%",
+        defaultValue: 65,
+        hint: "Enkel sirup ca. 65 %. Honning-lignende over 80 %.",
+      },
+    ],
+    formula: "total masse = sukker / (konsentrasjon/100)     vann = total − sukker",
+    explanation:
+      "Konsentrasjon er sukker delt på total vekt. Varm opp forsiktig til sukkeret løser seg – ikke rør for mye når det koker.",
+    compute(input) {
+      const sukker = num(input, "sukker");
+      const p = num(input, "prosent");
+      if (!allNumbers([sukker, p]) || sukker <= 0 || p <= 0 || p >= 100) return [];
+      const total = sukker / (p / 100);
+      const vann = total - sukker;
+      return [
+        result("vann", "Vann å tilsette", vann, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+        }),
+        result("total", "Total sirup", total, { digits: 0, unit: "g" }),
+      ];
+    },
+  },
 ];
