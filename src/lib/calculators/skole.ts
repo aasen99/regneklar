@@ -4,12 +4,20 @@ import { allNumbers, result } from "../helpers";
 
 export const skoleCalculators: Calculator[] = [
   {
-    slug: "karaktersnitt",
-    title: "Karaktersnitt",
+    slug: "karakterkalkulator",
+    title: "Karakterkalkulator og vitnemål-snitt",
+    shortTitle: "Karakterkalkulator",
     description:
-      "Regn ut gjennomsnitt av karakterer 1–6, med eller uten vekting.",
+      "Regn ut snitt på karakterer og vitnemål (1–6), med eller uten vekting av fag.",
     category: "skole",
-    tags: ["karakter", "snitt", "skole"],
+    tags: [
+      "karakterkalkulator",
+      "vitnemål",
+      "snitt",
+      "karakter",
+      "vgs",
+      "skole",
+    ],
     popular: true,
     fields: [
       {
@@ -22,7 +30,7 @@ export const skoleCalculators: Calculator[] = [
     ],
     formula: "snitt = Σ (karakter · vekt) / Σ vekt",
     explanation:
-      "Uten vekting teller hvert fag likt. Med kolon, f.eks. 5:2, teller karakteren dobbelt – nyttig for standpunkt med ulike årstimer.",
+      "Uten vekting teller hvert fag likt. Med kolon, f.eks. 5:2, teller karakteren dobbelt – nyttig for standpunkt og vitnemål med ulike årstimer.",
     compute(input) {
       const parts = (input.karakterer ?? "")
         .split(/[,;\s]+/)

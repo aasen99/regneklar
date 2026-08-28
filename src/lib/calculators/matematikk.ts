@@ -5,11 +5,11 @@ import { allNumbers, result } from "../helpers";
 export const matematikkCalculators: Calculator[] = [
   {
     slug: "pythagoras",
-    title: "Pythagoras",
+    title: "Pytagoras' setning",
     description:
-      "Finn den ukjente siden i en rettvinklet trekant: a² + b² = c².",
+      "Finn den ukjente siden i en rettvinklet trekant med Pytagoras' setning: a² + b² = c².",
     category: "matematikk",
-    tags: ["pythagoras", "trekant", "geometri"],
+    tags: ["pytagoras", "pythagoras", "setning", "trekant", "geometri"],
     popular: true,
     fields: [
       {
@@ -238,6 +238,52 @@ export const matematikkCalculators: Calculator[] = [
       }
       if (volum == null) return [];
       return [result("volum", "Volum", volum, { digits: 4, primary: true })];
+    },
+  },
+  {
+    slug: "volum-kule",
+    title: "Volum av kule",
+    shortTitle: "Kulevolum",
+    description:
+      "Regn ut volum av en kule når du kjenner radiusen eller diameteren.",
+    category: "matematikk",
+    tags: ["volum", "kule", "radius", "geometri", "matematikk"],
+    popular: true,
+    fields: [
+      {
+        id: "modus",
+        label: "Oppgi",
+        type: "select",
+        defaultValue: "radius",
+        options: [
+          { value: "radius", label: "Radius" },
+          { value: "diameter", label: "Diameter" },
+        ],
+      },
+      {
+        id: "verdi",
+        label: "Lengde",
+        type: "number",
+        defaultValue: 5,
+        unit: "cm",
+      },
+    ],
+    formula: "V = ⁴⁄₃ πr³",
+    explanation:
+      "Volumet av en kule er fire tredjedeler av π ganger radius i tredje. Diameter er det dobbelte av radius.",
+    compute(input) {
+      const verdi = num(input, "verdi");
+      if (!Number.isFinite(verdi) || verdi <= 0) return [];
+      const r = input.modus === "diameter" ? verdi / 2 : verdi;
+      const volum = (4 / 3) * Math.PI * r * r * r;
+      return [
+        result("volum", "Volum", volum, { digits: 4, primary: true }),
+        result("r", "Radius brukt", r, { digits: 4 }),
+        result("overflate", "Overflateareal", 4 * Math.PI * r * r, {
+          digits: 4,
+          hint: "4πr²",
+        }),
+      ];
     },
   },
   {

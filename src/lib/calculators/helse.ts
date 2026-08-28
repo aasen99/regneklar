@@ -212,12 +212,13 @@ export const helseCalculators: Calculator[] = [
     },
   },
   {
-    slug: "termin",
+    slug: "terminkalkulator",
     title: "Terminkalkulator",
     description:
-      "Estimer termin fra siste menstruasjons første dag (Naegele-regelen).",
+      "Regn ut forventet termin fra siste menstruasjons første dag (Naegele-regelen).",
     category: "sport",
-    tags: ["gravid", "termin", "svangerskap"],
+    tags: ["terminkalkulator", "termin", "gravid", "svangerskap", "fødsel"],
+    popular: true,
     fields: [
       {
         id: "siste",

@@ -69,6 +69,77 @@ export const hverdagCalculators: Calculator[] = [
     },
   },
   {
+    slug: "nettleie",
+    title: "Nettleiekalkulator",
+    shortTitle: "Nettleie",
+    description:
+      "Anslå nettleie fra forbruk, pris per kWh og fast månedlig nettledd.",
+    category: "hverdag",
+    tags: ["nettleie", "strøm", "kwh", "energi"],
+    popular: true,
+    fields: [
+      {
+        id: "kwh",
+        label: "Forbruk",
+        type: "number",
+        unit: "kWh",
+        defaultValue: 250,
+      },
+      {
+        id: "pris",
+        label: "Nettleie per kWh",
+        type: "number",
+        unit: "kr/kWh",
+        defaultValue: 0.45,
+        step: 0.01,
+        hint: "Energiledd – sjekk nettselskapets prisliste.",
+      },
+      {
+        id: "fast",
+        label: "Fast nettledd",
+        type: "number",
+        unit: "kr/mnd",
+        defaultValue: 350,
+      },
+      {
+        id: "maaneder",
+        label: "Antall måneder",
+        type: "number",
+        defaultValue: 1,
+        min: 1,
+        max: 12,
+      },
+    ],
+    formula: "nettleie = kWh · pris + fast · måneder",
+    explanation:
+      "Nettleie er kostnaden for å transportere strømmen på nettet, i tillegg til selve kraftprisen. Prisene varierer etter trinn og abonnement – fyll inn tall fra nettselskapet ditt.",
+    disclaimer:
+      "Forenklet overslag. Kapasitetsledd, trinn og avgifter kan gi annet resultat.",
+    compute(input) {
+      const kwh = num(input, "kwh");
+      const pris = num(input, "pris");
+      const fast = num(input, "fast");
+      const maaneder = num(input, "maaneder") ?? 1;
+      if (!allNumbers([kwh, pris, fast, maaneder]) || maaneder < 1) return [];
+      const energi = kwh * pris;
+      const fastTot = fast * maaneder;
+      const total = energi + fastTot;
+      return [
+        result("total", "Nettleie totalt", total, {
+          kind: "currency",
+          digits: 0,
+          primary: true,
+        }),
+        result("energi", "Energiledd", energi, { kind: "currency", digits: 0 }),
+        result("fast", "Fast nettledd", fastTot, { kind: "currency", digits: 0 }),
+        result("snitt", "Snitt per kWh", total / kwh, {
+          kind: "currency",
+          digits: 2,
+        }),
+      ];
+    },
+  },
+  {
     slug: "drivstoff",
     title: "Drivstoffkostnad",
     description: "Regn ut bensin- eller dieselkostnad ut fra distanse og forbruk.",

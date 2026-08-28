@@ -121,7 +121,7 @@ export const formulas: Formula[] = [
     ],
     explanation:
       "Utgangspunktet er 40 uker fra siste menstruasjon. Ultralyd gir vanligvis mer treffsikker termin.",
-    calculatorSlug: "termin",
+    calculatorSlug: "terminkalkulator",
   },
   {
     slug: "mosteller",
@@ -180,7 +180,7 @@ export const formulas: Formula[] = [
     expression: "V = ⁴⁄₃ πr³",
     variables: [{ symbol: "r", meaning: "Radius" }],
     explanation: "Overflatearealet av en kule er 4πr².",
-    calculatorSlug: "volum",
+    calculatorSlug: "volum-kule",
   },
   {
     slug: "abc-formelen",
@@ -1253,7 +1253,7 @@ export const formulas: Formula[] = [
       { symbol: "t", meaning: "Tid" },
     ],
     explanation: "1 kWh = 3,6·10⁶ J. Brukes både for mekanikk og elektrisitet.",
-    calculatorSlug: "effekt",
+    calculatorSlug: "effekt-kalkulator",
   },
   {
     slug: "seriekopling",

@@ -147,11 +147,14 @@ export const fysikkCalculators: Calculator[] = [
     },
   },
   {
-    slug: "effekt",
-    title: "Effekt og energi",
-    description: "P = E / t og E = P · t. Regn mellom watt, timer og kilowattimer.",
+    slug: "effekt-kalkulator",
+    title: "Effektkalkulator",
+    shortTitle: "Effekt",
+    description:
+      "Regn ut effekt, energi og strømkostnad. P = E / t og E = P · t – watt, timer og kWh.",
     category: "fysikk",
-    tags: ["effekt", "watt", "kwh"],
+    tags: ["effekt", "effektkalkulator", "watt", "kwh", "energi"],
+    popular: true,
     fields: [
       { id: "watt", label: "Effekt", type: "number", unit: "W", defaultValue: 60 },
       {
