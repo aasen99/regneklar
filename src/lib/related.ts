@@ -58,19 +58,19 @@ export function relatedCalculators(slug: string, limit = 4): Calculator[] {
 /** Diskret lenke til Penger i Fokus på utvalgte økonomisider. */
 export const PIF_LINKS: Record<string, { href: string; label: string }> = {
   laneramme: {
-    href: "https://pengerifokus.no",
+    href: "https://pengerifokus.no/guider/laneramme-for-boligkjop",
     label: "Les mer om låneramme og gjeldsgrad på Penger i Fokus",
   },
   lanekalkulator: {
-    href: "https://pengerifokus.no",
-    label: "Guide til nominell og effektiv rente på Penger i Fokus",
+    href: "https://pengerifokus.no/guider/prosentregning",
+    label: "Mer om prosent og rente på Penger i Fokus",
   },
   "egenkapital-bolig": {
-    href: "https://pengerifokus.no",
+    href: "https://pengerifokus.no/guider/eie-eller-leie-bolig",
     label: "Mer om boligkjøp og egenkapital på Penger i Fokus",
   },
   bsu: {
-    href: "https://pengerifokus.no",
-    label: "BSU-forklaring og tips på Penger i Fokus",
+    href: "https://pengerifokus.no/guider/bygg-bufferkonto",
+    label: "Tips om sparing og bolig på Penger i Fokus",
   },
 };

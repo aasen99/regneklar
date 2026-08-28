@@ -586,13 +586,27 @@ export const formulas: Formula[] = [
     slug: "effektiv-rente-formel",
     title: "Effektiv rente",
     category: "okonomi",
-    expression: "effektiv = (1 + r/m)ᵐ − 1",
+    expression: "IRR fra kontantstrømmer → effektiv årsrente",
     variables: [
+      { symbol: "P", meaning: "Lånebeløp" },
       { symbol: "r", meaning: "Nominell årsrente" },
-      { symbol: "m", meaning: "Antall terminer per år" },
+      { symbol: "m", meaning: "Terminer per år" },
     ],
     explanation:
-      "Hyppigere rentetillegg gir høyere effektiv rente. Gebyrer kommer i tillegg i bankens oppgitte effektive rente.",
+      "Effektiv rente finnes ved å løse for renten som gjør at nåverdien av alle kontantstrømmer (utbetaling, terminer med gebyrer) blir null. Dette er nærmere bankens oppgitte effektive rente enn bare omregning av nominell rente.",
+    example:
+      "2 000 000 kr til 5,5 % nominell over 25 år med 3 000 kr i etableringsgebyr og 70 kr i termingebyr gir effektiv rente noe over nominell.",
+    prerequisites:
+      "Annuitetslån med faste terminer, gebyrer og nominell rente. Ingen renteendringer eller avdragsfrihet.",
+    commonMistakes: [
+      "Blande effektiv rente med bare (1 + r/m)ᵐ − 1 uten gebyrer.",
+      "Glemme at bankens effektive rente kan inkludere flere kostnader enn kalkulatoren.",
+    ],
+    source: {
+      label: "Forbrukerrådet",
+      url: "https://storage02.forbrukerradet.no/media/2025/03/forbrukerradet-pakket-og-uklart.pdf",
+      reviewedAt: "2026-08-28",
+    },
     calculatorSlug: "effektiv-rente",
   },
   {

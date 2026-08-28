@@ -15,9 +15,22 @@ export default function AboutPage() {
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <h1 className="font-serif text-4xl">Om Regneklar</h1>
       <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-        Regneklar gjør vanlige utregninger enklere å forstå. Her får du ikke
-        bare et svar, men også formelen og en kort forklaring på hvordan
-        resultatet regnes ut.
+        Regneklar.no er laget av Benjamin for å gjøre vanlige utregninger
+        enklere å forstå. Kalkulatorene viser ikke bare svaret, men også
+        formelen og en kort forklaring.
+      </p>
+      <p className="mt-4 leading-relaxed text-ink-soft">
+        Regneklar og{" "}
+        <a
+          href="https://pengerifokus.no"
+          className="text-pine hover:underline"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Penger i Fokus
+        </a>{" "}
+        drives av samme person, men har ulike oppgaver. Regneklar gir raske
+        utregninger. Penger i Fokus går dypere i personlig økonomi.
       </p>
       <p className="mt-4 leading-relaxed text-ink-soft">
         Nettstedet har {calculators.length} kalkulatorer og {formulas.length}{" "}
@@ -32,20 +45,22 @@ export default function AboutPage() {
         <li>Resultatet oppdateres med én gang.</li>
         <li>Se formelen og forklaringen under resultatet.</li>
       </ul>
-      <p className="mt-4 leading-relaxed text-ink-soft">
-        Målet er at det skal være like enkelt å forstå utregningen som å få
-        svaret.
-      </p>
 
       <h2 className="mt-10 font-serif text-2xl">Kvalitet og kilder</h2>
       <p className="mt-3 leading-relaxed text-ink-soft">
         Kalkulatorer som bygger på regler eller satser som kan endre seg, viser
-        kilde og dato for siste oppdatering. Opplysningene hentes så langt det
-        er mulig fra offentlige og pålitelige kilder.
+        kilde og dato for siste faglige kontroll. Satser hentes fra et sentralt
+        register og oppdateres når reglene endres.
       </p>
       <p className="mt-4 leading-relaxed text-ink-soft">
-        Formler og forklaringer er laget for å være tydelige og nyttige.
-        Likevel kan feil forekomme.
+        Oppdager du feil i en formel, sats eller forklaring? Send en e-post til{" "}
+        <a
+          href="mailto:post@regneklar.no"
+          className="text-pine hover:underline"
+        >
+          post@regneklar.no
+        </a>{" "}
+        – gjerne med lenke til kalkulatoren og hva som virker feil.
       </p>
 
       <h2 className="mt-10 font-serif text-2xl">Viktig å vite</h2>
@@ -66,7 +81,7 @@ export default function AboutPage() {
         <Link href="/personvern" className="text-pine hover:underline">
           personvernerklæringen
         </Link>
-        .
+        . Du kan endre samtykke når som helst via lenken i bunnteksten.
       </p>
 
       <p className="mt-8">
