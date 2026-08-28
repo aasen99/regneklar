@@ -5,76 +5,64 @@ import { formulas } from "@/lib/formulas";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata(
-  "Om REGNEKLAR",
-  "REGNEKLAR er gratis kalkulatorer og formler på norsk – bredde fra sport og matte til mat, skole og fysikk, med forklaring under svaret.",
+  "Om Regneklar",
+  "Regneklar gjør vanlige utregninger enklere å forstå – med svar, formel og kort forklaring.",
   { path: "/om" },
 );
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="font-serif text-4xl">Om REGNEKLAR</h1>
+      <h1 className="font-serif text-4xl">Om Regneklar</h1>
       <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-        Regneklar.no er laget av Benjamin for å gjøre vanlige utregninger
-        enklere å forstå. Kalkulatorene viser ikke bare svaret, men også
-        formelen og en kort forklaring.
+        Regneklar gjør vanlige utregninger enklere å forstå. Her får du ikke
+        bare et svar, men også formelen og en kort forklaring på hvordan
+        resultatet regnes ut.
       </p>
       <p className="mt-4 leading-relaxed text-ink-soft">
-        Nettstedet samler {calculators.length} kalkulatorer og{" "}
-        {formulas.length} formler innen sport og helse, matematikk, fysikk,
-        elektro, statistikk, musikk, foto, dyr, bygg, mat, skole, enheter,
-        hverdag og økonomi.
+        Nettstedet har {calculators.length} kalkulatorer og {formulas.length}{" "}
+        formler innen blant annet matematikk, økonomi, sport og helse, fysikk,
+        elektro, statistikk, bygg, mat, skole og hverdagslige utregninger.
       </p>
 
-      <h2 className="mt-10 font-serif text-2xl">Slik bruker du det</h2>
+      <h2 className="mt-10 font-serif text-2xl">Slik fungerer kalkulatorene</h2>
       <ul className="mt-3 list-disc space-y-2 pl-5 text-ink-soft">
-        <li>Søk, eller gå via kategori.</li>
-        <li>Fyll inn feltene. Resultatet oppdateres med en gang.</li>
-        <li>Les formelen under – den er den samme som kalkulatoren bruker.</li>
+        <li>Finn riktig kalkulator ved å søke eller velge en kategori.</li>
+        <li>Fyll inn tallene du kjenner.</li>
+        <li>Resultatet oppdateres med én gang.</li>
+        <li>Se formelen og forklaringen under resultatet.</li>
       </ul>
+      <p className="mt-4 leading-relaxed text-ink-soft">
+        Målet er at det skal være like enkelt å forstå utregningen som å få
+        svaret.
+      </p>
 
       <h2 className="mt-10 font-serif text-2xl">Kvalitet og kilder</h2>
       <p className="mt-3 leading-relaxed text-ink-soft">
-        Satser og regler som endrer seg over tid (egenkapital, dokumentavgift,
-        feriepenger, BSU m.m.) kontrolleres jevnlig mot offentlige kilder.
-        Hver slik kalkulator viser kilde og dato for siste kontroll. Oppdager
-        du en feil?{" "}
-        <a href="mailto:post@regneklar.no" className="text-pine hover:underline">
-          Send en e-post
-        </a>
-        .
+        Kalkulatorer som bygger på regler eller satser som kan endre seg, viser
+        kilde og dato for siste oppdatering. Opplysningene hentes så langt det
+        er mulig fra offentlige og pålitelige kilder.
+      </p>
+      <p className="mt-4 leading-relaxed text-ink-soft">
+        Formler og forklaringer er laget for å være tydelige og nyttige.
+        Likevel kan feil forekomme.
       </p>
 
       <h2 className="mt-10 font-serif text-2xl">Viktig å vite</h2>
       <p className="mt-3 leading-relaxed text-ink-soft">
-        Tallene er til hjelp og læring. De erstatter ikke bank, lege,
-        Skatteetaten eller fagfolk. Skatt, lån og helse har regler og unntak
-        som en generell kalkulator ikke kan fange.
+        Resultatene er veiledende og kan være avrundet. Enkelte utregninger
+        påvirkes av regler, unntak eller personlige forhold som en generell
+        kalkulator ikke kan ta hensyn til.
+      </p>
+      <p className="mt-4 leading-relaxed text-ink-soft">
+        Regneklar erstatter derfor ikke råd eller beregninger fra banker,
+        Skatteetaten, helsepersonell eller andre fagfolk.
       </p>
 
-      <h2 className="mt-10 font-serif text-2xl">Penger i Fokus</h2>
+      <h2 className="mt-10 font-serif text-2xl">Personvern</h2>
       <p className="mt-3 leading-relaxed text-ink-soft">
-        Regneklar og{" "}
-        <a
-          href="https://pengerifokus.no"
-          className="text-pine hover:underline"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Penger i Fokus
-        </a>{" "}
-        drives av samme person, men har ulike oppgaver. Regneklar gir raske
-        utregninger. Penger i Fokus går dypere i personlig økonomi med guider
-        og mer spesialiserte verktøy.
-      </p>
-
-      <h2 className="mt-10 font-serif text-2xl">Kontakt og personvern</h2>
-      <p className="mt-3 leading-relaxed text-ink-soft">
-        E-post:{" "}
-        <a href="mailto:post@regneklar.no" className="text-pine hover:underline">
-          post@regneklar.no
-        </a>
-        . Les om informasjonskapsler og analyse i{" "}
+        Du trenger ikke opprette en konto for å bruke kalkulatorene.
+        Informasjon om informasjonskapsler og analyse finner du i{" "}
         <Link href="/personvern" className="text-pine hover:underline">
           personvernerklæringen
         </Link>
