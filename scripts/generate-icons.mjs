@@ -68,10 +68,11 @@ fs.writeFileSync(
 );
 fs.writeFileSync(path.join(app, "icon.png"), p32);
 fs.writeFileSync(path.join(app, "apple-icon.png"), p180);
+fs.writeFileSync(path.join(app, "icon.svg"), svg);
 fs.writeFileSync(path.join(publicDir, "icon-192.png"), p192);
 fs.writeFileSync(path.join(publicDir, "icon-512.png"), p512);
+fs.writeFileSync(path.join(publicDir, "apple-touch-icon.png"), p180);
 
-const oldSvg = path.join(app, "icon.svg");
-if (fs.existsSync(oldSvg)) fs.unlinkSync(oldSvg);
-
-console.log("Generated favicon.ico, icon.png, apple-icon.png, icon-192/512.png");
+console.log(
+  "Generated favicon.ico, icon.png, icon.svg, apple-icon.png, icon-192/512.png",
+);
