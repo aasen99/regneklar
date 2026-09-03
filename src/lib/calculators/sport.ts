@@ -1694,6 +1694,130 @@ export const sportCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "opptrapping-loping",
+    title: "Opptrapping av løpsmengde",
+    shortTitle: "Opptrapping",
+    description:
+      "Planlegg økning av ukentlig løpsmengde mot et mål – med 10 % opptrapping per uke eller egen sats.",
+    category: "sport",
+    tags: [
+      "løping",
+      "opptrapping",
+      "treningsmengde",
+      "10 prosent",
+      "uke",
+      "progresjon",
+    ],
+    popular: true,
+    fields: [
+      {
+        id: "naa",
+        label: "Nåværende mengde",
+        type: "number",
+        unit: "km/uke",
+        defaultValue: 25,
+        hint: "Hvor mye du løper typisk i en uke nå.",
+      },
+      {
+        id: "mal",
+        label: "Mål",
+        type: "number",
+        unit: "km/uke",
+        defaultValue: 50,
+        hint: "Ønsket ukentlig distanse.",
+      },
+      {
+        id: "okning",
+        label: "Økning per uke",
+        type: "number",
+        unit: "%",
+        defaultValue: 10,
+        step: 0.5,
+        hint: "Klassisk tommelfingerregel er ca. 10 %.",
+      },
+    ],
+    formula: "kmₙ = nå · (1 + r)ⁿ",
+    explanation:
+      "Hver uke økes mengden med valgt prosent fra uken før. Uke 1 er første økning fra dagens nivå. 10 %-regelen er en grov rettesnor – form, skader og livssituasjon betyr mer enn formelen.",
+    disclaimer:
+      "Veiledende plan, ikke personlig treningsråd. Øk mer forsiktig ved skadehistorikk, eller ta en lettere uke ved behov.",
+    faqs: [
+      {
+        question: "Hvorfor 10 % per uke?",
+        answer:
+          "Mange treningsplaner bruker ca. 10 % økning i ukentlig mengde for å redusere skaderisiko. Det er en tommelfingerregel, ikke en absolutt grense.",
+      },
+      {
+        question: "Er uke 1 dagens mengde?",
+        answer:
+          "Nei. Nåværende mengde er utgangspunktet. Uke 1 er første uke med økning (f.eks. 10 % mer).",
+      },
+    ],
+    compute(input) {
+      const naa = num(input, "naa");
+      const mal = num(input, "mal");
+      const okning = num(input, "okning");
+      if (!allNumbers([naa, mal, okning]) || naa <= 0 || mal <= 0 || okning <= 0) {
+        return [];
+      }
+      if (mal <= naa) {
+        return [
+          result("uker", "Uker til mål", 0, {
+            kind: "integer",
+            primary: true,
+            hint: "Du er allerede på eller over målet.",
+          }),
+          result("naa", "Nåværende mengde", naa, { digits: 1, unit: "km/uke" }),
+        ];
+      }
+
+      const factor = 1 + okning / 100;
+      const weeks = Math.max(
+        1,
+        Math.ceil(Math.log(mal / naa) / Math.log(factor) - 1e-12),
+      );
+      if (weeks > 52) {
+        return [
+          result("uker", "Uker til mål", weeks, {
+            kind: "integer",
+            primary: true,
+            hint: "Over 52 uker – vurder mer realistisk mål eller startmengde.",
+          }),
+        ];
+      }
+
+      const out: ResultItem[] = [
+        result("uker", "Uker til mål", weeks, {
+          kind: "integer",
+          primary: true,
+          hint: `Med ${okning} % økning hver uke`,
+        }),
+      ];
+
+      let km = naa;
+      let sum = 0;
+      for (let w = 1; w <= weeks; w++) {
+        km *= factor;
+        const display = w === weeks && km < mal ? mal : km;
+        sum += display;
+        out.push(
+          result(`uke${w}`, `Uke ${w}`, display, {
+            digits: 1,
+            unit: "km",
+          }),
+        );
+      }
+
+      out.push(
+        result("total", "Totalt i opptrappingsperioden", sum, {
+          digits: 0,
+          unit: "km",
+        }),
+      );
+      return out;
+    },
+  },
 ];
 
 function resolveDistance(input: Record<string, string>): number | null {

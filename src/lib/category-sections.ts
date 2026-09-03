@@ -12,6 +12,7 @@ export const CATEGORY_SECTIONS: Partial<Record<CategoryId, CategorySection[]>> =
       slugs: [
         "km-t-min-km",
         "maltempo",
+        "opptrapping-loping",
         "sluttid-loping",
         "split-tider",
         "rundetid-400m",

@@ -710,6 +710,28 @@ export const formulas: Formula[] = [
     calculatorSlug: "treningsvolum",
   },
   {
+    slug: "opptrapping-loping-formel",
+    title: "Opptrapping av løpsmengde",
+    category: "sport",
+    expression: "kmₙ = nå · (1 + r)ⁿ",
+    variables: [
+      { symbol: "nå", meaning: "Nåværende km per uke" },
+      { symbol: "r", meaning: "Økning som desimal, f.eks. 0,10" },
+      { symbol: "n", meaning: "Antall uker med økning" },
+      { symbol: "kmₙ", meaning: "Mengde i uke n" },
+    ],
+    explanation:
+      "Ukentlig mengde vokser eksponentielt med valgt prosent. Antall uker er det minste n der kmₙ ≥ målet. 10 % er en vanlig tommelfingerregel.",
+    example:
+      "Fra 25 km/uke mot 50 km/uke med 10 %: uke 1 ≈ 27,5 km, uke 2 ≈ 30,3 km, … til målet er nådd.",
+    prerequisites: "Startmengde større enn null. Økningen er prosent av forrige uke, ikke av startmengden.",
+    commonMistakes: [
+      "Øke med 10 % av startmengden hver uke i stedet for 10 % av forrige uke.",
+      "Ignorere skadesignaler fordi planen sier at mengden skal opp.",
+    ],
+    calculatorSlug: "opptrapping-loping",
+  },
+  {
     slug: "met-formel",
     title: "MET-kalorier",
     category: "sport",
