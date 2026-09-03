@@ -725,6 +725,504 @@ export const elektroCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "stromdeler",
+    title: "Strømdeler",
+    shortTitle: "Strømdeler",
+    description: "Finn strømmen gjennom hver gren i en parallellkopling med to motstander.",
+    category: "elektro",
+    tags: ["strømdeler", "parallell", "krets", "elektro"],
+    fields: [
+      {
+        id: "i",
+        label: "Total strøm",
+        type: "number",
+        unit: "A",
+        defaultValue: 1,
+      },
+      {
+        id: "r1",
+        label: "Motstand R₁",
+        type: "number",
+        unit: "Ω",
+        defaultValue: 100,
+      },
+      {
+        id: "r2",
+        label: "Motstand R₂",
+        type: "number",
+        unit: "Ω",
+        defaultValue: 200,
+      },
+    ],
+    formula: "I₁ = I · R₂ / (R₁ + R₂)",
+    explanation:
+      "Minst motstand får mest strøm. Samme spenning over begge grenene.",
+    compute(input) {
+      const i = num(input, "i");
+      const r1 = num(input, "r1");
+      const r2 = num(input, "r2");
+      if (!allNumbers([i, r1, r2]) || r1 <= 0 || r2 <= 0) return [];
+      const i1 = (i * r2) / (r1 + r2);
+      const i2 = (i * r1) / (r1 + r2);
+      return [
+        result("i1", "Strøm gjennom R₁", i1, { digits: 4, unit: "A", primary: true }),
+        result("i2", "Strøm gjennom R₂", i2, { digits: 4, unit: "A" }),
+        result("u", "Spenning over grenene", i1 * r1, { digits: 4, unit: "V" }),
+      ];
+    },
+  },
+  {
+    slug: "ladning-q",
+    title: "Ladning Q = I · t",
+    shortTitle: "Ladning",
+    description: "Regn ut ladning, strøm eller tid fra Q = I · t. Omregn også til Ah.",
+    category: "elektro",
+    tags: ["ladning", "coulomb", "amperetime", "elektro"],
+    fields: [
+      {
+        id: "i",
+        label: "Strøm",
+        type: "number",
+        unit: "A",
+        defaultValue: 2,
+      },
+      {
+        id: "t",
+        label: "Tid",
+        type: "number",
+        unit: "s",
+        defaultValue: 3600,
+      },
+    ],
+    formula: "Q = I · t     1 Ah = 3600 C",
+    explanation:
+      "Konstant strøm forutsatt. Batterikapasitet i Ah er Q / 3600.",
+    compute(input) {
+      const i = num(input, "i");
+      const t = num(input, "t");
+      if (!allNumbers([i, t]) || t < 0) return [];
+      const q = i * t;
+      return [
+        result("q", "Ladning Q", q, { digits: 2, unit: "C", primary: true }),
+        result("ah", "Som amperetimer", q / 3600, { digits: 4, unit: "Ah" }),
+      ];
+    },
+  },
+  {
+    slug: "kondensator-kopling",
+    title: "Kondensatorer serie/parallell",
+    shortTitle: "C serie/parallell",
+    description: "Finn erstatningskapasitans for to kondensatorer i serie eller parallell.",
+    category: "elektro",
+    tags: ["kondensator", "serie", "parallell", "elektro"],
+    fields: [
+      {
+        id: "kopling",
+        label: "Kopling",
+        type: "select",
+        defaultValue: "parallell",
+        options: [
+          { value: "parallell", label: "Parallell" },
+          { value: "serie", label: "Serie" },
+        ],
+      },
+      {
+        id: "c1",
+        label: "C₁",
+        type: "number",
+        unit: "µF",
+        defaultValue: 10,
+      },
+      {
+        id: "c2",
+        label: "C₂",
+        type: "number",
+        unit: "µF",
+        defaultValue: 22,
+      },
+    ],
+    formula: "parallell: C = C₁ + C₂     serie: 1/C = 1/C₁ + 1/C₂",
+    explanation:
+      "Parallell øker kapasitansen. Serie senker den – ofte brukt for å øke spenningsmarginen.",
+    compute(input) {
+      const c1 = num(input, "c1");
+      const c2 = num(input, "c2");
+      if (!allNumbers([c1, c2]) || c1 <= 0 || c2 <= 0) return [];
+      const c =
+        input.kopling === "serie" ? (c1 * c2) / (c1 + c2) : c1 + c2;
+      return [
+        result("c", "Erstatningskapasitans", c, {
+          digits: 4,
+          unit: "µF",
+          primary: true,
+        }),
+      ];
+    },
+  },
+  {
+    slug: "rl-tidskonstant",
+    title: "RL-tidskonstant",
+    shortTitle: "RL τ",
+    description: "Finn tidskonstanten τ = L / R for en RL-krets.",
+    category: "elektro",
+    tags: ["spole", "tidskonstant", "rl", "elektro"],
+    fields: [
+      {
+        id: "l",
+        label: "Induktans L",
+        type: "number",
+        unit: "mH",
+        defaultValue: 100,
+      },
+      {
+        id: "r",
+        label: "Resistans R",
+        type: "number",
+        unit: "Ω",
+        defaultValue: 50,
+      },
+    ],
+    formula: "τ = L / R",
+    explanation:
+      "Etter 1τ er strømmen ca. 63 % av sluttverdien. Etter 5τ er den praktisk talt ferdig.",
+    compute(input) {
+      const lMh = num(input, "l");
+      const r = num(input, "r");
+      if (!allNumbers([lMh, r]) || r <= 0 || lMh < 0) return [];
+      const l = lMh / 1000;
+      const tau = l / r;
+      return [
+        result("tau", "Tidskonstant τ", tau, {
+          digits: 6,
+          unit: "s",
+          primary: true,
+        }),
+        result("ms", "I millisekund", tau * 1000, { digits: 3, unit: "ms" }),
+        result("five", "Ca. 5τ", 5 * tau, { digits: 6, unit: "s" }),
+      ];
+    },
+  },
+  {
+    slug: "resonans",
+    title: "Resonansfrekvens LC",
+    shortTitle: "Resonans",
+    description: "Finn resonansfrekvensen for en LC-krets: f₀ = 1 / (2π√(LC)).",
+    category: "elektro",
+    tags: ["resonans", "lc", "frekvens", "elektro"],
+    popular: true,
+    fields: [
+      {
+        id: "l",
+        label: "Induktans L",
+        type: "number",
+        unit: "mH",
+        defaultValue: 10,
+      },
+      {
+        id: "c",
+        label: "Kapasitans C",
+        type: "number",
+        unit: "nF",
+        defaultValue: 100,
+      },
+    ],
+    formula: "f₀ = 1 / (2π √(L C))",
+    explanation:
+      "Ved resonans er X_L = X_C. Brukes i filter, oscillatorer og radio.",
+    compute(input) {
+      const lMh = num(input, "l");
+      const cNf = num(input, "c");
+      if (!allNumbers([lMh, cNf]) || lMh <= 0 || cNf <= 0) return [];
+      const l = lMh / 1000;
+      const c = cNf * 1e-9;
+      const f0 = 1 / (2 * Math.PI * Math.sqrt(l * c));
+      return [
+        result("f0", "Resonansfrekvens", f0, {
+          digits: 2,
+          unit: "Hz",
+          primary: true,
+        }),
+        result("khz", "I kHz", f0 / 1000, { digits: 3, unit: "kHz" }),
+        result("omega", "ω₀", 2 * Math.PI * f0, { digits: 2, unit: "rad/s" }),
+      ];
+    },
+  },
+  {
+    slug: "rc-filter",
+    title: "RC-filter grensefrekvens",
+    shortTitle: "RC-filter",
+    description: "Finn −3 dB-grensefrekvensen for et enkelt RC-filter.",
+    category: "elektro",
+    tags: ["filter", "rc", "frekvens", "elektro"],
+    fields: [
+      {
+        id: "r",
+        label: "Resistans R",
+        type: "number",
+        unit: "Ω",
+        defaultValue: 10000,
+      },
+      {
+        id: "c",
+        label: "Kapasitans C",
+        type: "number",
+        unit: "nF",
+        defaultValue: 10,
+      },
+    ],
+    formula: "f_c = 1 / (2π R C)",
+    explanation:
+      "Ved f_c er amplituden ca. 70,7 % (−3 dB). Lavpass: utgang over C. Høypass: utgang over R.",
+    compute(input) {
+      const r = num(input, "r");
+      const cNf = num(input, "c");
+      if (!allNumbers([r, cNf]) || r <= 0 || cNf <= 0) return [];
+      const c = cNf * 1e-9;
+      const fc = 1 / (2 * Math.PI * r * c);
+      return [
+        result("fc", "Grensefrekvens", fc, {
+          digits: 2,
+          unit: "Hz",
+          primary: true,
+        }),
+        result("khz", "I kHz", fc / 1000, { digits: 4, unit: "kHz" }),
+      ];
+    },
+  },
+  {
+    slug: "effekttrekant",
+    title: "Effekttrekant P, Q, S",
+    shortTitle: "P / Q / S",
+    description:
+      "Regn ut aktiv, reaktiv og tilsynelatende effekt, samt effektfaktor.",
+    category: "elektro",
+    tags: ["effekt", "cos phi", "reaktiv", "elektro"],
+    fields: [
+      {
+        id: "p",
+        label: "Aktiv effekt P",
+        type: "number",
+        unit: "W",
+        defaultValue: 800,
+      },
+      {
+        id: "q",
+        label: "Reaktiv effekt Q",
+        type: "number",
+        unit: "var",
+        defaultValue: 600,
+      },
+    ],
+    formula: "S = √(P² + Q²)     cos φ = P / S",
+    explanation:
+      "S er det nettet må dimensjoneres for. Lav cos φ betyr mer strøm for samme nyttige P.",
+    compute(input) {
+      const p = num(input, "p");
+      const q = num(input, "q");
+      if (!allNumbers([p, q])) return [];
+      const s = Math.sqrt(p * p + q * q);
+      const cos = s === 0 ? Number.NaN : p / s;
+      return [
+        result("s", "Tilsynelatende S", s, {
+          digits: 2,
+          unit: "VA",
+          primary: true,
+        }),
+        result("cos", "Effektfaktor cos φ", cos, { digits: 3 }),
+        result("phi", "Fasevinkel φ", (Math.acos(Math.min(1, Math.max(-1, cos))) * 180) / Math.PI, {
+          digits: 1,
+          unit: "°",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "virkningsgrad-elektro",
+    title: "Virkningsgrad (elektro)",
+    shortTitle: "Virkningsgrad",
+    description: "Regn ut virkningsgrad og tap fra inn- og uteffekt.",
+    category: "elektro",
+    tags: ["virkningsgrad", "tap", "motor", "elektro"],
+    fields: [
+      {
+        id: "inn",
+        label: "Tilført effekt",
+        type: "number",
+        unit: "W",
+        defaultValue: 1000,
+      },
+      {
+        id: "ut",
+        label: "Nytteeffekt",
+        type: "number",
+        unit: "W",
+        defaultValue: 920,
+      },
+    ],
+    formula: "η = P_ut / P_inn · 100 %",
+    explanation: "Tap = P_inn − P_ut. Virkningsgrad kan aldri overstige 100 %.",
+    compute(input) {
+      const inn = num(input, "inn");
+      const ut = num(input, "ut");
+      if (!allNumbers([inn, ut]) || inn <= 0) return [];
+      return [
+        result("eta", "Virkningsgrad", (ut / inn) * 100, {
+          kind: "percent",
+          digits: 1,
+          primary: true,
+        }),
+        result("tap", "Tap", inn - ut, { digits: 2, unit: "W" }),
+      ];
+    },
+  },
+  {
+    slug: "desibel-elektro",
+    title: "Desibel (U og P)",
+    shortTitle: "dB",
+    description: "Regn om spennings- eller effektforhold til desibel.",
+    category: "elektro",
+    tags: ["desibel", "db", "forsterkning", "elektro"],
+    fields: [
+      {
+        id: "type",
+        label: "Type",
+        type: "select",
+        defaultValue: "u",
+        options: [
+          { value: "u", label: "Spenning (20 log)" },
+          { value: "p", label: "Effekt (10 log)" },
+        ],
+      },
+      {
+        id: "v1",
+        label: "Referanseverdi",
+        type: "number",
+        defaultValue: 1,
+      },
+      {
+        id: "v2",
+        label: "Ny verdi",
+        type: "number",
+        defaultValue: 2,
+      },
+    ],
+    formula: "dB = 20 log(U₂/U₁)     dB = 10 log(P₂/P₁)",
+    explanation:
+      "Dobling av spenning ≈ +6 dB. Dobling av effekt ≈ +3 dB.",
+    compute(input) {
+      const v1 = num(input, "v1");
+      const v2 = num(input, "v2");
+      if (!allNumbers([v1, v2]) || v1 === 0 || v2 <= 0) return [];
+      const ratio = v2 / v1;
+      const db =
+        input.type === "p" ? 10 * Math.log10(ratio) : 20 * Math.log10(ratio);
+      return [
+        result("db", "Forhold", db, { digits: 2, unit: "dB", primary: true }),
+        result("ratio", "Forholdstall", ratio, { digits: 4 }),
+      ];
+    },
+  },
+  {
+    slug: "indre-motstand",
+    title: "Indre motstand i batteri",
+    shortTitle: "Indre R",
+    description:
+      "Finn indre motstand fra tomgangsspenning, klemmespenning og laststrøm.",
+    category: "elektro",
+    tags: ["batteri", "indre motstand", "elektro"],
+    fields: [
+      {
+        id: "e",
+        label: "Tomgangsspenning E",
+        type: "number",
+        unit: "V",
+        defaultValue: 12.6,
+      },
+      {
+        id: "u",
+        label: "Klemmespenning U",
+        type: "number",
+        unit: "V",
+        defaultValue: 12.0,
+      },
+      {
+        id: "i",
+        label: "Laststrøm",
+        type: "number",
+        unit: "A",
+        defaultValue: 10,
+      },
+    ],
+    formula: "r = (E − U) / I",
+    explanation:
+      "Jo høyere indre motstand, desto mer faller spenningen under last.",
+    compute(input) {
+      const e = num(input, "e");
+      const u = num(input, "u");
+      const i = num(input, "i");
+      if (!allNumbers([e, u, i]) || i <= 0 || e < u) return [];
+      const r = (e - u) / i;
+      return [
+        result("r", "Indre motstand", r, {
+          digits: 4,
+          unit: "Ω",
+          primary: true,
+        }),
+        result("tap", "Tap i batteriet", i * i * r, { digits: 2, unit: "W" }),
+      ];
+    },
+  },
+  {
+    slug: "pwm-duty",
+    title: "PWM duty cycle",
+    shortTitle: "PWM",
+    description: "Finn duty cycle og gjennomsnittsspenning for PWM-styring.",
+    category: "elektro",
+    tags: ["pwm", "duty cycle", "elektronikk", "elektro"],
+    fields: [
+      {
+        id: "ton",
+        label: "Tid på",
+        type: "number",
+        unit: "µs",
+        defaultValue: 500,
+      },
+      {
+        id: "t",
+        label: "Periode",
+        type: "number",
+        unit: "µs",
+        defaultValue: 1000,
+      },
+      {
+        id: "u",
+        label: "Forsyningsspenning",
+        type: "number",
+        unit: "V",
+        defaultValue: 12,
+      },
+    ],
+    formula: "D = t_på / T     U_snitt = D · U",
+    explanation:
+      "Duty cycle mellom 0 og 1. 50 % gir omtrent halv snittspenning (ideell firkant).",
+    compute(input) {
+      const ton = num(input, "ton");
+      const t = num(input, "t");
+      const u = num(input, "u");
+      if (!allNumbers([ton, t, u]) || t <= 0 || ton < 0 || ton > t) return [];
+      const d = ton / t;
+      return [
+        result("d", "Duty cycle", d * 100, {
+          kind: "percent",
+          digits: 1,
+          primary: true,
+        }),
+        result("usnitt", "Snittspenning", d * u, { digits: 3, unit: "V" }),
+        result("f", "Frekvens", 1e6 / t, { digits: 1, unit: "Hz" }),
+      ];
+    },
+  },
 ];
 
 function nearestE24(r: number): number {

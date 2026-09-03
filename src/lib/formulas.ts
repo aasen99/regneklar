@@ -1561,6 +1561,329 @@ export const formulas: Formula[] = [
       "Spolen lagrer energi i magnetfeltet. Bryter du strømmen brått, kan u = L·di/dt gi høye spenningstopper – derfor friløpsdiode over reléspoler.",
   },
   {
+    slug: "led-motstand-formel",
+    title: "LED-seriemotstand",
+    category: "elektro",
+    expression: "R = (Vs − Vf) / I",
+    variables: [
+      { symbol: "Vs", meaning: "Forsyningsspenning" },
+      { symbol: "Vf", meaning: "LED-ens fremspenning" },
+      { symbol: "I", meaning: "Ønsket LED-strøm i ampere" },
+      { symbol: "R", meaning: "Seriemotstand" },
+    ],
+    explanation:
+      "Motstanden tar restspenningen. Velg nærmeste høyere standardverdi (E24). Effekt i motstanden: P = (Vs − Vf)·I.",
+    example: "5 V, Vf 2,1 V og 20 mA gir R = (5 − 2,1) / 0,02 = 145 Ω → bruk 150 Ω.",
+    commonMistakes: [
+      "Glemme å dele milliampere på 1000.",
+      "Koble LED uten motstand på mer enn Vf.",
+    ],
+    calculatorSlug: "led-motstand",
+  },
+  {
+    slug: "batteri-wh-ah-formel",
+    title: "Batteri Wh og Ah",
+    category: "elektro",
+    expression: "Wh = V · Ah     Ah = Wh / V",
+    variables: [
+      { symbol: "Wh", meaning: "Energi i wattimer" },
+      { symbol: "Ah", meaning: "Kapasitet i amperetimer" },
+      { symbol: "V", meaning: "Nominell spenning" },
+    ],
+    explanation:
+      "Wh forteller hvor mye energi batteriet lagrer. Ah alene sier lite uten spenning. Driftstid ≈ Ah / forbruksstrøm (grovt).",
+    calculatorSlug: "batteri-wh-ah",
+  },
+  {
+    slug: "stromdeler-formel",
+    title: "Strømdeler",
+    category: "elektro",
+    expression: "I₁ = I · R₂ / (R₁ + R₂)",
+    variables: [
+      { symbol: "I", meaning: "Total strøm inn i parallellkoplingen" },
+      { symbol: "I₁", meaning: "Strøm gjennom R₁" },
+      { symbol: "R₁, R₂", meaning: "Parallellkoplede motstander" },
+    ],
+    explanation:
+      "Minst motstand får mest strøm. Motsatt av spenningsdeleren. Gjelder bare to grener uten ekstra kilder.",
+    calculatorSlug: "stromdeler",
+  },
+  {
+    slug: "ledningsevne-formel",
+    title: "Ledningsevne",
+    category: "elektro",
+    expression: "G = 1 / R     I = G · U",
+    variables: [
+      { symbol: "G", meaning: "Ledningsevne i siemens (S)" },
+      { symbol: "R", meaning: "Resistans i ohm" },
+    ],
+    explanation:
+      "Høy G betyr lett strømvei. Parallelle ledningsevner summeres direkte: G = G₁ + G₂.",
+  },
+  {
+    slug: "ladning-strom-tid",
+    title: "Ladning, strøm og tid",
+    category: "elektro",
+    expression: "Q = I · t",
+    variables: [
+      { symbol: "Q", meaning: "Ladning i coulomb (C)" },
+      { symbol: "I", meaning: "Strøm i ampere" },
+      { symbol: "t", meaning: "Tid i sekunder" },
+    ],
+    explanation:
+      "1 Ah = 3600 C. Batterikapasitet i Ah er ladning delt på 3600. Konstant strøm forutsatt.",
+    calculatorSlug: "ladning-q",
+  },
+  {
+    slug: "kondensator-serie-parallell",
+    title: "Kondensatorer i serie og parallell",
+    category: "elektro",
+    expression: "parallell: C = C₁ + C₂     serie: 1/C = 1/C₁ + 1/C₂",
+    variables: [{ symbol: "C", meaning: "Erstatningskapasitans" }],
+    explanation:
+      "Motsatt av motstander: parallell øker C, serie senker C. I serie er den minste C den som begrenser mest.",
+    calculatorSlug: "kondensator-kopling",
+  },
+  {
+    slug: "spole-serie-parallell",
+    title: "Spoler i serie og parallell",
+    category: "elektro",
+    expression: "serie: L = L₁ + L₂     parallell: 1/L = 1/L₁ + 1/L₂",
+    variables: [{ symbol: "L", meaning: "Erstatningsinduktans" }],
+    explanation:
+      "Samme regneregel som for motstander, dersom spolene ikke påvirker hverandre magnetisk (ingen gjensidig induktans).",
+  },
+  {
+    slug: "rl-tidskonstant-formel",
+    title: "RL-tidskonstant",
+    category: "elektro",
+    expression: "τ = L / R",
+    variables: [
+      { symbol: "τ", meaning: "Tidskonstant i sekunder" },
+      { symbol: "L", meaning: "Induktans i henry" },
+      { symbol: "R", meaning: "Resistans i ohm" },
+    ],
+    explanation:
+      "Etter 1τ har strømmen nådd ca. 63 % av sluttverdien ved innkobling. Etter 5τ er den praktisk talt stabil.",
+    calculatorSlug: "rl-tidskonstant",
+  },
+  {
+    slug: "resonans-formel",
+    title: "Resonansfrekvens LC",
+    category: "elektro",
+    expression: "f₀ = 1 / (2π √(L C))",
+    variables: [
+      { symbol: "f₀", meaning: "Resonansfrekvens i hertz" },
+      { symbol: "L", meaning: "Induktans i henry" },
+      { symbol: "C", meaning: "Kapasitans i farad" },
+    ],
+    explanation:
+      "Ved resonans er X_L = X_C. Serie-LC gir lav impedans, parallell-LC gir høy impedans ved f₀.",
+    example: "L = 10 mH og C = 100 nF gir f₀ ≈ 5,03 kHz.",
+    calculatorSlug: "resonans",
+  },
+  {
+    slug: "rc-filter-formel",
+    title: "RC-filter (grensefrekvens)",
+    category: "elektro",
+    expression: "f_c = 1 / (2π R C)",
+    variables: [
+      { symbol: "f_c", meaning: "Grensefrekvens (−3 dB)" },
+      { symbol: "R", meaning: "Resistans i ohm" },
+      { symbol: "C", meaning: "Kapasitans i farad" },
+    ],
+    explanation:
+      "Lavpass: utgang over C. Høypass: utgang over R. Ved f_c er amplituden ca. 70,7 % (−3 dB).",
+    calculatorSlug: "rc-filter",
+  },
+  {
+    slug: "effekttrekant-formel",
+    title: "Effekttrekant (P, Q, S)",
+    category: "elektro",
+    expression: "S² = P² + Q²     cos φ = P / S",
+    variables: [
+      { symbol: "P", meaning: "Aktiv effekt (W)" },
+      { symbol: "Q", meaning: "Reaktiv effekt (var)" },
+      { symbol: "S", meaning: "Tilsynelatende effekt (VA)" },
+    ],
+    explanation:
+      "P gjør arbeid, Q svinger mellom kilde og last, S er det nettet må levere. cos φ = P/S er effektfaktoren.",
+    calculatorSlug: "effekttrekant",
+  },
+  {
+    slug: "fase-linje-spenning",
+    title: "Fase- og linjespenning",
+    category: "elektro",
+    expression: "U_L = √3 · U_f     I_L = I_f (stjerne)",
+    variables: [
+      { symbol: "U_L", meaning: "Linjespenning mellom to faser (400 V)" },
+      { symbol: "U_f", meaning: "Fasespenning fase–null (230 V)" },
+    ],
+    explanation:
+      "I Norge er U_L typisk 400 V og U_f 230 V. I stjerne er linjestrøm = fasestrøm. I trekant er I_L = √3 · I_f.",
+  },
+  {
+    slug: "elektrisk-felt-formel",
+    title: "Elektrisk felt",
+    category: "elektro",
+    expression: "E = F / q     E = U / d",
+    variables: [
+      { symbol: "E", meaning: "Elektrisk feltstyrke i V/m" },
+      { symbol: "U", meaning: "Spenning mellom platene" },
+      { symbol: "d", meaning: "Avstand mellom platene" },
+    ],
+    explanation:
+      "Mellom parallelle plater er feltet jevnt. Kraften på en ladning er F = q·E.",
+  },
+  {
+    slug: "parallellplate-kondensator",
+    title: "Parallellplatekondensator",
+    category: "elektro",
+    expression: "C = ε₀ ε_r A / d",
+    variables: [
+      { symbol: "ε₀", meaning: "8,85·10⁻¹² F/m" },
+      { symbol: "ε_r", meaning: "Relativ dielektrisitetskonstant" },
+      { symbol: "A", meaning: "Plateareal i m²" },
+      { symbol: "d", meaning: "Avstand mellom platene" },
+    ],
+    explanation:
+      "Større areal eller tynnere gap øker C. Dielektrikum (ε_r > 1) øker kapasitansen ytterligere.",
+  },
+  {
+    slug: "faraday-lov",
+    title: "Faradays induksjonslov",
+    category: "elektro",
+    expression: "ε = −N · dΦ / dt",
+    variables: [
+      { symbol: "ε", meaning: "Indusert elektromotorisk spenning" },
+      { symbol: "N", meaning: "Antall vindinger" },
+      { symbol: "Φ", meaning: "Magnetisk fluks" },
+    ],
+    explanation:
+      "Endring i fluks gjennom en spole gir spenning. Minustegnet er Lenz’ lov: induksjon motvirker endringen.",
+  },
+  {
+    slug: "magnetisk-fluks",
+    title: "Magnetisk fluks",
+    category: "elektro",
+    expression: "Φ = B · A · cos θ",
+    variables: [
+      { symbol: "Φ", meaning: "Fluks i weber (Wb)" },
+      { symbol: "B", meaning: "Magnetisk flukstetthet i tesla" },
+      { symbol: "A", meaning: "Areal" },
+      { symbol: "θ", meaning: "Vinkel mellom B og normalen til flaten" },
+    ],
+    explanation:
+      "Maks fluks når feltet står vinkelrett på flaten (θ = 0). Enhet: 1 Wb = 1 T·m².",
+  },
+  {
+    slug: "biot-savart-leder",
+    title: "Magnetfelt rundt rett leder",
+    category: "elektro",
+    expression: "B = μ₀ I / (2π r)",
+    variables: [
+      { symbol: "B", meaning: "Flukstetthet i tesla" },
+      { symbol: "μ₀", meaning: "4π·10⁻⁷ T·m/A" },
+      { symbol: "I", meaning: "Strøm i ampere" },
+      { symbol: "r", meaning: "Avstand fra lederen" },
+    ],
+    explanation:
+      "Feltet går i sirkler rundt lederen (høyrehåndsregelen). Dobbel strøm → dobbel B. Dobbel avstand → halv B.",
+  },
+  {
+    slug: "virkningsgrad-elektro",
+    title: "Virkningsgrad",
+    category: "elektro",
+    expression: "η = P_ut / P_inn · 100 %",
+    variables: [
+      { symbol: "η", meaning: "Virkningsgrad" },
+      { symbol: "P_ut", meaning: "Nytteeffekt" },
+      { symbol: "P_inn", meaning: "Tilført effekt" },
+    ],
+    explanation:
+      "Tap = P_inn − P_ut. Motorer, transformatorer og ladere oppgir ofte η. Kan aldri overstige 100 %.",
+    calculatorSlug: "virkningsgrad-elektro",
+  },
+  {
+    slug: "desibel-elektro",
+    title: "Desibel (spenning og effekt)",
+    category: "elektro",
+    expression: "dB = 20 log₁₀(U₂/U₁)     dB = 10 log₁₀(P₂/P₁)",
+    variables: [
+      { symbol: "U", meaning: "Spenning" },
+      { symbol: "P", meaning: "Effekt" },
+    ],
+    explanation:
+      "Dobling av spenning er +6 dB. Dobling av effekt er +3 dB. Bruk 20-regelen for U og I, 10-regelen for P.",
+    calculatorSlug: "desibel-elektro",
+  },
+  {
+    slug: "indre-motstand-batteri",
+    title: "Indre motstand i batteri",
+    category: "elektro",
+    expression: "U = E − I · r     r = (E − U) / I",
+    variables: [
+      { symbol: "E", meaning: "Elektromotorisk spenning (tomgang)" },
+      { symbol: "U", meaning: "Klemmespenning under last" },
+      { symbol: "r", meaning: "Indre motstand" },
+      { symbol: "I", meaning: "Laststrøm" },
+    ],
+    explanation:
+      "Klemmespenningen faller når strømmen øker. Høy indre motstand gir mer fall og mer tap i batteriet.",
+    calculatorSlug: "indre-motstand",
+  },
+  {
+    slug: "maksimal-effektoverforing",
+    title: "Maksimal effektoverføring",
+    category: "elektro",
+    expression: "R_last = R_kilde     P_maks = E² / (4 R_kilde)",
+    variables: [
+      { symbol: "R_last", meaning: "Lastresistans" },
+      { symbol: "R_kilde", meaning: "Kildens indre resistans" },
+      { symbol: "E", meaning: "Tomgangsspenning" },
+    ],
+    explanation:
+      "Mest effekt til lasten når R_last = R_kilde. Da er virkningsgraden bare 50 % – ofte uaktuelt i kraftnett, mer relevant i signaler.",
+  },
+  {
+    slug: "wheatstone-bro",
+    title: "Wheatstone-bro",
+    category: "elektro",
+    expression: "balanse: R₁/R₂ = R₃/R₄",
+    variables: [
+      { symbol: "R₁, R₂", meaning: "Den ene spenningsdeleren" },
+      { symbol: "R₃, R₄", meaning: "Den andre spenningsdeleren" },
+    ],
+    explanation:
+      "Ved balanse er midtpunktene på samme potensial, og ingen strøm går gjennom galvanometeret. Brukes til å måle ukjent R.",
+  },
+  {
+    slug: "pwm-duty-cycle",
+    title: "PWM og duty cycle",
+    category: "elektro",
+    expression: "D = t_på / T     U_snitt = D · U_forsyning",
+    variables: [
+      { symbol: "D", meaning: "Duty cycle (0–1)" },
+      { symbol: "t_på", meaning: "Tid på i hver periode" },
+      { symbol: "T", meaning: "Periode" },
+    ],
+    explanation:
+      "Pulsbreddemodulasjon styrer gjennomsnittsspenning uten lineær effektregulering. 50 % duty cycle ≈ halv snittspenning.",
+    calculatorSlug: "pwm-duty",
+  },
+  {
+    slug: "stjerne-trekant",
+    title: "Stjerne–trekant-omregning",
+    category: "elektro",
+    expression: "R_Δ = 3 R_Y     (like motstander)",
+    variables: [
+      { symbol: "R_Y", meaning: "Motstand i stjerne (hver gren)" },
+      { symbol: "R_Δ", meaning: "Motstand i trekant (hver side)" },
+    ],
+    explanation:
+      "For like verdier er trekantmotstanden tre ganger stjernemotstanden. Generell omregning bruker produkt-over-sum for ulik R.",
+  },
+  {
     slug: "gjennomsnitt-formel",
     title: "Gjennomsnitt",
     category: "statistikk",
