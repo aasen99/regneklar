@@ -540,10 +540,11 @@ export const hverdagCalculators: Calculator[] = [
   },
   {
     slug: "ukenummer",
-    title: "Ukenummer",
-    description: "Finn ISO-ukenr og ukedag for en dato.",
+    title: "Ukenummer-kalkulator",
+    shortTitle: "Ukenummer",
+    description: "Finn ISO-ukenummer og ukedag for en dato – hvilken uke er det?",
     category: "hverdag",
-    tags: ["uke", "dato", "kalender", "iso"],
+    tags: ["ukenummer", "uke", "dato", "kalender", "iso", "hvilken uke"],
     fields: [
       {
         id: "dato",

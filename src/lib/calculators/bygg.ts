@@ -8,9 +8,9 @@ export const byggCalculators: Calculator[] = [
     title: "Malingskalkulator",
     shortTitle: "Maling",
     description:
-      "Finn hvor mange liter maling du trenger ut fra areal, strøk og dekning.",
+      "Malingskalkulator: finn hvor mange liter maling du trenger ut fra areal, strøk og dekning.",
     category: "bygg",
-    tags: ["maling", "oppussing", "vegg"],
+    tags: ["maling", "malingskalkulator", "oppussing", "vegg", "liter maling"],
     popular: true,
     fields: [
       {

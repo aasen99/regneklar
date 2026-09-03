@@ -25,16 +25,18 @@ export function featuredCalculators(): Calculator[] {
 
 /** Populære søk / snarveier på søkesiden før brukeren skriver. */
 export const POPULAR_SEARCHES = [
-  { label: "Lån", href: "/kalkulator/lanekalkulator" },
+  { label: "Lånekalkulator", href: "/kalkulator/lanekalkulator" },
+  { label: "Hvor mye kan jeg låne", href: "/kalkulator/laneramme" },
   { label: "BMI", href: "/kalkulator/bmi" },
   { label: "Prosent", href: "/kalkulator/prosent" },
   { label: "Maling", href: "/kalkulator/maling" },
   { label: "Løpetempo", href: "/kalkulator/km-t-min-km" },
   { label: "MVA", href: "/kalkulator/mva" },
   { label: "Karakterkalkulator", href: "/kalkulator/karakterkalkulator" },
-  { label: "Strømkostnad", href: "/kalkulator/stromkostnad" },
+  { label: "Kalorier", href: "/kalkulator/kaloribehov" },
   { label: "Pytagoras", href: "/kalkulator/pythagoras" },
   { label: "Egenkapital", href: "/kalkulator/egenkapital-bolig" },
+  { label: "Feriepenger", href: "/kalkulator/feriepenger" },
 ] as const;
 
 export const calculatorCount = calculators.length;

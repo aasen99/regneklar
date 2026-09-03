@@ -5,11 +5,19 @@ import { allNumbers, result } from "../helpers";
 export const matematikkCalculators: Calculator[] = [
   {
     slug: "pythagoras",
-    title: "Pytagoras' setning",
+    title: "Pytagoras' setning – kalkulator",
+    shortTitle: "Pytagoras",
     description:
-      "Finn den ukjente siden i en rettvinklet trekant med Pytagoras' setning: a² + b² = c².",
+      "Pytagoras' setning-kalkulator: finn den ukjente siden i en rettvinklet trekant (a² + b² = c²).",
     category: "matematikk",
-    tags: ["pytagoras", "pythagoras", "setning", "trekant", "geometri"],
+    tags: [
+      "pytagoras",
+      "pythagoras",
+      "pytagoras setning",
+      "pythagoras setning",
+      "trekant",
+      "geometri",
+    ],
     popular: true,
     fields: [
       {
@@ -88,11 +96,18 @@ export const matematikkCalculators: Calculator[] = [
   },
   {
     slug: "areal",
-    title: "Areal",
+    title: "Arealkalkulator",
+    shortTitle: "Areal",
     description:
-      "Regn ut areal av rektangel, trekant, sirkel, trapes og parallellogram.",
+      "Arealkalkulator: regn ut areal av rektangel, trekant, sirkel, trapes og parallellogram.",
     category: "matematikk",
-    tags: ["areal", "geometri", "arealberegning"],
+    tags: [
+      "areal",
+      "arealkalkulator",
+      "arealberegning",
+      "geometri",
+      "kvadratmeter",
+    ],
     popular: true,
     fields: [
       {
@@ -334,11 +349,12 @@ export const matematikkCalculators: Calculator[] = [
   },
   {
     slug: "gjennomsnitt",
-    title: "Gjennomsnitt og median",
+    title: "Gjennomsnittskalkulator",
+    shortTitle: "Gjennomsnitt",
     description:
-      "Lim inn tall skilt med komma eller mellomrom og få snitt, median og sum.",
+      "Gjennomsnittskalkulator: lim inn tall og få snitt, median og sum.",
     category: "matematikk",
-    tags: ["snitt", "median", "statistikk"],
+    tags: ["gjennomsnitt", "gjennomsnittskalkulator", "snitt", "median", "statistikk"],
     fields: [
       {
         id: "tall",
@@ -445,10 +461,12 @@ export const matematikkCalculators: Calculator[] = [
   },
   {
     slug: "brok",
-    title: "Brøk",
-    description: "Addér, trekk fra, gang og del to brøker, og forkort resultatet.",
+    title: "Brøkkalkulator",
+    shortTitle: "Brøk",
+    description:
+      "Brøkkalkulator: addér, trekk fra, gang og del to brøker, og forkort resultatet.",
     category: "matematikk",
-    tags: ["brøk", "forkorting"],
+    tags: ["brøk", "brøkkalkulator", "forkorting", "regning"],
     fields: [
       { id: "a1", label: "Teller 1", type: "number", defaultValue: 1 },
       { id: "a2", label: "Nevner 1", type: "number", defaultValue: 2 },

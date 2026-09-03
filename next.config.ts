@@ -64,6 +64,121 @@ const nextConfig: NextConfig = {
         destination: "/kalkulator/volum-kule",
         permanent: true,
       },
+      {
+        source: "/kalkulator/boliglan-kalkulator",
+        destination: "/kalkulator/lanekalkulator",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/boliglanskalkulator",
+        destination: "/kalkulator/lanekalkulator",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/hvor-mye-kan-jeg-lane",
+        destination: "/kalkulator/laneramme",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/bmi-kalkulator",
+        destination: "/kalkulator/bmi",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/kalorikalkulator",
+        destination: "/kalkulator/kaloribehov",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/malingskalkulator",
+        destination: "/kalkulator/maling",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/prosentkalkulator",
+        destination: "/kalkulator/prosent",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/feriepengekalkulator",
+        destination: "/kalkulator/feriepenger",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/loypekalkulator",
+        destination: "/kalkulator/km-t-min-km",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/lopekalkulator",
+        destination: "/kalkulator/km-t-min-km",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/tempokalkulator",
+        destination: "/kalkulator/km-t-min-km",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/makspuls-kalkulator",
+        destination: "/kalkulator/makspuls",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/arealkalkulator",
+        destination: "/kalkulator/areal",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/ohms-lov-kalkulator",
+        destination: "/kalkulator/ohms-lov",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/mva-kalkulator",
+        destination: "/kalkulator/mva",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/moms-kalkulator",
+        destination: "/kalkulator/mva",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/rentesrente",
+        destination: "/kalkulator/rentes-rente",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/rentes-rente-kalkulator",
+        destination: "/kalkulator/rentes-rente",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/brokkalkulator",
+        destination: "/kalkulator/brok",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/gjennomsnittskalkulator",
+        destination: "/kalkulator/gjennomsnitt",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/graviditetskalkulator",
+        destination: "/kalkulator/graviditetsuke",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/egenkapitalkalkulator",
+        destination: "/kalkulator/egenkapital-bolig",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/bsu-kalkulator",
+        destination: "/kalkulator/bsu",
+        permanent: true,
+      },
     ];
   },
 };

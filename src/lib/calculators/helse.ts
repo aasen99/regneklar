@@ -8,9 +8,9 @@ export const helseCalculators: Calculator[] = [
     title: "BMI-kalkulator",
     shortTitle: "BMI",
     description:
-      "Regn ut kroppsmasseindeks fra vekt og høyde, med vanlige vektklasser.",
+      "Gratis BMI-kalkulator: regn ut kroppsmasseindeks fra vekt og høyde, med vanlige vektklasser.",
     category: "sport",
-    tags: ["bmi", "vekt", "helse"],
+    tags: ["bmi", "bmi-kalkulator", "vekt", "helse", "kroppsmasseindeks"],
     popular: true,
     fields: [
       {
@@ -102,12 +102,19 @@ export const helseCalculators: Calculator[] = [
   },
   {
     slug: "kaloribehov",
-    title: "Kaloribehov (BMR og TDEE)",
+    title: "Kalorikalkulator – BMR og TDEE",
     shortTitle: "Kalorier",
     description:
-      "Estimer hvileforbrenning og daglig kaloribehov med Mifflin–St Jeor.",
+      "Kalorikalkulator: estimer hvileforbrenning (BMR) og daglig kaloribehov (TDEE) med Mifflin–St Jeor.",
     category: "sport",
-    tags: ["kalorier", "bmr", "tdee", "forbrenning"],
+    tags: [
+      "kalorikalkulator",
+      "kalorier",
+      "kaloribehov",
+      "bmr",
+      "tdee",
+      "forbrenning",
+    ],
     popular: true,
     fields: [
       {
@@ -263,10 +270,11 @@ export const helseCalculators: Calculator[] = [
   },
   {
     slug: "makspuls",
-    title: "Makspuls",
-    description: "Estimer makspuls og treningssoner fra alder.",
+    title: "Makspulskalkulator",
+    shortTitle: "Makspuls",
+    description: "Estimer makspuls og treningssoner fra alder – gratis makspulskalkulator.",
     category: "sport",
-    tags: ["puls", "trening", "hjerte"],
+    tags: ["makspuls", "makspulskalkulator", "puls", "trening", "hjerte", "pulssoner"],
     fields: [
       { id: "alder", label: "Alder", type: "number", unit: "år", defaultValue: 32 },
     ],
@@ -539,11 +547,19 @@ export const helseCalculators: Calculator[] = [
   },
   {
     slug: "graviditetsuke",
-    title: "Graviditetsuke",
+    title: "Graviditetskalkulator – uke",
+    shortTitle: "Graviditetsuke",
     description:
-      "Finn svangerskapsuke og gjenstående dager fra siste menstruasjons første dag.",
+      "Graviditetskalkulator: finn svangerskapsuke og gjenstående dager fra siste menstruasjons første dag.",
     category: "sport",
-    tags: ["gravid", "uke", "termin", "svangerskap"],
+    tags: [
+      "graviditetskalkulator",
+      "graviditetsuke",
+      "gravid",
+      "uke",
+      "termin",
+      "svangerskap",
+    ],
     fields: [
       {
         id: "lmp",

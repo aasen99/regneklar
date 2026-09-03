@@ -7,12 +7,21 @@ import { reg, regPercent } from "../regulations";
 export const okonomiCalculators: Calculator[] = [
   {
     slug: "lanekalkulator",
-    title: "Lånekalkulator",
-    shortTitle: "Lån",
+    title: "Lånekalkulator – månedlig beløp for boliglån",
+    shortTitle: "Lånekalkulator",
     description:
-      "Regn ut månedlig beløp, totalkostnad og renter for boliglån og andre annuitetslån.",
+      "Gratis lånekalkulator: regn ut månedlig beløp, totalkostnad og renter for boliglån og andre annuitetslån.",
     category: "okonomi",
-    tags: ["lån", "boliglån", "renter", "annuitet", "avdrag"],
+    tags: [
+      "lånekalkulator",
+      "boliglånskalkulator",
+      "boliglån",
+      "lån",
+      "renter",
+      "annuitet",
+      "avdrag",
+      "månedlig beløp",
+    ],
     popular: true,
     fields: [
       {
@@ -84,12 +93,19 @@ export const okonomiCalculators: Calculator[] = [
   },
   {
     slug: "rentes-rente",
-    title: "Rentes rente og sparing",
-    shortTitle: "Sparing",
+    title: "Rentes rente-kalkulator",
+    shortTitle: "Rentes rente",
     description:
-      "Se hvordan sparebeløp vokser med rentes rente, med eller uten faste innskudd.",
+      "Se hvordan sparebeløp vokser med rentes rente, med eller uten faste månedlige innskudd.",
     category: "okonomi",
-    tags: ["sparing", "renter", "avkastning", "fond"],
+    tags: [
+      "rentes rente",
+      "rentesrente",
+      "sparing",
+      "avkastning",
+      "fond",
+      "renters rente",
+    ],
     popular: true,
     fields: [
       {
@@ -154,9 +170,9 @@ export const okonomiCalculators: Calculator[] = [
     title: "MVA-kalkulator",
     shortTitle: "MVA",
     description:
-      "Legg til eller trekk fra merverdiavgift med norske satser: 25 %, 15 % og 12 %.",
+      "Legg til eller trekk fra merverdiavgift (moms) med norske satser: 25 %, 15 % og 12 %.",
     category: "okonomi",
-    tags: ["mva", "moms", "skatt", "pris"],
+    tags: ["mva", "mva-kalkulator", "moms", "moms-kalkulator", "skatt", "pris"],
     popular: true,
     fields: [
       {
@@ -218,9 +234,16 @@ export const okonomiCalculators: Calculator[] = [
     title: "Prosentkalkulator",
     shortTitle: "Prosent",
     description:
-      "Finn prosent av et tall, hvor mange prosent ett tall er av et annet, og prosentvis endring.",
+      "Gratis prosentkalkulator: finn prosent av et tall, andel i prosent, og prosentvis endring.",
     category: "okonomi",
-    tags: ["prosent", "andel", "rabatt", "påslag"],
+    tags: [
+      "prosentkalkulator",
+      "prosent",
+      "prosentregning",
+      "andel",
+      "rabatt",
+      "påslag",
+    ],
     popular: true,
     fields: [
       { id: "a", label: "Tall A", type: "number", defaultValue: 25 },
@@ -289,11 +312,18 @@ export const okonomiCalculators: Calculator[] = [
   },
   {
     slug: "feriepenger",
-    title: "Feriepenger",
+    title: "Feriepengekalkulator",
+    shortTitle: "Feriepenger",
     description:
-      "Regn ut feriepenger av feriepengegrunnlaget med riktig sats etter ferielengde og alder.",
+      "Regn ut feriepenger av feriepengegrunnlaget med riktig sats (10,2 %, 12 %, 12,5 % eller 14,3 %).",
     category: "okonomi",
-    tags: ["lønn", "ferie", "arbeid", "feriepenger"],
+    tags: [
+      "feriepengekalkulator",
+      "feriepenger",
+      "lønn",
+      "ferie",
+      "arbeid",
+    ],
     source: {
       label: "Arbeidstilsynet",
       url: "https://www.arbeidstilsynet.no/arbeidstid-og-organisering/ferie/feriepenger/",
@@ -704,12 +734,19 @@ export const okonomiCalculators: Calculator[] = [
   },
   {
     slug: "egenkapital-bolig",
-    title: "Egenkapital til bolig",
+    title: "Egenkapitalkalkulator bolig",
     shortTitle: "Egenkapital",
     description:
       "Finn egenkapital, dokumentavgift og lånebehov ved boligkjøp – med 10 % som hovedregel.",
     category: "okonomi",
-    tags: ["bolig", "egenkapital", "dokumentavgift", "lån"],
+    tags: [
+      "egenkapital",
+      "egenkapitalkalkulator",
+      "bolig",
+      "dokumentavgift",
+      "lån",
+      "10 prosent egenkapital",
+    ],
     popular: true,
     source: {
       label: reg("mortgage_equity_requirement").sourceLabel,
@@ -1129,7 +1166,14 @@ export const okonomiCalculators: Calculator[] = [
     description:
       "Regn ut skattefradrag, total sparing og renter på BSU med årlige innskudd.",
     category: "okonomi",
-    tags: ["bsu", "boligsparing", "skatt", "ungdom"],
+    tags: [
+      "bsu",
+      "bsu-kalkulator",
+      "boligsparing",
+      "skatt",
+      "ungdom",
+      "bsu sparekalkulator",
+    ],
     popular: true,
     fields: [
       {
@@ -1612,12 +1656,19 @@ export const okonomiCalculators: Calculator[] = [
   },
   {
     slug: "laneramme",
-    title: "Låneramme",
+    title: "Hvor mye kan jeg låne? – låneramme",
     shortTitle: "Låneramme",
     description:
-      "Anslå teoretisk øvre låneramme ut fra inntekt, eksisterende gjeld, egenkapital og belåningsgrad.",
+      "Anslå hvor mye du kan låne ut fra inntekt, eksisterende gjeld, egenkapital og belåningsgrad (teoretisk øvre låneramme).",
     category: "okonomi",
-    tags: ["boliglån", "låneramme", "belåningsgrad", "gjeldsgrad"],
+    tags: [
+      "hvor mye kan jeg låne",
+      "låneramme",
+      "boliglån",
+      "belåningsgrad",
+      "gjeldsgrad",
+      "lånekapasitet",
+    ],
     source: {
       label: reg("mortgage_max_ltv").sourceLabel,
       url: reg("mortgage_max_ltv").sourceUrl,

@@ -7,11 +7,20 @@ const KAPPA = { cu: 56, al: 35 } as const;
 export const elektroCalculators: Calculator[] = [
   {
     slug: "ohms-lov",
-    title: "Ohms lov",
+    title: "Ohms lov-kalkulator",
     shortTitle: "Ohm",
-    description: "U = R · I. Finn spenning, resistans, strøm og effekt.",
+    description:
+      "Ohms lov-kalkulator: U = R · I. Finn spenning, resistans, strøm og effekt.",
     category: "elektro",
-    tags: ["ohm", "strøm", "spenning", "resistans", "elektro"],
+    tags: [
+      "ohms lov",
+      "ohms lov kalkulator",
+      "ohm",
+      "strøm",
+      "spenning",
+      "resistans",
+      "elektro",
+    ],
     popular: true,
     fields: [
       {

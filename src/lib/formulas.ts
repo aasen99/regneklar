@@ -3092,6 +3092,952 @@ export const formulas: Formula[] = [
     explanation: "r nær 1: sterk positiv samvariasjon. Korrelasjon er ikke årsak.",
     calculatorSlug: "korrelasjon",
   },
+  {
+    slug: "avkastning-formel",
+    title: "Avkastning (ROI)",
+    category: "okonomi",
+    expression: "ROI = (verdi − investert) / investert · 100 %",
+    variables: [
+      { symbol: "verdi", meaning: "Nåværende eller solgt verdi" },
+      { symbol: "investert", meaning: "Opprinnelig innsats" },
+    ],
+    explanation:
+      "ROI viser gevinst eller tap i forhold til innsatsen. Positivt tall er fortjeneste, negativt er tap.",
+    calculatorSlug: "avkastning",
+  },
+  {
+    slug: "nedbetaling-gjeld-formel",
+    title: "Nedbetalingstid for gjeld",
+    category: "okonomi",
+    expression: "n = ln(PMT / (PMT − P · r)) / ln(1 + r)",
+    variables: [
+      { symbol: "n", meaning: "Antall måneder til gjeldfri" },
+      { symbol: "PMT", meaning: "Fast månedlig betaling" },
+      { symbol: "P", meaning: "Gjeldsbeløp" },
+      { symbol: "r", meaning: "Månedlig rente (årlig / 12)" },
+    ],
+    explanation:
+      "Gir hvor lenge det tar å bli gjeldfri med fast beløp. Hvis betalingen bare dekker rentene, synker ikke gjelden.",
+    calculatorSlug: "nedbetaling-gjeld",
+  },
+  {
+    slug: "brutto-netto-formel",
+    title: "Brutto til netto",
+    category: "okonomi",
+    expression: "netto = brutto · (1 − skatt) − andre trekk",
+    variables: [
+      { symbol: "brutto", meaning: "Bruttolønn" },
+      { symbol: "skatt", meaning: "Skattetrekk som desimal" },
+      { symbol: "andre", meaning: "Faste trekk i kroner" },
+    ],
+    explanation:
+      "Enkel modell der du oppgir trekkprosent selv. Ekte skatt avhenger av tabellkort, trinnskatt og fradrag.",
+    calculatorSlug: "brutto-netto",
+  },
+  {
+    slug: "valuta-formel",
+    title: "Valutaomregning",
+    category: "okonomi",
+    expression: "NOK = beløp · kurs     valuta = NOK / kurs",
+    variables: [
+      { symbol: "kurs", meaning: "Kroner per 1 utenlandsk enhet" },
+      { symbol: "beløp", meaning: "Beløpet som veksles" },
+    ],
+    explanation:
+      "Kursen er vanligvis «kroner per 1 euro/dollar». Bruk den kursen du faktisk får, inkludert bankmargin.",
+    calculatorSlug: "valuta",
+  },
+  {
+    slug: "timepris-frilans-formel",
+    title: "Timepris for frilans",
+    category: "okonomi",
+    expression: "timepris = (netto / (1 − skatt)) / (uker · timer · utnyttelse)",
+    variables: [
+      { symbol: "netto", meaning: "Ønsket utbetalt per år" },
+      { symbol: "skatt", meaning: "Skatt og avgifter som desimal" },
+      { symbol: "uker", meaning: "Arbeidsuker (52 − ferie)" },
+      { symbol: "utnyttelse", meaning: "Fakturerbar andel" },
+    ],
+    explanation:
+      "Først regnes bruttobehov fra ønsket netto, deretter fordeles det på fakturerbare timer i året.",
+    calculatorSlug: "timepris-frilans",
+  },
+  {
+    slug: "nodfond-formel",
+    title: "Nødfond",
+    category: "okonomi",
+    expression: "nødfond = månedlige utgifter · måneder",
+    variables: [
+      { symbol: "utgifter", meaning: "Faste månedlige utgifter" },
+      { symbol: "måneder", meaning: "Antall måneder buffer (ofte 3–6)" },
+    ],
+    explanation:
+      "Bufferen skal dekke husleie, mat og andre faste utgifter hvis inntekten svikter. Tre måneder er et vanlig startmål.",
+    calculatorSlug: "nodfond",
+  },
+  {
+    slug: "kredittkort-renter-formel",
+    title: "Kredittkort-renter",
+    category: "okonomi",
+    expression: "n = ln(PMT / (PMT − r · S)) / ln(1 + r)",
+    variables: [
+      { symbol: "n", meaning: "Måneder til nedbetalt" },
+      { symbol: "PMT", meaning: "Fast månedlig betaling" },
+      { symbol: "S", meaning: "Saldo" },
+      { symbol: "r", meaning: "Månedlig rente" },
+    ],
+    explanation:
+      "Samme nedbetalingsformel som for annen rentebærende gjeld. Høy kort rente gjør ekstra innbetalinger spesielt lønnsomme.",
+    calculatorSlug: "kredittkort-renter",
+  },
+  {
+    slug: "ekstra-innbetaling-lan-formel",
+    title: "Ekstra innbetaling på lån",
+    category: "okonomi",
+    expression: "n = ln(PMT / (PMT − P · r)) / ln(1 + r)",
+    variables: [
+      { symbol: "PMT", meaning: "Ordinær termin + ekstra" },
+      { symbol: "P", meaning: "Lånebeløp" },
+      { symbol: "r", meaning: "Månedlig rente" },
+      { symbol: "n", meaning: "Ny nedbetalingstid i måneder" },
+    ],
+    explanation:
+      "Sammenligner standard annuitet med samme lån pluss ekstra månedlig beløp. Ekstra går til avdrag og kutter totale renter.",
+    calculatorSlug: "ekstra-innbetaling-lan",
+  },
+  {
+    slug: "annuitet-vs-serie-formel",
+    title: "Annuitet vs. serielån",
+    category: "okonomi",
+    expression: "annuitet: fast termin     serie: fast avdrag",
+    variables: [
+      { symbol: "M", meaning: "Annuitetstermin" },
+      { symbol: "avdrag", meaning: "Fast serieavdrag = P / n" },
+      { symbol: "r", meaning: "Rente per termin" },
+    ],
+    explanation:
+      "Serielån koster normalt mindre i renter totalt, men første termin er høyere. Annuitet gir jevnere månedlige beløp.",
+    calculatorSlug: "annuitet-vs-serie",
+  },
+  {
+    slug: "vanninntak-formel",
+    title: "Væskebehov",
+    category: "sport",
+    expression: "behov ≈ 30–35 ml · kg + ekstra",
+    variables: [
+      { symbol: "kg", meaning: "Kroppsvekt" },
+      { symbol: "ekstra", meaning: "Tillegg ved trening eller varme" },
+    ],
+    explanation:
+      "Et vanlig utgangspunkt er rundt 30 ml per kilo, pluss mer ved trening. Tørste og helse veier tyngre enn formelen alene.",
+    calculatorSlug: "vanninntak",
+  },
+  {
+    slug: "vektreduksjon-formel",
+    title: "Tid til vektreduksjon",
+    category: "sport",
+    expression: "dager = (kg-tap · 7700) / daglig underskudd",
+    variables: [
+      { symbol: "kg-tap", meaning: "Ønsket vektreduksjon" },
+      { symbol: "underskudd", meaning: "Daglig kaloriunderskudd i kcal" },
+    ],
+    explanation:
+      "Ett kilo fettvev tilsvarer grovt 7700 kcal. Kroppen tilpasser seg, så tempoet er sjelden helt lineært.",
+    calculatorSlug: "vektreduksjon",
+  },
+  {
+    slug: "makrofordeling-formel",
+    title: "Makrofordeling",
+    category: "sport",
+    expression: "gram = (kcal · %) / (4 eller 9)",
+    variables: [
+      { symbol: "kcal", meaning: "Kalorier per dag" },
+      { symbol: "%", meaning: "Andel protein, karbo eller fett" },
+    ],
+    explanation:
+      "Protein og karbohydrat gir 4 kcal per gram, fett 9 kcal. Prosentene bør summere til 100.",
+    calculatorSlug: "makrofordeling",
+  },
+  {
+    slug: "graviditetsuke-formel",
+    title: "Graviditetsuke",
+    category: "sport",
+    expression: "dager = dato − LMP     uke = dager / 7",
+    variables: [
+      { symbol: "LMP", meaning: "Første dag i siste menstruasjon" },
+      { symbol: "dato", meaning: "Datoen du sjekker" },
+    ],
+    explanation:
+      "Svangerskapet telles fra siste menstruasjons første dag. Fullgått er 40 uker (280 dager).",
+    calculatorSlug: "graviditetsuke",
+  },
+  {
+    slug: "sovnbehov-formel",
+    title: "Søvnbehov",
+    category: "sport",
+    expression: "voksen ≈ 7–9 t     +0,5–1 t ved hard trening",
+    variables: [
+      { symbol: "alder", meaning: "Alder i år" },
+      { symbol: "trening", meaning: "Treningsmengde (justering)" },
+    ],
+    explanation:
+      "Basert på vanlige aldersanbefalinger. Hard trening øker ofte søvnbehovet litt.",
+    calculatorSlug: "sovnbehov",
+  },
+  {
+    slug: "hviletid-sett-formel",
+    title: "Hviletid mellom sett",
+    category: "sport",
+    expression: "styrke 3–5 min     hypertrofi 1–2 min     utholdenhet 30–90 s",
+    variables: [
+      { symbol: "mål", meaning: "Styrke, hypertrofi eller utholdenhet" },
+    ],
+    explanation:
+      "Tyngre sett og færre reps trenger lengre pause. Kortere pauser passer bedre til volum og utholdenhet.",
+    calculatorSlug: "hviletid-sett",
+  },
+  {
+    slug: "maltempo-formel",
+    title: "Måltempo fra sluttid",
+    category: "sport",
+    expression: "tempo = sluttid / distanse",
+    variables: [
+      { symbol: "sluttid", meaning: "Ønsket total tid" },
+      { symbol: "distanse", meaning: "Distanse i km" },
+    ],
+    explanation:
+      "Deler ønsket sluttid på distansen for å få jevnt tempo per kilometer.",
+    calculatorSlug: "maltempo",
+  },
+  {
+    slug: "split-tider-formel",
+    title: "Split-tider",
+    category: "sport",
+    expression: "tid ved d km = sluttid · (d / total)",
+    variables: [
+      { symbol: "d", meaning: "Delstrekning i km" },
+      { symbol: "total", meaning: "Total distanse" },
+      { symbol: "sluttid", meaning: "Ønsket total tid" },
+    ],
+    explanation:
+      "Forutsetter jevn fart. Gir mellomtider for hver kilometer eller 400 m ut fra ønsket sluttid.",
+    calculatorSlug: "split-tider",
+  },
+  {
+    slug: "banerunder-formel",
+    title: "Banerunder",
+    category: "sport",
+    expression: "runder = distanse / banelengde",
+    variables: [
+      { symbol: "distanse", meaning: "Løpsdistanse i meter" },
+      { symbol: "banelengde", meaning: "Vanligvis 400 m" },
+    ],
+    explanation:
+      "Viser hvor mange hele banerunder en distanse tilsvarer, og hvor mange meter som blir til rest.",
+    calculatorSlug: "banerunder",
+  },
+  {
+    slug: "treningstempo-formel",
+    title: "Treningstempo fra 5 km",
+    category: "sport",
+    expression: "rolig ≈ 1,30 · T₅     terskel ≈ 1,07 · T₅     intervall ≈ 0,97 · T₅",
+    variables: [
+      { symbol: "T₅", meaning: "5 km-tempo i min/km" },
+    ],
+    explanation:
+      "Tommelfingerregler ut fra 5 km-tempo. Rolig skal være pratbart; intervall ligger nær konkurransefart.",
+    calculatorSlug: "treningstempo",
+  },
+  {
+    slug: "intervallokt-formel",
+    title: "Intervalløkt",
+    category: "sport",
+    expression: "dragtid = tempo · (meter / 1000)     total = n · drag + (n−1) · pause",
+    variables: [
+      { symbol: "n", meaning: "Antall drag" },
+      { symbol: "tempo", meaning: "Tempo i min/km" },
+      { symbol: "pause", meaning: "Hvile mellom drag" },
+    ],
+    explanation:
+      "Regner dragtid fra tempo og lengde, deretter total økttid med pauser mellom dragene.",
+    calculatorSlug: "intervallokt",
+  },
+  {
+    slug: "svommetempo-formel",
+    title: "Svømmetempo",
+    category: "sport",
+    expression: "tid per 100 m = sluttid · 100 / distanse",
+    variables: [
+      { symbol: "sluttid", meaning: "Tid for svømt distanse" },
+      { symbol: "distanse", meaning: "Svømt distanse i meter" },
+    ],
+    explanation:
+      "Skalerer en kjent sluttid til tid per 100 m og 50 m, og kan estimere lengre distanser.",
+    calculatorSlug: "svommetempo",
+  },
+  {
+    slug: "skivekalkulator-formel",
+    title: "Skivekalkulator",
+    category: "sport",
+    expression: "per side = (total − stang) / 2",
+    variables: [
+      { symbol: "total", meaning: "Ønsket totalvekt" },
+      { symbol: "stang", meaning: "Stangvekt" },
+    ],
+    explanation:
+      "Trekker stangvekten fra totalen og deler resten likt på begge sider.",
+    calculatorSlug: "skivekalkulator",
+  },
+  {
+    slug: "sykkel-kadens-formel",
+    title: "Sykkelkadens og fart",
+    category: "sport",
+    expression: "fart = kadens · (fortann/baktann) · omkrets · 60 / 10³",
+    variables: [
+      { symbol: "kadens", meaning: "Omdreininger per minutt" },
+      { symbol: "fortann/baktann", meaning: "Girforhold" },
+      { symbol: "omkrets", meaning: "Hjulomkrets i meter" },
+    ],
+    explanation:
+      "Farten følger av tråkkfrekvens, girforhold og hjulomkrets. Større fortann eller mindre baktann gir høyere fart ved samme kadens.",
+    calculatorSlug: "sykkel-kadens",
+  },
+  {
+    slug: "triathlon-tid-formel",
+    title: "Triathlon-tid",
+    category: "sport",
+    expression: "total = svøm + T1 + sykkel + T2 + løp",
+    variables: [
+      { symbol: "T1", meaning: "Første veksling" },
+      { symbol: "T2", meaning: "Andre veksling" },
+    ],
+    explanation:
+      "Summerer svømming, sykling, løping og begge vekslingene til estimert total tid.",
+    calculatorSlug: "triathlon-tid",
+  },
+  {
+    slug: "progresjon-styrke-formel",
+    title: "Styrkeprogresjon",
+    category: "sport",
+    expression: "vekt = start + økning · uker",
+    variables: [
+      { symbol: "start", meaning: "Startvekt" },
+      { symbol: "økning", meaning: "Planlagt økning per uke" },
+      { symbol: "uker", meaning: "Antall uker" },
+    ],
+    explanation:
+      "Lineær progresjon der vekten økes med et fast beløp hver uke. Enkel planlegging, ikke en fasit for alle løft.",
+    calculatorSlug: "progresjon-styrke",
+  },
+  {
+    slug: "gjennomsnitt-median-formel",
+    title: "Gjennomsnitt og median",
+    category: "matematikk",
+    expression: "snitt = sum / n     median = midterste verdi når listen er sortert",
+    variables: [
+      { symbol: "n", meaning: "Antall tall" },
+      { symbol: "sum", meaning: "Summen av verdiene" },
+    ],
+    explanation:
+      "Gjennomsnittet er sum delt på antall. Medianen er den midterste verdien når tallene er sortert.",
+    calculatorSlug: "gjennomsnitt",
+  },
+  {
+    slug: "brok-formel",
+    title: "Brøkregning",
+    category: "matematikk",
+    expression: "a/b ± c/d = (ad ± bc) / bd",
+    variables: [
+      { symbol: "a/b", meaning: "Første brøk" },
+      { symbol: "c/d", meaning: "Andre brøk" },
+    ],
+    explanation:
+      "Addisjon og subtraksjon krever felles nevner. Resultatet forkortes med største felles faktor.",
+    calculatorSlug: "brok",
+  },
+  {
+    slug: "fakultet-formel",
+    title: "Fakultet og kombinasjoner",
+    category: "matematikk",
+    expression: "n! = 1·2·…·n     C(n,k) = n! / (k!(n−k)!)     P(n,k) = n! / (n−k)!",
+    variables: [
+      { symbol: "n", meaning: "Antall elementer" },
+      { symbol: "k", meaning: "Antall som velges" },
+    ],
+    explanation:
+      "Fakultet er produktet av alle positive heltall opp til n. Kombinasjoner ignorerer rekkefølge, permutasjoner tar den med.",
+    calculatorSlug: "fakultet",
+  },
+  {
+    slug: "prosent-av-tall-formel",
+    title: "Prosent av tall",
+    category: "matematikk",
+    expression: "verdi = p/100 · tall",
+    variables: [
+      { symbol: "p", meaning: "Prosent" },
+      { symbol: "tall", meaning: "Utgangspunktet" },
+    ],
+    explanation:
+      "Regner ut p prosent av et tall. Samme idé brukes til påslag og rabatt.",
+    calculatorSlug: "prosent-av-tall",
+  },
+  {
+    slug: "sff-mfm-formel",
+    title: "SFF og MFM",
+    category: "matematikk",
+    expression: "SFF(a, b) via Euklid     MFM = |a · b| / SFF",
+    variables: [
+      { symbol: "a, b", meaning: "To hele tall" },
+      { symbol: "SFF", meaning: "Største felles faktor (gcd)" },
+      { symbol: "MFM", meaning: "Minste felles multiplum (lcm)" },
+    ],
+    explanation:
+      "Euklids algoritme finner største felles faktor. Minste felles multiplum følger direkte fra produktet delt på SFF.",
+    calculatorSlug: "sff-mfm",
+  },
+  {
+    slug: "trekant-vinkler-formel",
+    title: "Vinkler i en trekant",
+    category: "matematikk",
+    expression: "A + B + C = 180°",
+    variables: [
+      { symbol: "A, B, C", meaning: "De tre vinklene" },
+    ],
+    explanation:
+      "Vinkelsummen i en trekant er alltid 180°. Kjenner du to, er den tredje 180° minus de to.",
+    calculatorSlug: "trekant-vinkler",
+  },
+  {
+    slug: "compound-prosent-formel",
+    title: "Sammensatt prosentendring",
+    category: "matematikk",
+    expression: "slutt = start · Π (1 + pᵢ/100)",
+    variables: [
+      { symbol: "start", meaning: "Startverdi" },
+      { symbol: "pᵢ", meaning: "Hver prosentendring i rekkefølge" },
+    ],
+    explanation:
+      "Flere prosentendringer etter hverandre multipliseres. +10 % og deretter −10 % gir ikke tilbake til start.",
+    calculatorSlug: "compound-prosent",
+  },
+  {
+    slug: "primtallsfaktorisering-formel",
+    title: "Primtallsfaktorisering",
+    category: "matematikk",
+    expression: "n = p₁^a₁ · p₂^a₂ · …",
+    variables: [
+      { symbol: "n", meaning: "Positivt heltall" },
+      { symbol: "pᵢ", meaning: "Primtallsfaktorer" },
+    ],
+    explanation:
+      "Ethvert heltall større enn 1 kan skrives entydig som produkt av primtall, bortsett fra rekkefølgen.",
+    calculatorSlug: "primtallsfaktorisering",
+  },
+  {
+    slug: "lengde-formel",
+    title: "Lengdeomregning",
+    category: "enheter",
+    expression: "verdi_til = verdi_fra · (faktor_fra / faktor_til)",
+    variables: [
+      { symbol: "faktor", meaning: "Omregningsfaktor til meter" },
+    ],
+    explanation:
+      "Alle lengder regnes via en felles grunnenhet (meter), deretter til ønsket enhet.",
+    calculatorSlug: "lengde",
+  },
+  {
+    slug: "vekt-formel",
+    title: "Vektomregning",
+    category: "enheter",
+    expression: "via kilogram som grunnenhet",
+    variables: [
+      { symbol: "kg", meaning: "Kilogram (grunnenhet)" },
+    ],
+    explanation:
+      "Milligram, gram, tonn, uns og pund omregnes via kilogram.",
+    calculatorSlug: "vekt",
+  },
+  {
+    slug: "volum-enheter-formel",
+    title: "Volumenheter",
+    category: "enheter",
+    expression: "via kubikkmeter (1 L = 0,001 m³)",
+    variables: [
+      { symbol: "m³", meaning: "Kubikkmeter (grunnenhet)" },
+      { symbol: "L", meaning: "Liter" },
+    ],
+    explanation:
+      "Milliliter, desiliter, liter og gallon regnes om via kubikkmeter.",
+    calculatorSlug: "volum-enheter",
+  },
+  {
+    slug: "tid-enheter-formel",
+    title: "Tidomregning",
+    category: "enheter",
+    expression: "1 døgn = 24 t = 1440 min = 86400 s",
+    variables: [
+      { symbol: "s", meaning: "Sekunder" },
+      { symbol: "t", meaning: "Timer" },
+    ],
+    explanation:
+      "Sekunder, minutter, timer, døgn og uker henger sammen med faste faktorer.",
+    calculatorSlug: "tid-enheter",
+  },
+  {
+    slug: "skostorrelse-formel",
+    title: "Skostørrelse",
+    category: "enheter",
+    expression: "cm ≈ 2/3 · EU     UK ≈ EU − 33     US ≈ EU − 32,5",
+    variables: [
+      { symbol: "EU", meaning: "Europeisk størrelse" },
+      { symbol: "cm", meaning: "Fodlengde omtrent" },
+    ],
+    explanation:
+      "Omtrentlig omregning mellom EU, UK, US og centimeter. Passform varierer mellom merker.",
+    calculatorSlug: "skostorrelse",
+  },
+  {
+    slug: "trykk-enheter-formel",
+    title: "Trykkenheter",
+    category: "enheter",
+    expression: "via pascal som grunnenhet",
+    variables: [
+      { symbol: "Pa", meaning: "Pascal (N/m²)" },
+    ],
+    explanation:
+      "Bar, atmosfære, psi og mmHg omregnes via pascal.",
+    calculatorSlug: "trykk-enheter",
+  },
+  {
+    slug: "energi-enheter-formel",
+    title: "Energienheter",
+    category: "enheter",
+    expression: "1 kcal ≈ 4184 J     1 kWh = 3,6 MJ",
+    variables: [
+      { symbol: "J", meaning: "Joule" },
+      { symbol: "kcal", meaning: "Kilokalori" },
+      { symbol: "kWh", meaning: "Kilowattime" },
+    ],
+    explanation:
+      "Joule, kilokalori, wattime og kilowattime beskriver samme energimengde i ulike enheter.",
+    calculatorSlug: "energi-enheter",
+  },
+  {
+    slug: "nettleie-formel",
+    title: "Nettleie",
+    category: "hverdag",
+    expression: "nettleie = kWh · pris + fast · måneder",
+    variables: [
+      { symbol: "kWh", meaning: "Forbruk" },
+      { symbol: "pris", meaning: "Energiledd per kWh" },
+      { symbol: "fast", meaning: "Fastledd per måned" },
+    ],
+    explanation:
+      "Nettleie består typisk av et energiledd etter forbruk og et fastledd per måned.",
+    calculatorSlug: "nettleie",
+  },
+  {
+    slug: "dager-mellom-formel",
+    title: "Dager mellom datoer",
+    category: "hverdag",
+    expression: "dager = dato₂ − dato₁",
+    variables: [
+      { symbol: "dato₁", meaning: "Startdato" },
+      { symbol: "dato₂", meaning: "Sluttdato" },
+    ],
+    explanation:
+      "Differansen mellom to kalenderdatoer gir antall dager; uker og måneder følger derav.",
+    calculatorSlug: "dager-mellom",
+  },
+  {
+    slug: "dato-pluss-formel",
+    title: "Dato pluss dager",
+    category: "hverdag",
+    expression: "ny dato = dato + n dager",
+    variables: [
+      { symbol: "dato", meaning: "Startdato" },
+      { symbol: "n", meaning: "Antall dager (kan være negativt)" },
+    ],
+    explanation:
+      "Legger til eller trekker fra et antall dager på en dato. Kalenderen håndterer måneds- og årsskifter.",
+    calculatorSlug: "dato-pluss",
+  },
+  {
+    slug: "sovn-formel",
+    title: "Søvnsykluser",
+    category: "hverdag",
+    expression: "tid = klokke ± (sykluser · 90 min + innsovning)",
+    variables: [
+      { symbol: "sykluser", meaning: "Antall søvnsykluser à ca. 90 min" },
+      { symbol: "innsovning", meaning: "Tid til du sovner" },
+    ],
+    explanation:
+      "Mange bruker ca. 90-minutters sykluser for å planlegge leggetid eller vekketid.",
+    calculatorSlug: "sovn",
+  },
+  {
+    slug: "ukenummer-formel",
+    title: "Ukenummer (ISO)",
+    category: "hverdag",
+    expression: "ISO 8601: uke 1 inneholder årets første torsdag",
+    variables: [
+      { symbol: "dato", meaning: "Kalenderdato" },
+    ],
+    explanation:
+      "ISO-uken starter på mandag. Uke 1 er uken som inneholder årets første torsdag.",
+    calculatorSlug: "ukenummer",
+  },
+  {
+    slug: "feriedager-formel",
+    title: "Feriedager igjen",
+    category: "hverdag",
+    expression: "igjen = krav − brukt − planlagt",
+    variables: [
+      { symbol: "krav", meaning: "Feriedager totalt" },
+      { symbol: "brukt", meaning: "Allerede tatt ut" },
+      { symbol: "planlagt", meaning: "Kommende ferie" },
+    ],
+    explanation:
+      "Enkel restberegning: totalt krav minus det du har brukt og det du har planlagt.",
+    calculatorSlug: "feriedager",
+  },
+  {
+    slug: "bompenger-reise-formel",
+    title: "Bompenger på reise",
+    category: "hverdag",
+    expression: "totalt = bom · pass · turer · (1 − rabatt/100)",
+    variables: [
+      { symbol: "bom", meaning: "Pris per passering" },
+      { symbol: "pass", meaning: "Antall bommer" },
+      { symbol: "turer", meaning: "Antall turer" },
+    ],
+    explanation:
+      "Summerer bompenger for flere passeringer og turer, med eventuell rabatt.",
+    calculatorSlug: "bompenger-reise",
+  },
+  {
+    slug: "trestykker-formel",
+    title: "Trestykker og reglar",
+    category: "bygg",
+    expression: "stendere ≈ lengde / c/c + 1     (+ ekstra ved dører)",
+    variables: [
+      { symbol: "lengde", meaning: "Vegglengde" },
+      { symbol: "c/c", meaning: "Senteravstand mellom stendere" },
+    ],
+    explanation:
+      "Antall stendere følger av vegglengde og c/c-avstand, pluss ekstra ved åpninger.",
+    calculatorSlug: "trestykker",
+  },
+  {
+    slug: "kokkemal-formel",
+    title: "Kjøkkenmål",
+    category: "mat",
+    expression: "1 ss = 15 ml     1 ts = 5 ml     1 dl = 100 ml",
+    variables: [
+      { symbol: "ss", meaning: "Spiseskje" },
+      { symbol: "ts", meaning: "Teskje" },
+      { symbol: "dl", meaning: "Desiliter" },
+    ],
+    explanation:
+      "Standard norske kjøkkenmål for væske. For vann er 1 ml omtrent 1 g.",
+    calculatorSlug: "kokkemal",
+  },
+  {
+    slug: "gjester-formel",
+    title: "Mat til gjester",
+    category: "mat",
+    expression: "porsjoner = voksne + 0,6 · barn, deretter m × porsjonsvekt",
+    variables: [
+      { symbol: "voksne", meaning: "Antall voksne" },
+      { symbol: "barn", meaning: "Antall barn (regnet som 0,6 porsjon)" },
+      { symbol: "m", meaning: "Mengde per porsjon" },
+    ],
+    explanation:
+      "Grovt anslag der barn telles som delporsjoner, deretter ganges med typisk porsjonsvekt.",
+    calculatorSlug: "gjester",
+  },
+  {
+    slug: "pasta-ris-formel",
+    title: "Pasta og ris",
+    category: "mat",
+    expression: "tørrvare = personer · g/person     risvann ≈ 1,5–2 × ris",
+    variables: [
+      { symbol: "personer", meaning: "Antall porsjoner" },
+      { symbol: "g/person", meaning: "Tørrvare per person" },
+    ],
+    explanation:
+      "Anslår tørr pasta eller ris ut fra antall personer. Ris trenger omtrent 1,5–2 deler vann.",
+    calculatorSlug: "pasta-ris",
+  },
+  {
+    slug: "egg-vekt-formel",
+    title: "Egg etter vekt",
+    category: "mat",
+    expression: "gram ≈ antall · vekt per egg",
+    variables: [
+      { symbol: "antall", meaning: "Antall egg" },
+      { symbol: "vekt", meaning: "Gram per egg (L ≈ 63 g med skall)" },
+    ],
+    explanation:
+      "Regner om mellom antall egg og gram. Store (L) egg veier typisk rundt 63 g med skall.",
+    calculatorSlug: "egg-vekt",
+  },
+  {
+    slug: "hevetid-formel",
+    title: "Hevetid og temperatur",
+    category: "mat",
+    expression: "tid₂ ≈ tid₁ · 2^((t₁ − t₂)/10)",
+    variables: [
+      { symbol: "tid₁", meaning: "Kjent hevetid ved temperatur t₁" },
+      { symbol: "t₂", meaning: "Ny temperatur" },
+    ],
+    explanation:
+      "Gjær jobber omtrent dobbelt så raskt for hver 10 °C økning (innenfor et praktisk område).",
+    calculatorSlug: "hevetid",
+  },
+  {
+    slug: "marinering-tid-formel",
+    title: "Marineringstid",
+    category: "mat",
+    expression: "tid ≈ tykkelse² · faktor / salt^0,5",
+    variables: [
+      { symbol: "tykkelse", meaning: "Tykkelse på kjøtt/fisk" },
+      { symbol: "salt", meaning: "Saltstyrke i marinet" },
+    ],
+    explanation:
+      "Tykkere stykker trenger lengre tid; mer salt øker tempoet noe. En grov tommelfingerregel, ikke laboratoriepresisjon.",
+    calculatorSlug: "marinering-tid",
+  },
+  {
+    slug: "sukker-sirup-formel",
+    title: "Sukker til sirup",
+    category: "mat",
+    expression: "total masse = sukker / (konsentrasjon/100)     vann = total − sukker",
+    variables: [
+      { symbol: "sukker", meaning: "Sukker i gram" },
+      { symbol: "konsentrasjon", meaning: "Ønsket sukkerprosent" },
+    ],
+    explanation:
+      "Finner hvor mye vann som trengs for å nå en ønsket sukkerkonsentrasjon i sirupen.",
+    calculatorSlug: "sukker-sirup",
+  },
+  {
+    slug: "prosent-karakter-formel",
+    title: "Prosent til karakter",
+    category: "skole",
+    expression: "karakter etter prosentintervaller (uoffisiell skala)",
+    variables: [
+      { symbol: "p", meaning: "Oppnådd prosent" },
+    ],
+    explanation:
+      "Et vanlig, uoffisielt skjema fra prosent til karakter 1–6. Skoler kan bruke andre grenser.",
+    calculatorSlug: "prosent-karakter",
+  },
+  {
+    slug: "studiebelastning-formel",
+    title: "Studiebelastning",
+    category: "skole",
+    expression: "60 sp = 1 årsenhet ≈ 1500–1800 timer",
+    variables: [
+      { symbol: "sp", meaning: "Studiepoeng" },
+    ],
+    explanation:
+      "Fulltidsstudium er 60 studiepoeng per år. Poengene kan regnes om til andel årsenhet og uketimer.",
+    calculatorSlug: "studiebelastning",
+  },
+  {
+    slug: "eksamen-standpunkt-formel",
+    title: "Eksamen og standpunkt",
+    category: "skole",
+    expression: "samlet = standpunkt · (1 − v) + eksamen · v",
+    variables: [
+      { symbol: "standpunkt", meaning: "Standpunktkarakter" },
+      { symbol: "eksamen", meaning: "Eksamenskarakter" },
+      { symbol: "v", meaning: "Eksamensvekt som desimal" },
+    ],
+    explanation:
+      "Veid snitt der eksamen teller med andelen v og standpunkt med resten.",
+    calculatorSlug: "eksamen-standpunkt",
+  },
+  {
+    slug: "karakterskala-formel",
+    title: "Karakterskala-omregning",
+    category: "skole",
+    expression: "illustrativ mapping – ikke offisiell konvertering",
+    variables: [
+      { symbol: "karakter", meaning: "Karakter på én skala" },
+    ],
+    explanation:
+      "Illustrativ omregning mellom vanlige karakterskalaer. Ikke en offisiell konvertering.",
+    calculatorSlug: "karakterskala",
+  },
+  {
+    slug: "karakterpoeng-formel",
+    title: "Karakterpoeng",
+    category: "skole",
+    expression: "karakterpoeng = sum av karakterer",
+    variables: [
+      { symbol: "karakterer", meaning: "Enkeltkarakterer som summeres" },
+    ],
+    explanation:
+      "Enkel sum av karakterer. Reelle opptakspoeng kan ha tillegg for programfag og alder.",
+    calculatorSlug: "karakterpoeng",
+  },
+  {
+    slug: "pensum-timer-formel",
+    title: "Pensum og studietimer",
+    category: "skole",
+    expression: "timer/uke ≈ SP · faktor",
+    variables: [
+      { symbol: "SP", meaning: "Studiepoeng i emnet" },
+      { symbol: "faktor", meaning: "Timer per studiepoeng per uke" },
+    ],
+    explanation:
+      "Anslår ukentlig studieinnsats ut fra studiepoeng og en valgt timefaktor.",
+    calculatorSlug: "pensum-timer",
+  },
+  {
+    slug: "skolestart-alder-formel",
+    title: "Skolestart og alder",
+    category: "skole",
+    expression: "1. trinn = året barnet fyller 6 (august)",
+    variables: [
+      { symbol: "fødselsår", meaning: "Barnets fødselsår" },
+    ],
+    explanation:
+      "I Norge starter de fleste i 1. trinn høsten det året de fyller seks.",
+    calculatorSlug: "skolestart-alder",
+  },
+  {
+    slug: "pendel-periode-formel",
+    title: "Pendelperiode",
+    category: "fysikk",
+    expression: "T = 2π √(L/g)",
+    variables: [
+      { symbol: "T", meaning: "Svingetid (periode)" },
+      { symbol: "L", meaning: "Pendellengde" },
+      { symbol: "g", meaning: "Tyngdeakselerasjon ≈ 9,81 m/s²" },
+    ],
+    explanation:
+      "For en matematisk pendel med små utslag avhenger perioden bare av lengde og g, ikke av massen.",
+    calculatorSlug: "pendel-periode",
+  },
+  {
+    slug: "notelengde-formel",
+    title: "Notelengde i millisekunder",
+    category: "musikk",
+    expression: "ms = 60000 / BPM · (4 / nevner)",
+    variables: [
+      { symbol: "BPM", meaning: "Slag per minutt" },
+      { symbol: "nevner", meaning: "Noteverdi (4 = firedelsnote)" },
+    ],
+    explanation:
+      "Regner hvor mange millisekunder en note varer ved gitt tempo. Firedelsnote ved 120 BPM er 500 ms.",
+    calculatorSlug: "notelengde",
+  },
+  {
+    slug: "intervall-musikk-formel",
+    title: "Musikalsk intervall",
+    category: "musikk",
+    expression: "halvtoner = |til − fra|",
+    variables: [
+      { symbol: "fra", meaning: "Starttone (MIDI eller trinn)" },
+      { symbol: "til", meaning: "Måltonen" },
+    ],
+    explanation:
+      "Avstanden mellom to toner måles i halvtoner. Navnet på intervallet følger antall halvtoner.",
+    calculatorSlug: "intervall-musikk",
+  },
+  {
+    slug: "metronom-click-formel",
+    title: "Metronom-intervall",
+    category: "musikk",
+    expression: "intervall = 60000 / BPM",
+    variables: [
+      { symbol: "BPM", meaning: "Slag per minutt" },
+    ],
+    explanation:
+      "Antall millisekunder mellom hvert metronomslag er 60 000 delt på BPM.",
+    calculatorSlug: "metronom-click",
+  },
+  {
+    slug: "stemming-a4-formel",
+    title: "Stemming og A4",
+    category: "musikk",
+    expression: "f = A4 · 2^((n − 69) / 12)",
+    variables: [
+      { symbol: "A4", meaning: "Referansefrekvens (ofte 440 Hz)" },
+      { symbol: "n", meaning: "MIDI-notennummer" },
+    ],
+    explanation:
+      "Like temperert stemming: hver halvtonestigning multipliserer frekvensen med 2^(1/12).",
+    calculatorSlug: "stemming-a4",
+  },
+  {
+    slug: "lukker-tommelfinger-formel",
+    title: "Lukkertid tommelfingerregel",
+    category: "foto",
+    expression: "t ≈ 1 / (f · crop)     med IBIS: t · 2^stopp",
+    variables: [
+      { symbol: "f", meaning: "Brennvidde i mm" },
+      { symbol: "crop", meaning: "Crop-faktor" },
+      { symbol: "stopp", meaning: "Stabilisering i stopp" },
+    ],
+    explanation:
+      "Klassisk håndholdt regel: lukkertiden bør være omtrent 1 dividert på effektiv brennvidde. IBIS tillater lengre tider.",
+    calculatorSlug: "lukker-tommelfinger",
+  },
+  {
+    slug: "dybdeskarphet-enkel-formel",
+    title: "Dybdeskarphet (forenklet)",
+    category: "foto",
+    expression: "H ≈ f² / (N · c) + f     (f i mm, H omregnet til meter)",
+    variables: [
+      { symbol: "H", meaning: "Hyperfokal avstand" },
+      { symbol: "f", meaning: "Brennvidde" },
+      { symbol: "N", meaning: "Blender (f-tall)" },
+      { symbol: "c", meaning: "Sirkel av forvirring" },
+    ],
+    explanation:
+      "Hyperfokal avstand er et praktisk anslag for dybdeskarphet. Skarphet fra H/2 til uendelig når du fokuserer på H.",
+    calculatorSlug: "dybdeskarphet-enkel",
+  },
+  {
+    slug: "kaninalder-formel",
+    title: "Kaninalder",
+    category: "dyr",
+    expression: "1. år ≈ 21 menneskeår     deretter +5 per år",
+    variables: [
+      { symbol: "år", meaning: "Kaninens alder" },
+    ],
+    explanation:
+      "Grov omregning til menneskeår. Første året teller mer; deretter legges typisk fem menneskeår til per kaninår.",
+    calculatorSlug: "kaninalder",
+  },
+  {
+    slug: "hestealder-formel",
+    title: "Hestealder",
+    category: "dyr",
+    expression: "2 år ≈ 24 menneskeår     deretter +3 per år",
+    variables: [
+      { symbol: "år", meaning: "Hestens alder" },
+    ],
+    explanation:
+      "Omtrentlig omregning til menneskeår. Unge hester «aldres» raskere de første årene.",
+    calculatorSlug: "hestealder",
+  },
+  {
+    slug: "valpekull-formel",
+    title: "Valpekull og fødsel",
+    category: "dyr",
+    expression: "fødsel ≈ paring + 63 dager",
+    variables: [
+      { symbol: "paring", meaning: "Dato for paring" },
+    ],
+    explanation:
+      "Drektighetstiden hos hund er grovt 63 dager fra paring. Individuell variasjon forekommer.",
+    calculatorSlug: "valpekull",
+  },
 ];
 
 export function getFormula(slug: string): Formula | undefined {

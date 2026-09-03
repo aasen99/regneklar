@@ -91,17 +91,19 @@ const distances = [
 export const sportCalculators: Calculator[] = [
   {
     slug: "km-t-min-km",
-    title: "Km/t til min/km",
-    shortTitle: "Tempo",
+    title: "Løpekalkulator – km/t til min/km",
+    shortTitle: "Løpetempo",
     description:
-      "Regn om mellom kilometer i timen og minutter per kilometer. Viser også 400 m-runde og vanlige løpsdistanser.",
+      "Løpekalkulator og tempokalkulator: regn om mellom kilometer i timen og minutter per kilometer. Viser også 400 m-runde og vanlige løpsdistanser.",
     category: "sport",
     tags: [
-      "løping",
-      "tempo",
-      "km/t",
+      "løpekalkulator",
+      "tempokalkulator",
+      "løpetempo",
       "min/km",
+      "km/t",
       "pace",
+      "løping",
       "fart",
       "400m",
     ],
