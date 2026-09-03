@@ -2274,6 +2274,824 @@ export const formulas: Formula[] = [
     explanation: "1000 cm³ = 1 liter. Juster for fyllingsgrad og dekor.",
     calculatorSlug: "akvarium-volum",
   },
+
+  // —— Matematikk ——
+  {
+    slug: "omkrets-sirkel",
+    title: "Omkrets av sirkel",
+    category: "matematikk",
+    expression: "O = 2πr = πd",
+    variables: [
+      { symbol: "r", meaning: "Radius" },
+      { symbol: "d", meaning: "Diameter (= 2r)" },
+    ],
+    explanation: "Omkretsen er lengden rundt sirkelen. π ≈ 3,14159.",
+    example: "Radius 5 cm gir O = 2π·5 ≈ 31,4 cm.",
+    calculatorSlug: "omkrets",
+  },
+  {
+    slug: "areal-rektangel",
+    title: "Areal av rektangel",
+    category: "matematikk",
+    expression: "A = l · b",
+    variables: [
+      { symbol: "l", meaning: "Lengde" },
+      { symbol: "b", meaning: "Bredde" },
+    ],
+    explanation: "Kvadrat er spesialtilfellet l = b, da A = s².",
+    calculatorSlug: "areal",
+  },
+  {
+    slug: "areal-parallellogram",
+    title: "Areal av parallellogram",
+    category: "matematikk",
+    expression: "A = g · h",
+    variables: [
+      { symbol: "g", meaning: "Grunnlinje" },
+      { symbol: "h", meaning: "Høyde vinkelrett på grunnlinjen" },
+    ],
+    explanation: "Ikke bruk skrå siden som høyde – høyden står alltid vinkelrett.",
+    calculatorSlug: "areal",
+  },
+  {
+    slug: "areal-trapes",
+    title: "Areal av trapes",
+    category: "matematikk",
+    expression: "A = (a + b) · h / 2",
+    variables: [
+      { symbol: "a, b", meaning: "De to parallelle sidene" },
+      { symbol: "h", meaning: "Høyde mellom dem" },
+    ],
+    explanation: "Gjennomsnittet av parallelle sider ganget med høyden.",
+    calculatorSlug: "areal",
+  },
+  {
+    slug: "herons-formel",
+    title: "Herons formel",
+    category: "matematikk",
+    expression: "A = √(s(s−a)(s−b)(s−c))     s = (a+b+c)/2",
+    variables: [
+      { symbol: "a,b,c", meaning: "Sidene i trekanten" },
+      { symbol: "s", meaning: "Halvomkrets" },
+    ],
+    explanation: "Areal når du kjenner tre sider, uten høyde. Trekanten må oppfylle triangelulikheten.",
+    calculatorSlug: "heron",
+  },
+  {
+    slug: "volum-sylinder",
+    title: "Volum av sylinder",
+    category: "matematikk",
+    expression: "V = πr²h",
+    variables: [
+      { symbol: "r", meaning: "Radius i grunnflaten" },
+      { symbol: "h", meaning: "Høyde" },
+    ],
+    explanation: "Grunnflateareal ganger høyde. Overflate (lukket): 2πr² + 2πrh.",
+    calculatorSlug: "volum",
+  },
+  {
+    slug: "volum-kjegle",
+    title: "Volum av kjegle",
+    category: "matematikk",
+    expression: "V = (1/3) πr²h",
+    variables: [
+      { symbol: "r", meaning: "Radius i grunnflaten" },
+      { symbol: "h", meaning: "Høyde" },
+    ],
+    explanation: "En kjegle har en tredjedel av volumet til en sylinder med samme r og h.",
+    calculatorSlug: "volum",
+  },
+  {
+    slug: "volum-prisme",
+    title: "Volum av prisme",
+    category: "matematikk",
+    expression: "V = A_grunn · h",
+    variables: [
+      { symbol: "A_grunn", meaning: "Arealet av grunnflaten" },
+      { symbol: "h", meaning: "Høyde" },
+    ],
+    explanation: "Gjelder rett prisme. For skjevt prisme brukes den vinkelrette høyden.",
+    calculatorSlug: "volum",
+  },
+  {
+    slug: "sohcahtoa",
+    title: "Sinus, cosinus og tangens i rettvinklet trekant",
+    category: "matematikk",
+    expression: "sin = mot / hyp     cos = hos / hyp     tan = mot / hos",
+    variables: [
+      { symbol: "mot", meaning: "Motstående katet til vinkelen" },
+      { symbol: "hos", meaning: "Hosliggende katet" },
+      { symbol: "hyp", meaning: "Hypotenus" },
+    ],
+    explanation:
+      "Gjelder i rettvinklede trekanter. Husk: tan θ = sin θ / cos θ.",
+    example: "I en 30–60–90-trekant er sin 30° = 1/2 og cos 30° = √3/2.",
+    calculatorSlug: "trigonometri",
+  },
+  {
+    slug: "sinussetningen",
+    title: "Sinussetningen",
+    category: "matematikk",
+    expression: "a / sin A = b / sin B = c / sin C = 2R",
+    variables: [
+      { symbol: "a,b,c", meaning: "Sider" },
+      { symbol: "A,B,C", meaning: "Motstående vinkler" },
+      { symbol: "R", meaning: "Radius i omskrevet sirkel" },
+    ],
+    explanation: "Brukes når du kjenner en side og dens motstående vinkel, pluss én størrelse til.",
+    calculatorSlug: "trigonometri",
+  },
+  {
+    slug: "cosinussetningen",
+    title: "Cosinussetningen",
+    category: "matematikk",
+    expression: "c² = a² + b² − 2ab cos C",
+    variables: [
+      { symbol: "a,b", meaning: "Sider som danner vinkel C" },
+      { symbol: "c", meaning: "Side mot C" },
+    ],
+    explanation: "Generalisering av Pythagoras. Når C = 90° er cos C = 0 og du får a² + b² = c².",
+    calculatorSlug: "trigonometri",
+  },
+  {
+    slug: "logaritme-formel",
+    title: "Logaritme",
+    category: "matematikk",
+    expression: "log_b a = c  ⇔  b^c = a",
+    variables: [
+      { symbol: "b", meaning: "Grunntall (base)" },
+      { symbol: "a", meaning: "Argument" },
+      { symbol: "c", meaning: "Eksponent / logaritmeverdi" },
+    ],
+    explanation:
+      "log(xy) = log x + log y. log(x/y) = log x − log y. log(x^n) = n log x. ln er naturlig log (base e).",
+    calculatorSlug: "logaritme",
+  },
+  {
+    slug: "potensregler",
+    title: "Potensregler",
+    category: "matematikk",
+    expression: "a^m · a^n = a^(m+n)     (a^m)^n = a^(mn)     a^(−n) = 1/a^n",
+    variables: [
+      { symbol: "a", meaning: "Grunntall" },
+      { symbol: "m,n", meaning: "Eksponenter" },
+    ],
+    explanation: "Samme grunntall ved multiplikasjon: legg sammen eksponentene. a^0 = 1 (a ≠ 0).",
+    calculatorSlug: "potens-rot",
+  },
+  {
+    slug: "forstegardsligning",
+    title: "Førstegradsligning",
+    category: "matematikk",
+    expression: "ax + b = 0  ⇒  x = −b / a",
+    variables: [
+      { symbol: "a", meaning: "Koeffisient foran x (a ≠ 0)" },
+      { symbol: "b", meaning: "Konstantledd" },
+    ],
+    explanation: "Flytt konstantleddet og del på a. Grafen er en rett linje.",
+    calculatorSlug: "forstegard",
+  },
+  {
+    slug: "avstand-to-punkt",
+    title: "Avstand mellom to punkt",
+    category: "matematikk",
+    expression: "d = √((x₂−x₁)² + (y₂−y₁)²)",
+    variables: [
+      { symbol: "(x₁,y₁)", meaning: "Første punkt" },
+      { symbol: "(x₂,y₂)", meaning: "Andre punkt" },
+    ],
+    explanation: "Pythagoras i koordinatsystemet. I 3D legges (z₂−z₁)² under roten også.",
+    calculatorSlug: "avstand-punkt",
+  },
+  {
+    slug: "midtpunkt-formel",
+    title: "Midtpunkt",
+    category: "matematikk",
+    expression: "M = ((x₁+x₂)/2 , (y₁+y₂)/2)",
+    variables: [
+      { symbol: "M", meaning: "Midtpunktet mellom to punkt" },
+    ],
+    explanation: "Gjennomsnittet av x-koordinatene og av y-koordinatene.",
+  },
+  {
+    slug: "vektor-lengde",
+    title: "Vektorlengde og prikkprodukt",
+    category: "matematikk",
+    expression: "|v| = √(x²+y²)     u·v = |u||v| cos θ = x₁x₂ + y₁y₂",
+    variables: [
+      { symbol: "v", meaning: "Vektor (x, y)" },
+      { symbol: "θ", meaning: "Vinkel mellom u og v" },
+    ],
+    explanation: "Prikkprodukt null betyr at vektorene står vinkelrett på hverandre.",
+    calculatorSlug: "vektor-2d",
+  },
+
+  // —— Bygg ——
+  {
+    slug: "fliser-formel",
+    title: "Antall fliser",
+    category: "bygg",
+    expression: "antall ≈ (areal / flisareal) · (1 + svinn)",
+    variables: [
+      { symbol: "areal", meaning: "Gulv- eller veggareal" },
+      { symbol: "svinn", meaning: "Kapp og reservedel, f.eks. 0,10" },
+    ],
+    explanation: "Rund opp til hele esker. Mønster og kapp øker svinnet.",
+    calculatorSlug: "fliser",
+  },
+  {
+    slug: "gulvbelegg-formel",
+    title: "Gulvbelegg",
+    category: "bygg",
+    expression: "m² = lengde · bredde · (1 + svinn)",
+    variables: [
+      { symbol: "svinn", meaning: "Typisk 5–15 % til kapp" },
+    ],
+    explanation: "Mål rommet, ikke bare fri gulvflate hvis lister og dører krever ekstra.",
+    calculatorSlug: "gulvbelegg",
+  },
+  {
+    slug: "tapet-formel",
+    title: "Tapetmengde",
+    category: "bygg",
+    expression: "baner = takhøyde / rapporthøyde     ruller ≈ omkrets / banebredde",
+    variables: [
+      { symbol: "rapport", meaning: "Mønsterets gjentakelse i høyden" },
+    ],
+    explanation: "Mønster med rapport gir mer svinn enn ensfarget tapet. Trekk fra vinduer og dører grovt.",
+    calculatorSlug: "tapet",
+  },
+  {
+    slug: "u-verdi-formel",
+    title: "U-verdi (isolasjon)",
+    category: "bygg",
+    expression: "U = 1 / Σ R     R = d / λ",
+    variables: [
+      { symbol: "U", meaning: "Varmegjennomgangstall i W/(m²·K)" },
+      { symbol: "R", meaning: "Varmemotstand" },
+      { symbol: "d", meaning: "Tykkelse" },
+      { symbol: "λ", meaning: "Varmekonduktivitet" },
+    ],
+    explanation: "Lavere U betyr bedre isolasjon. Lagene summeres som R-verdier i serie.",
+    calculatorSlug: "isolasjon-uverdi",
+  },
+  {
+    slug: "gipsplater-formel",
+    title: "Gipsplater",
+    category: "bygg",
+    expression: "plater = areal / plateareal · (1 + svinn)",
+    variables: [
+      { symbol: "plateareal", meaning: "Ofte 0,6 · 2,4 = 1,44 m²" },
+    ],
+    explanation: "Standard norsk plate er ofte 60×240 cm. Legg til ekstra til kapp.",
+    calculatorSlug: "gipsplater",
+  },
+  {
+    slug: "grus-sand-formel",
+    title: "Grus og sand",
+    category: "bygg",
+    expression: "V = l · b · tykkelse",
+    variables: [
+      { symbol: "V", meaning: "Volum i m³" },
+    ],
+    explanation: "Bestill gjerne litt ekstra. 1 m³ veier ulikt etter materialtype – spør leverandør.",
+    calculatorSlug: "grus-sand",
+  },
+  {
+    slug: "gjerde-formel",
+    title: "Gjerdestolper",
+    category: "bygg",
+    expression: "stolper = lengde / avstand + 1",
+    variables: [
+      { symbol: "lengde", meaning: "Gjerdelengde" },
+      { symbol: "avstand", meaning: "Senteravstand mellom stolper" },
+    ],
+    explanation: "Pluss 1 fordi du trenger stolpe i begge ender. Hjørner og porter krever ekstra.",
+    calculatorSlug: "gjerde",
+  },
+  {
+    slug: "takstein-formel",
+    title: "Takstein",
+    category: "bygg",
+    expression: "stein = takareal · stein/m² · (1 + svinn)",
+    variables: [
+      { symbol: "stein/m²", meaning: "Oppgis av produsenten" },
+    ],
+    explanation: "Takareal er skrått areal, ikke grunnflate. Møne, piper og kapp øker behovet.",
+    calculatorSlug: "takstein",
+  },
+
+  // —— Hverdag ——
+  {
+    slug: "reisetid-formel",
+    title: "Reisetid",
+    category: "hverdag",
+    expression: "tid = distanse / fart",
+    variables: [
+      { symbol: "distanse", meaning: "km" },
+      { symbol: "fart", meaning: "km/t" },
+    ],
+    explanation: "Gjennomsnittsfart, ikke toppfart. Pause og kø kommer i tillegg.",
+    calculatorSlug: "reisetid",
+  },
+  {
+    slug: "nedlasting-formel",
+    title: "Nedlastingstid",
+    category: "hverdag",
+    expression: "tid = filstørrelse / hastighet",
+    variables: [
+      { symbol: "filstørrelse", meaning: "I bit (byte · 8)" },
+      { symbol: "hastighet", meaning: "bit/s (Mbps · 10⁶)" },
+    ],
+    explanation: "Pass på bit vs. byte. 100 Mbps er teoretisk maks – faktisk hastighet er ofte lavere.",
+    calculatorSlug: "nedlasting",
+  },
+  {
+    slug: "arbeidstid-formel",
+    title: "Arbeidstid og overtid",
+    category: "hverdag",
+    expression: "timer = slutt − start − pause",
+    variables: [
+      { symbol: "pause", meaning: "Ulønnet pause trekkes fra" },
+    ],
+    explanation: "Overtid beregnes etter avtale/tariff når du overstiger avtalt arbeidstid.",
+    calculatorSlug: "arbeidstid",
+  },
+  {
+    slug: "abonnement-arspris",
+    title: "Abonnement årspris",
+    category: "hverdag",
+    expression: "år = måned · 12     eller     måned = år / 12",
+    variables: [
+      { symbol: "år", meaning: "Årlig kostnad" },
+      { symbol: "måned", meaning: "Månedlig kostnad" },
+    ],
+    explanation: "Sammenlign abonnement på samme tidsenhet. Bindingstid og oppstartgebyr påvirker totalkostnaden.",
+    calculatorSlug: "abonnement",
+  },
+  {
+    slug: "vaskemaskin-formel",
+    title: "Vaskemaskinkostnad",
+    category: "hverdag",
+    expression: "kostnad = (kWh · strømpris) + (vann · vannpris)",
+    variables: [
+      { symbol: "kWh", meaning: "Energibruk per vask" },
+    ],
+    explanation: "Eco-program bruker ofte mindre energi, men tar lengre tid. Vannpris varierer mellom kommuner.",
+    calculatorSlug: "vaskemaskin-kostnad",
+  },
+  {
+    slug: "alder-formel",
+    title: "Alder",
+    category: "hverdag",
+    expression: "alder = i dag − fødselsdato",
+    variables: [
+      { symbol: "alder", meaning: "Hele år, eller år/måned/dag" },
+    ],
+    explanation: "Du fyller år på fødselsdagen. Før den dagen er alderen fortsatt forrige hele år.",
+    calculatorSlug: "alder",
+  },
+
+  // —— Mat ——
+  {
+    slug: "oppskrift-skalering",
+    title: "Oppskriftskalering",
+    category: "mat",
+    expression: "ny mengde = gammel · (nye porsjoner / gamle porsjoner)",
+    variables: [
+      { symbol: "porsjoner", meaning: "Antall personer eller enheter" },
+    ],
+    explanation: "Fungerer best lineært. Bakepulver, gjær og krydder kan trenge skjønn ved store sprang.",
+    calculatorSlug: "oppskrift",
+  },
+  {
+    slug: "gjaer-formel",
+    title: "Gjæromregning",
+    category: "mat",
+    expression: "tørr ≈ 1/3 av fersk (vekt)",
+    variables: [
+      { symbol: "fersk", meaning: "Fersk gjær i gram" },
+      { symbol: "tørr", meaning: "Tørrgjær i gram" },
+    ],
+    explanation: "Tommelfingerregel: 50 g fersk ≈ 17 g tørr. Følg alltid pakkens anbefaling ved tvil.",
+    calculatorSlug: "gjaer",
+  },
+  {
+    slug: "steketid-formel",
+    title: "Steketid",
+    category: "mat",
+    expression: "tid ≈ minutter_per_kg · vekt",
+    variables: [
+      { symbol: "minutter_per_kg", meaning: "Oppgis i oppskrift eller tabell" },
+    ],
+    explanation: "Kjernetemperatur er sikrere enn klokke. Tykkelse betyr mer enn totalvekt for biffer.",
+    calculatorSlug: "steketid",
+  },
+  {
+    slug: "ovn-omregning",
+    title: "Ovnstemperatur over/under",
+    category: "mat",
+    expression: "overvarm ≈ under · 0,85 til 0,90 (tommelfinger)",
+    variables: [
+      { symbol: "under", meaning: "Temperatur ved undervarme" },
+    ],
+    explanation: "Over- og undervarme bruner annerledes. Konveksjon (varmluft) krever ofte 10–20 °C lavere.",
+    calculatorSlug: "ovn-temperatur",
+  },
+
+  // —— Skole ——
+  {
+    slug: "karaktersnitt-formel",
+    title: "Karaktersnitt",
+    category: "skole",
+    expression: "snitt = (Σ karakter) / n",
+    variables: [
+      { symbol: "n", meaning: "Antall karakterer" },
+    ],
+    explanation: "Uvektet snitt. Noen skoler bruker vekting – da er det Σ(karakter·vekt) / Σ vekt.",
+    calculatorSlug: "karakterkalkulator",
+  },
+  {
+    slug: "karakterbehov-formel",
+    title: "Karakterbehov",
+    category: "skole",
+    expression: "trengt = mål · n − sum_så_langt",
+    variables: [
+      { symbol: "mål", meaning: "Ønsket snitt" },
+      { symbol: "n", meaning: "Totalt antall karakterer til slutt" },
+    ],
+    explanation: "Sier hvilken karakter du trenger på det som gjenstår for å treffe snittet.",
+    calculatorSlug: "karakterbehov",
+  },
+  {
+    slug: "vekttall-formel",
+    title: "Vekttall / vektet snitt",
+    category: "skole",
+    expression: "snitt = Σ(karakter · stp) / Σ stp",
+    variables: [
+      { symbol: "stp", meaning: "Studiepoeng / vekttall for emnet" },
+    ],
+    explanation: "Emner med flere studiepoeng teller mer. Brukes ofte i høyere utdanning.",
+    calculatorSlug: "vekttall-snitt",
+  },
+  {
+    slug: "lesetid-formel",
+    title: "Lesetid",
+    category: "skole",
+    expression: "tid = sider / (sider per time)",
+    variables: [
+      { symbol: "sider per time", meaning: "Din faktiske lesefart for denne teksten" },
+    ],
+    explanation: "Fagtekst går saktere enn roman. Legg inn tid til notater.",
+    calculatorSlug: "lesetid",
+  },
+
+  // —— Sport / helse ——
+  {
+    slug: "makspuls-formel",
+    title: "Makspuls",
+    category: "sport",
+    expression: "HF_maks ≈ 220 − alder",
+    variables: [
+      { symbol: "alder", meaning: "Alder i år" },
+    ],
+    explanation:
+      "Grov tommelfingerregel. Tanaka: 208 − 0,7·alder. Individuell makspuls kan avvike mye.",
+    calculatorSlug: "makspuls",
+  },
+  {
+    slug: "pulssoner-formel",
+    title: "Pulssoner",
+    category: "sport",
+    expression: "sone = HF_hvile + intensitet · (HF_maks − HF_hvile)",
+    variables: [
+      { symbol: "intensitet", meaning: "Andel av hjertefrekvensreserve (Karvonen)" },
+    ],
+    explanation: "Karvonen-metoden bruker reserve, ikke bare prosent av makspuls. Mer treffsikkert for mange.",
+    calculatorSlug: "pulssoner-sport",
+  },
+  {
+    slug: "kalorier-loping-formel",
+    title: "Kalorier ved løping",
+    category: "sport",
+    expression: "kcal ≈ 1,036 · kg · km",
+    variables: [
+      { symbol: "kg", meaning: "Kroppsvekt" },
+      { symbol: "km", meaning: "Distanse" },
+    ],
+    explanation: "Grov tommelfingerregel. Fart, underlag og vind påvirker. Ofte ca. 1 kcal per kg per km.",
+    calculatorSlug: "kalorier-loping",
+  },
+  {
+    slug: "ideell-vekt-formel",
+    title: "Ideell vekt (BMI-basert)",
+    category: "sport",
+    expression: "vekt = BMI · høyde²",
+    variables: [
+      { symbol: "BMI", meaning: "Valgt mål-BMI, f.eks. 22" },
+      { symbol: "høyde", meaning: "I meter" },
+    ],
+    explanation: "Gir vekt som treffer valgt BMI. Ideell vekt er ikke medisinsk fasit – muskelmasse betyr mye.",
+    calculatorSlug: "ideell-vekt",
+  },
+  {
+    slug: "midje-hoyde-formel",
+    title: "Midje–høyde-forhold",
+    category: "sport",
+    expression: "forhold = midje / høyde",
+    variables: [
+      { symbol: "midje, høyde", meaning: "Samme enhet (cm)" },
+    ],
+    explanation: "Under ca. 0,5 brukes ofte som et enkelt helsemål for voksne. Ikke diagnostisk alene.",
+    calculatorSlug: "midje-hoyde",
+  },
+  {
+    slug: "ftp-soner-formel",
+    title: "FTP-soner (sykling)",
+    category: "sport",
+    expression: "soneeffekt = andel · FTP",
+    variables: [
+      { symbol: "FTP", meaning: "Functional Threshold Power" },
+    ],
+    explanation: "Sonene er prosent av FTP (f.eks. tempo 76–90 %). FTP anslås ofte fra 20 min-test · 0,95.",
+    calculatorSlug: "ftp-soner",
+  },
+  {
+    slug: "watt-per-kg-formel",
+    title: "Watt per kilogram",
+    category: "sport",
+    expression: "W/kg = effekt / kroppsvekt",
+    variables: [
+      { symbol: "effekt", meaning: "Watt" },
+      { symbol: "kroppsvekt", meaning: "kg" },
+    ],
+    explanation: "Viktig mål i sykling, særlig i stigning. Høy W/kg betyr mer fart oppover.",
+    calculatorSlug: "watt-per-kg",
+  },
+  {
+    slug: "negativ-split-formel",
+    title: "Negativ split",
+    category: "sport",
+    expression: "andre halvdel raskere enn første",
+    variables: [
+      { symbol: "split", meaning: "Tid på hver halvdel av løpet" },
+    ],
+    explanation: "Mange løpere åpner for hardt. Negativ split betyr kontrollert start og sterkere avslutning.",
+    calculatorSlug: "negativ-split",
+  },
+
+  // —— Musikk ——
+  {
+    slug: "bpm-tid-formel",
+    title: "BPM og tid",
+    category: "musikk",
+    expression: "tid = slag / BPM · 60     slag = BPM · tid / 60",
+    variables: [
+      { symbol: "BPM", meaning: "Beats per minute" },
+      { symbol: "slag", meaning: "Antall taktslag" },
+    ],
+    explanation: "120 BPM: hvert slag er 0,5 s. En 4/4-takt tar da 2 sekunder.",
+    calculatorSlug: "bpm-tid",
+  },
+  {
+    slug: "delay-bpm-formel",
+    title: "Delay-tid fra BPM",
+    category: "musikk",
+    expression: "delay_ms = 60000 / BPM · notelengde",
+    variables: [
+      { symbol: "notelengde", meaning: "1 for kvartnote, 0,5 for åttendedel" },
+    ],
+    explanation: "Synker delay til tempoet. Ved 120 BPM er kvartnote-delay 500 ms.",
+    calculatorSlug: "delay-bpm",
+  },
+
+  // —— Foto ——
+  {
+    slug: "eksponeringstrekant-formel",
+    title: "Eksponeringstrekanten",
+    category: "foto",
+    expression: "eksponering styres av blender · lukker · ISO",
+    variables: [
+      { symbol: "blender", meaning: "f-tall (lysåpning)" },
+      { symbol: "lukker", meaning: "Tid i sekunder" },
+      { symbol: "ISO", meaning: "Sensorens lysfølsomhet" },
+    ],
+    explanation:
+      "Ett stopp mer lys: åpne blender ett trinn, doble tiden, eller doble ISO. Balanser etter dybdeskarphet og bevegelse.",
+    calculatorSlug: "eksponeringstrekant",
+  },
+  {
+    slug: "crop-faktor-formel",
+    title: "Crop-faktor",
+    category: "foto",
+    expression: "ekvivalent = brennvidde · crop",
+    variables: [
+      { symbol: "crop", meaning: "f.eks. 1,5 (APS-C) eller 2 (Micro Four Thirds)" },
+    ],
+    explanation: "50 mm på APS-C med crop 1,5 tilsvarer 75 mm synsfelt på fullformat.",
+    calculatorSlug: "crop-faktor",
+  },
+  {
+    slug: "nd-filter-formel",
+    title: "ND-filter og lukkertid",
+    category: "foto",
+    expression: "ny tid = tid · 2^(stop)",
+    variables: [
+      { symbol: "stop", meaning: "ND-styrke i stopp (ND8 ≈ 3 stop)" },
+    ],
+    explanation: "ND-filter slipper inn mindre lys slik at du kan bruke lengre lukkertid i dagslys.",
+    calculatorSlug: "nd-filter",
+  },
+  {
+    slug: "fov-formel",
+    title: "Synsfelt (FOV)",
+    category: "foto",
+    expression: "FOV ≈ 2 arctan(sensor / (2 · f))",
+    variables: [
+      { symbol: "f", meaning: "Brennvidde" },
+      { symbol: "sensor", meaning: "Sensorbredde eller -høyde" },
+    ],
+    explanation: "Vidvinkel (kort f) gir stort synsfelt. Tele (lang f) gir smalt.",
+    calculatorSlug: "synsfelt-fov",
+  },
+  {
+    slug: "megapiksel-formel",
+    title: "Megapiksel og utskrift",
+    category: "foto",
+    expression: "MP = (bredde_px · høyde_px) / 10^6",
+    variables: [
+      { symbol: "px", meaning: "Piksler" },
+    ],
+    explanation: "Til utskrift betyr oppløsning i ppi også mye. Flere MP hjelper ved beskæring.",
+    calculatorSlug: "megapiksel",
+  },
+
+  // —— Dyr ——
+  {
+    slug: "kattealder-formel",
+    title: "Kattealder",
+    category: "dyr",
+    expression: "grovt: første år ≈ 15 menneskeår, deretter +4 per år",
+    variables: [
+      { symbol: "år", meaning: "Kattens alder" },
+    ],
+    explanation: "Tommelfingerregler varierer. Veterinær vurderer biologisk alder bedre enn formler.",
+    calculatorSlug: "kattealder",
+  },
+  {
+    slug: "for-kjaledyr-formel",
+    title: "Fôrmengde kjæledyr",
+    category: "dyr",
+    expression: "dagsrase ≈ anbefaling per kg · vekt",
+    variables: [
+      { symbol: "anbefaling", meaning: "Fra fôrprodusent" },
+    ],
+    explanation: "Start med pakkens tabell og juster etter hold. Valper og drektige dyr har andre behov.",
+    calculatorSlug: "for-kjaledyr",
+  },
+
+  // —— Enheter ——
+  {
+    slug: "hastighet-omregning",
+    title: "Hastighetsomregning",
+    category: "enheter",
+    expression: "1 m/s = 3,6 km/t     1 mph ≈ 1,609 km/t",
+    variables: [
+      { symbol: "m/s", meaning: "Meter per sekund" },
+      { symbol: "km/t", meaning: "Kilometer per time" },
+    ],
+    explanation: "Del km/t på 3,6 for å få m/s. Omvendt: gange med 3,6.",
+    calculatorSlug: "hastighet-enheter",
+  },
+  {
+    slug: "dataenheter-formel",
+    title: "Dataenheter",
+    category: "enheter",
+    expression: "1 byte = 8 bit     1 KiB = 1024 byte     1 KB ≈ 1000 byte",
+    variables: [
+      { symbol: "bit", meaning: "Minst enhet (0 eller 1)" },
+    ],
+    explanation: "Nettverk bruker ofte desimale SI-prefiks (MB = 10⁶). Operativsystemer viser ofte binære (MiB = 2²⁰).",
+    calculatorSlug: "data-enheter",
+  },
+  {
+    slug: "grader-radianer-formel",
+    title: "Grader og radianer",
+    category: "enheter",
+    expression: "rad = grader · π/180     grader = rad · 180/π",
+    variables: [
+      { symbol: "π", meaning: "≈ 3,14159" },
+    ],
+    explanation: "Full sirkel: 360° = 2π rad. 180° = π rad. 90° = π/2 rad.",
+    calculatorSlug: "grader-radianer",
+  },
+
+  // —— Økonomi (flere) ——
+  {
+    slug: "inflasjon-formel",
+    title: "Inflasjon og realverdi",
+    category: "okonomi",
+    expression: "real = nominell / (1 + i)^n",
+    variables: [
+      { symbol: "i", meaning: "Inflasjon per år som desimal" },
+      { symbol: "n", meaning: "Antall år" },
+    ],
+    explanation: "Viser hva et beløp er verdt i dagens kjøpekraft etter n år med inflasjon.",
+    calculatorSlug: "inflasjon",
+  },
+  {
+    slug: "tips-formel",
+    title: "Tips",
+    category: "okonomi",
+    expression: "tips = regning · sats     total = regning + tips",
+    variables: [
+      { symbol: "sats", meaning: "F.eks. 0,10 for 10 %" },
+    ],
+    explanation: "I Norge er tips frivillig. Noen steder er service inkludert.",
+    calculatorSlug: "tips",
+  },
+  {
+    slug: "budsjett-50-30-20-formel",
+    title: "Budsjett 50/30/20",
+    category: "okonomi",
+    expression: "behov 50 % · inntekt     ønsker 30 %     sparing 20 %",
+    variables: [
+      { symbol: "inntekt", meaning: "Netto inntekt" },
+    ],
+    explanation: "Enkel tommelfingerregel. Tilpass til boligkostnader og livssituasjon i Norge.",
+    calculatorSlug: "budsjett-50-30-20",
+  },
+  {
+    slug: "feriepenger-formel",
+    title: "Feriepenger",
+    category: "okonomi",
+    expression: "feriepenger = grunnlag · sats",
+    variables: [
+      { symbol: "sats", meaning: "10,2 %, 12 %, 12,5 % eller 14,3 %" },
+    ],
+    explanation: "Satsen avhenger av ferielengde og alder. Opptjenes året før utbetaling.",
+    calculatorSlug: "feriepenger",
+  },
+  {
+    slug: "lonnsomregning-formel",
+    title: "Lønn år / måned / time",
+    category: "okonomi",
+    expression: "år ≈ måned · 12     time ≈ år / (52 · uketimer)",
+    variables: [
+      { symbol: "uketimer", meaning: "Avtalt arbeidstid, ofte 37,5" },
+    ],
+    explanation: "Forenklet omregning. Ferie, helligdager og overtidsregler påvirker reell timelønn.",
+    calculatorSlug: "lonn-omregning",
+  },
+
+  // —— Statistikk ——
+  {
+    slug: "bayes-formel",
+    title: "Bayes’ setning",
+    category: "statistikk",
+    expression: "P(A|B) = P(B|A) · P(A) / P(B)",
+    variables: [
+      { symbol: "P(A|B)", meaning: "Sannsynlighet for A gitt B" },
+      { symbol: "P(A)", meaning: "Prior for A" },
+    ],
+    explanation: "Oppdaterer sannsynlighet når ny informasjon (B) kommer. Grunnlag for mye moderne statistikk.",
+    calculatorSlug: "bayes-enkel",
+  },
+  {
+    slug: "median-formel",
+    title: "Median",
+    category: "statistikk",
+    expression: "midterste verdi når data er sortert",
+    variables: [
+      { symbol: "n", meaning: "Antall observasjoner" },
+    ],
+    explanation: "Ved partall n er medianen ofte snittet av de to midterste. Robust mot ekstremverdier.",
+    calculatorSlug: "median-percentil",
+  },
+  {
+    slug: "binomial-formel",
+    title: "Binomialsannsynlighet",
+    category: "statistikk",
+    expression: "P(X=k) = C(n,k) · p^k · (1−p)^(n−k)",
+    variables: [
+      { symbol: "n", meaning: "Antall forsøk" },
+      { symbol: "k", meaning: "Antall suksesser" },
+      { symbol: "p", meaning: "Sannsynlighet per forsøk" },
+    ],
+    explanation: "Uavhengige ja/nei-forsøk med lik p. C(n,k) er antall kombinasjoner.",
+    calculatorSlug: "binomialsannsynlighet",
+  },
+  {
+    slug: "korrelasjon-formel",
+    title: "Korrelasjon (Pearson)",
+    category: "statistikk",
+    expression: "r = Σ((x−x̄)(y−ȳ)) / (s_x s_y (n−1))",
+    variables: [
+      { symbol: "r", meaning: "Korrelasjonskoeffisient mellom −1 og 1" },
+    ],
+    explanation: "r nær 1: sterk positiv samvariasjon. Korrelasjon er ikke årsak.",
+    calculatorSlug: "korrelasjon",
+  },
 ];
 
 export function getFormula(slug: string): Formula | undefined {
