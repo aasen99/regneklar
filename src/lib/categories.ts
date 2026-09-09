@@ -4,8 +4,9 @@ export const categories: Category[] = [
   {
     id: "okonomi",
     title: "Økonomi",
-    description: "Lån, BSU, sparing, bolig, renter, MVA, lønn og prosent.",
-    blurb: "Penger, renter og priser",
+    description:
+      "Lån, BSU, sparing, bolig, renter, MVA, lønn, prosent, aksjer, verdsettelse og utbytte.",
+    blurb: "Penger, renter, aksjer og priser",
   },
   {
     id: "sport",

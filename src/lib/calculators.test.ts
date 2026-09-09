@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { getCategory } from "@/lib/categories";
 import { getCalculator } from "@/lib/catalog";
 import {
   annuityPayment,
@@ -351,6 +352,11 @@ describe("aksjekalkulatorer", () => {
     expect(primaryValue("pe-ratio", { kurs: "150", eps: "10" })).toBe(15);
   });
 
+  it("viser N/A for P/E når EPS ≤ 0", () => {
+    expect(primaryValue("pe-ratio", { kurs: "150", eps: "0" })).toBe("N/A");
+    expect(primaryValue("pe-ratio", { kurs: "150", eps: "-2" })).toBe("N/A");
+  });
+
   it("beregner EPS", () => {
     expect(
       primaryValue("eps", { resultat: "2500000000", aksjer: "250000000" }),
@@ -363,6 +369,79 @@ describe("aksjekalkulatorer", () => {
     ).toBeCloseTo(4, 5);
   });
 
+  it("beregner utbetalingsgrad", () => {
+    expect(
+      primaryValue("utbetalingsgrad", { dps: "6", eps: "10" }),
+    ).toBeCloseTo(60, 5);
+  });
+
+  it("viser N/A for payout når EPS ≤ 0", () => {
+    expect(primaryValue("utbetalingsgrad", { dps: "6", eps: "0" })).toBe("N/A");
+    expect(primaryValue("utbetalingsgrad", { dps: "6", eps: "-1" })).toBe(
+      "N/A",
+    );
+  });
+
+  it("beregner markedsverdi", () => {
+    expect(
+      primaryValue("markedsverdi", { kurs: "150", aksjer: "250000000" }),
+    ).toBe(37_500_000_000);
+  });
+
+  it("beregner P/B", () => {
+    expect(primaryValue("pb-ratio", { kurs: "150", bvps: "80" })).toBeCloseTo(
+      1.875,
+      5,
+    );
+  });
+
+  it("beregner ROE", () => {
+    expect(
+      primaryValue("roe", {
+        resultat: "2500000000",
+        ekStart: "20000000000",
+        ekSlutt: "22000000000",
+      }),
+    ).toBeCloseTo((2_500_000_000 / 21_000_000_000) * 100, 5);
+  });
+
+  it("beregner gearing D/E", () => {
+    expect(
+      primaryValue("gearing", {
+        gjeld: "15000000000",
+        ek: "22000000000",
+        eiendeler: "37000000000",
+      }),
+    ).toBeCloseTo((15_000_000_000 / 22_000_000_000) * 100, 5);
+  });
+
+  it("beregner net debt / EBITDA", () => {
+    expect(
+      primaryValue("net-debt-ebitda", {
+        gjeld: "12000000000",
+        kontanter: "3000000000",
+        ebitda: "4000000000",
+      }),
+    ).toBeCloseTo(2.25, 5);
+  });
+
+  it("viser N/A for net debt/EBITDA når EBITDA ≤ 0", () => {
+    expect(
+      primaryValue("net-debt-ebitda", {
+        gjeld: "12000000000",
+        kontanter: "3000000000",
+        ebitda: "0",
+      }),
+    ).toBe("N/A");
+    expect(
+      primaryValue("net-debt-ebitda", {
+        gjeld: "12000000000",
+        kontanter: "3000000000",
+        ebitda: "-100",
+      }),
+    ).toBe("N/A");
+  });
+
   it("beregner EV og EV/EBITDA", () => {
     const ev = primaryValue("enterprise-value", {
       mcap: "37500000000",
@@ -373,6 +452,40 @@ describe("aksjekalkulatorer", () => {
     expect(
       primaryValue("ev-ebitda", { ev: "46500000000", ebitda: "4000000000" }),
     ).toBeCloseTo(11.625, 3);
+  });
+
+  it("viser N/A for EV/EBITDA når EBITDA ≤ 0", () => {
+    expect(
+      primaryValue("ev-ebitda", { ev: "46500000000", ebitda: "0" }),
+    ).toBe("N/A");
+    expect(
+      primaryValue("ev-ebitda", { ev: "46500000000", ebitda: "-1" }),
+    ).toBe("N/A");
+  });
+
+  it("beregner PEG", () => {
+    expect(primaryValue("peg-ratio", { pe: "15", vekst: "12" })).toBeCloseTo(
+      1.25,
+      5,
+    );
+  });
+
+  it("viser N/A for PEG uten positiv P/E og vekst", () => {
+    expect(primaryValue("peg-ratio", { pe: "0", vekst: "12" })).toBe("N/A");
+    expect(primaryValue("peg-ratio", { pe: "-5", vekst: "12" })).toBe("N/A");
+    expect(primaryValue("peg-ratio", { pe: "15", vekst: "0" })).toBe("N/A");
+    expect(primaryValue("peg-ratio", { pe: "15", vekst: "-3" })).toBe("N/A");
+  });
+
+  it("beregner totalavkastning", () => {
+    // (150-120+8)/120 = 31.666...%
+    expect(
+      primaryValue("totalavkastning-aksje", {
+        kjop: "120",
+        salg: "150",
+        utbytte: "8",
+      }),
+    ).toBeCloseTo(31.6667, 3);
   });
 
   it("beregner snittkurs fra flere kjøp", () => {
@@ -392,6 +505,27 @@ describe("aksjekalkulatorer", () => {
     ).toBe(101);
   });
 
+  it("krever kjøpskurs > 0 for break-even", () => {
+    expect(
+      compute("break-even-kurtasje", {
+        kjop: "0",
+        aksjer: "100",
+        kurtasjeKjop: "49",
+        kurtasjeSalg: "49",
+      }),
+    ).toEqual([]);
+  });
+
+  it("beregner utbytteinntekt", () => {
+    expect(
+      primaryValue("utbytteinntekt", {
+        aksjer: "200",
+        dps: "6",
+        kurs: "150",
+      }),
+    ).toBe(1200);
+  });
+
   it("beregner aksje-CAGR", () => {
     expect(
       primaryValue("cagr-aksje", {
@@ -408,6 +542,13 @@ describe("aksjekalkulatorer", () => {
     expect(getFormula("enterprise-value-formel")?.calculatorSlug).toBe(
       "enterprise-value",
     );
+  });
+
+  it("omtaler aksjer i økonomikategoriens beskrivelse", () => {
+    const desc = getCategory("okonomi")?.description ?? "";
+    expect(desc.toLowerCase()).toMatch(/aksjer/);
+    expect(desc.toLowerCase()).toMatch(/verdsettelse/);
+    expect(desc.toLowerCase()).toMatch(/utbytte/);
   });
 });
 

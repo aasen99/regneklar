@@ -53,12 +53,21 @@ export const aksjerCalculators: Calculator[] = [
     ],
     formula: "P/E = aksjekurs / EPS",
     explanation:
-      "Høy P/E kan bety forventet vekst eller dyr aksje; lav kan bety billig eller lav forventning. Negativ EPS gir negativ P/E – ofte mindre meningsfull.",
+      "Høy P/E kan bety forventet vekst eller dyr aksje; lav kan bety billig eller lav forventning. Ved EPS ≤ 0 er P/E ikke meningsfull og vises som N/A.",
     disclaimer: "Ikke investeringsråd. Sammenlign P/E innen samme bransje.",
     compute(input) {
       const kurs = num(input, "kurs");
       const eps = num(input, "eps");
-      if (!allNumbers([kurs, eps]) || kurs <= 0 || eps === 0) return [];
+      if (!allNumbers([kurs, eps]) || kurs <= 0) return [];
+      if (eps <= 0) {
+        return [
+          result("pe", "P/E", "N/A", {
+            kind: "text",
+            primary: true,
+            hint: "P/E krever positiv EPS.",
+          }),
+        ];
+      }
       return [
         result("pe", "P/E", kurs / eps, { digits: 2, primary: true }),
         result("earningsYield", "Earnings yield", (eps / kurs) * 100, {
@@ -189,12 +198,21 @@ export const aksjerCalculators: Calculator[] = [
     ],
     formula: "payout = DPS / EPS · 100 %",
     explanation:
-      "Under 100 % betyr at noe resultat beholdes i selskapet. Over 100 % kan bety utbytte finansiert av egenkapital eller engangseffekter.",
-    disclaimer: "Negativ EPS gjør ratioen lite meningsfull.",
+      "Under 100 % betyr at noe resultat beholdes i selskapet. Over 100 % kan bety utbytte finansiert av egenkapital eller engangseffekter. Ved EPS ≤ 0 vises N/A.",
+    disclaimer: "Negativ eller null EPS gjør ratioen lite meningsfull.",
     compute(input) {
       const dps = num(input, "dps");
       const eps = num(input, "eps");
-      if (!allNumbers([dps, eps]) || eps === 0) return [];
+      if (!allNumbers([dps, eps])) return [];
+      if (eps <= 0) {
+        return [
+          result("payout", "Utbetalingsgrad", "N/A", {
+            kind: "text",
+            primary: true,
+            hint: "Payout ratio krever positiv EPS.",
+          }),
+        ];
+      }
       return [
         result("payout", "Utbetalingsgrad", (dps / eps) * 100, {
           kind: "percent",
@@ -434,14 +452,24 @@ export const aksjerCalculators: Calculator[] = [
     ],
     formula: "netto gjeld = rentebærende gjeld − kontanter     ratio = netto gjeld / EBITDA",
     explanation:
-      "Vanlig nøkkeltall for hvor mange år med EBITDA som trengs for å betale netto gjeld. Negativ netto gjeld betyr nettokasse.",
+      "Vanlig nøkkeltall for hvor mange år med EBITDA som trengs for å betale netto gjeld. Negativ netto gjeld betyr nettokasse. Ved EBITDA ≤ 0 vises ikke vanlig multippel (N/A).",
     disclaimer: "Leasing (IFRS 16) og definisjon av EBITDA påvirker tallet.",
     compute(input) {
       const gjeld = num(input, "gjeld");
       const kontanter = num(input, "kontanter");
       const ebitda = num(input, "ebitda");
-      if (!allNumbers([gjeld, kontanter, ebitda]) || ebitda === 0) return [];
+      if (!allNumbers([gjeld, kontanter, ebitda])) return [];
       const netDebt = gjeld - kontanter;
+      if (ebitda <= 0) {
+        return [
+          result("ratio", "Net debt / EBITDA", "N/A", {
+            kind: "text",
+            primary: true,
+            hint: "Multippel krever positiv EBITDA.",
+          }),
+          result("netDebt", "Netto gjeld", netDebt, { kind: "currency" }),
+        ];
+      }
       return [
         result("ratio", "Net debt / EBITDA", netDebt / ebitda, {
           digits: 2,
@@ -538,12 +566,21 @@ export const aksjerCalculators: Calculator[] = [
     ],
     formula: "EV/EBITDA = EV / EBITDA",
     explanation:
-      "Sammenligner selskaper uavhengig av kapitalstruktur bedre enn P/E alene. Negative eller svært lave EBITDA gir meningsløse multipler.",
+      "Sammenligner selskaper uavhengig av kapitalstruktur bedre enn P/E alene. Ved EBITDA ≤ 0 er multippelen ikke meningsfull og vises som N/A.",
     disclaimer: "Ikke investeringsråd. Bransje og vekst påvirker «normal» multippel.",
     compute(input) {
       const ev = num(input, "ev");
       const ebitda = num(input, "ebitda");
-      if (!allNumbers([ev, ebitda]) || ebitda === 0) return [];
+      if (!allNumbers([ev, ebitda])) return [];
+      if (ebitda <= 0) {
+        return [
+          result("mult", "EV/EBITDA", "N/A", {
+            kind: "text",
+            primary: true,
+            hint: "Multippel krever positiv EBITDA.",
+          }),
+        ];
+      }
       return [
         result("mult", "EV/EBITDA", ev / ebitda, { digits: 2, primary: true }),
       ];
@@ -577,12 +614,21 @@ export const aksjerCalculators: Calculator[] = [
     ],
     formula: "PEG = (P/E) / vekst%",
     explanation:
-      "En PEG nær 1 tolkes ofte som «rimelig» relativ til vekst, men tommelfingerregelen er grov. Bruk samme vekstperiode som i P/E (forward vs. trailing).",
+      "En PEG nær 1 tolkes ofte som «rimelig» relativ til vekst, men tommelfingerregelen er grov. Krever positiv P/E og positiv forventet EPS-vekst; ellers N/A.",
     disclaimer: "Vekstestimater er usikre. PEG ignorerer risiko og kvalitet.",
     compute(input) {
       const pe = num(input, "pe");
       const vekst = num(input, "vekst");
-      if (!allNumbers([pe, vekst]) || vekst === 0) return [];
+      if (!allNumbers([pe, vekst])) return [];
+      if (pe <= 0 || vekst <= 0) {
+        return [
+          result("peg", "PEG", "N/A", {
+            kind: "text",
+            primary: true,
+            hint: "PEG krever positiv P/E og positiv EPS-vekst.",
+          }),
+        ];
+      }
       return [
         result("peg", "PEG", pe / vekst, { digits: 2, primary: true }),
       ];
@@ -747,7 +793,7 @@ export const aksjerCalculators: Calculator[] = [
       if (
         !allNumbers([kjop, aksjer, kKjop, kSalg]) ||
         aksjer <= 0 ||
-        kjop < 0
+        kjop <= 0
       ) {
         return [];
       }
