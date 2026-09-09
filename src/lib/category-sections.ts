@@ -93,7 +93,7 @@ export const CATEGORY_SECTIONS: Partial<Record<CategoryId, CategorySection[]>> =
     },
     {
       title: "Spill og odds",
-      slugs: ["odds-kalkulator", "verdibett"],
+      slugs: ["odds-kalkulator", "verdibett", "bankroll-kelly"],
     },
   ],
   fysikk: [

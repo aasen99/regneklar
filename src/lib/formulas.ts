@@ -4315,6 +4315,21 @@ export const formulas: Formula[] = [
       "Positiv EV betyr at tipset har verdi hvis sannsynlighetsestimatet er riktig over tid.",
     calculatorSlug: "verdibett",
   },
+  {
+    slug: "kelly-formel",
+    title: "Kelly-kriteriet (bankroll)",
+    category: "okonomi",
+    expression: "f* = (b·p − q) / b     innsats = fraksjon · f* · bankroll",
+    variables: [
+      { symbol: "b", meaning: "Nettogevinst-odds (desimalodds − 1)" },
+      { symbol: "p", meaning: "Sannsynlighet for gevinst" },
+      { symbol: "q", meaning: "Sannsynlighet for tap (1 − p)" },
+      { symbol: "f*", meaning: "Full Kelly-andel av bankroll" },
+    ],
+    explanation:
+      "Kelly gir teoretisk optimal innsatsandel. Fraksjonell Kelly (¼–½) og et absolutt tak demper svingninger og feilestimat av p.",
+    calculatorSlug: "bankroll-kelly",
+  },
 ];
 
 export function getFormula(slug: string): Formula | undefined {

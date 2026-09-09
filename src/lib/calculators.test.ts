@@ -429,4 +429,33 @@ describe("bettingkalkulatorer", () => {
     expect(results.find((r) => r.id === "ev")?.value).toBeCloseTo(12.5, 5);
     expect(results.find((r) => r.id === "status")?.value).toMatch(/Positiv/);
   });
+
+  it("anbefaler bankroll-innsats med ½ Kelly og tak", () => {
+    // b=1.5, p=0.5, q=0.5 → f* = (0.75−0.5)/1.5 ≈ 16,67 %
+    // ½ Kelly ≈ 8,33 % > tak 5 % → 5 % av 5000 = 250
+    const results = compute("bankroll-kelly", {
+      bankroll: "5000",
+      odds: "2.5",
+      sannsynlighet: "50",
+      fraksjon: "0.5",
+      tak: "5",
+    });
+    expect(results.find((r) => r.id === "kelly")?.value).toBeCloseTo(
+      (100 * (1.5 * 0.5 - 0.5)) / 1.5,
+      5,
+    );
+    expect(results.find((r) => r.id === "innsats")?.value).toBe(250);
+    expect(results.find((r) => r.id === "status")?.value).toMatch(/taket/);
+  });
+
+  it("anbefaler ingen innsats uten edge", () => {
+    const status = primaryValue("bankroll-kelly", {
+      bankroll: "5000",
+      odds: "2.0",
+      sannsynlighet: "40",
+      fraksjon: "0.5",
+      tak: "5",
+    });
+    expect(status).toMatch(/Ingen innsats/);
+  });
 });
