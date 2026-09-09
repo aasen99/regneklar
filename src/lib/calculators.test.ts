@@ -12,6 +12,7 @@ import {
   parsePaceMinutes,
   parseRaceSeconds,
 } from "@/lib/format";
+import { getFormula } from "@/lib/formulas";
 import { validateField } from "@/lib/validate";
 
 function compute(slug: string, input: Record<string, string>) {
@@ -342,5 +343,70 @@ describe("QA P0/P1 finans og bygg", () => {
       "t",
     );
     expect(t).toBe(2);
+  });
+});
+
+describe("aksjekalkulatorer", () => {
+  it("beregner P/E", () => {
+    expect(primaryValue("pe-ratio", { kurs: "150", eps: "10" })).toBe(15);
+  });
+
+  it("beregner EPS", () => {
+    expect(
+      primaryValue("eps", { resultat: "2500000000", aksjer: "250000000" }),
+    ).toBe(10);
+  });
+
+  it("beregner utbytteavkastning", () => {
+    expect(
+      primaryValue("utbytteavkastning", { dps: "6", kurs: "150" }),
+    ).toBeCloseTo(4, 5);
+  });
+
+  it("beregner EV og EV/EBITDA", () => {
+    const ev = primaryValue("enterprise-value", {
+      mcap: "37500000000",
+      gjeld: "12000000000",
+      kontanter: "3000000000",
+    });
+    expect(ev).toBe(46_500_000_000);
+    expect(
+      primaryValue("ev-ebitda", { ev: "46500000000", ebitda: "4000000000" }),
+    ).toBeCloseTo(11.625, 3);
+  });
+
+  it("beregner snittkurs fra flere kjøp", () => {
+    expect(
+      primaryValue("snittkurs-aksje", { kjop: "100:100; 100:200" }),
+    ).toBe(150);
+  });
+
+  it("beregner break-even etter kurtasje", () => {
+    expect(
+      primaryValue("break-even-kurtasje", {
+        kjop: "100",
+        aksjer: "100",
+        kurtasjeKjop: "49",
+        kurtasjeSalg: "51",
+      }),
+    ).toBe(101);
+  });
+
+  it("beregner aksje-CAGR", () => {
+    expect(
+      primaryValue("cagr-aksje", {
+        kjop: "100",
+        salg: "180",
+        aar: "5",
+        utbytte: "0",
+      }),
+    ).toBeCloseTo((Math.pow(1.8, 1 / 5) - 1) * 100, 2);
+  });
+
+  it("har formler knyttet til aksjekalkulatorene", () => {
+    expect(getFormula("pe-formel")?.calculatorSlug).toBe("pe-ratio");
+    expect(getFormula("enterprise-value-formel")?.calculatorSlug).toBe(
+      "enterprise-value",
+    );
   });
 });

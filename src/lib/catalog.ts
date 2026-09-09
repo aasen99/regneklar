@@ -6,6 +6,7 @@ import { helseCalculators } from "./calculators/helse";
 import { hverdagCalculators } from "./calculators/hverdag";
 import { matCalculators } from "./calculators/mat";
 import { matematikkCalculators } from "./calculators/matematikk";
+import { aksjerCalculators } from "./calculators/aksjer";
 import { okonomiCalculators } from "./calculators/okonomi";
 import { skoleCalculators } from "./calculators/skole";
 import { dyrCalculators } from "./calculators/dyr";
@@ -17,6 +18,7 @@ import type { Calculator, CategoryId } from "./types";
 
 export const calculators: Calculator[] = [
   ...okonomiCalculators,
+  ...aksjerCalculators,
   ...helseCalculators,
   ...sportCalculators,
   ...matematikkCalculators,

@@ -37,6 +37,8 @@ export const POPULAR_SEARCHES = [
   { label: "Pytagoras", href: "/kalkulator/pythagoras" },
   { label: "Egenkapital", href: "/kalkulator/egenkapital-bolig" },
   { label: "Feriepenger", href: "/kalkulator/feriepenger" },
+  { label: "P/E", href: "/kalkulator/pe-ratio" },
+  { label: "Utbytteavkastning", href: "/kalkulator/utbytteavkastning" },
 ] as const;
 
 export const calculatorCount = calculators.length;

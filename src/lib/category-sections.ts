@@ -69,6 +69,28 @@ export const CATEGORY_SECTIONS: Partial<Record<CategoryId, CategorySection[]>> =
       title: "Prosent og priser",
       slugs: ["prosent", "mva", "inflasjon", "tips", "prosentvis-endring"],
     },
+    {
+      title: "Aksjer og verdsettelse",
+      slugs: [
+        "pe-ratio",
+        "eps",
+        "utbytteavkastning",
+        "utbetalingsgrad",
+        "markedsverdi",
+        "pb-ratio",
+        "roe",
+        "gearing",
+        "net-debt-ebitda",
+        "enterprise-value",
+        "ev-ebitda",
+        "peg-ratio",
+        "totalavkastning-aksje",
+        "snittkurs-aksje",
+        "break-even-kurtasje",
+        "utbytteinntekt",
+        "cagr-aksje",
+      ],
+    },
   ],
   fysikk: [
     {
