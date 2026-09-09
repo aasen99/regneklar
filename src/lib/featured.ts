@@ -30,7 +30,7 @@ export const POPULAR_SEARCHES = [
   { label: "BMI", href: "/kalkulator/bmi" },
   { label: "Prosent", href: "/kalkulator/prosent" },
   { label: "Maling", href: "/kalkulator/maling" },
-  { label: "Løpetempo", href: "/kalkulator/km-t-min-km" },
+  { label: "Løpefart", href: "/kalkulator/km-t-min-km" },
   { label: "MVA", href: "/kalkulator/mva" },
   { label: "Karakterkalkulator", href: "/kalkulator/karakterkalkulator" },
   { label: "Kalorier", href: "/kalkulator/kaloribehov" },

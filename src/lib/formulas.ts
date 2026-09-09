@@ -418,20 +418,21 @@ export const formulas: Formula[] = [
   },
   {
     slug: "tempo-km-t",
-    title: "Løpetempo",
+    title: "Løpefart og tempo",
     category: "sport",
-    expression: "min/km = 60 / km/t     km/t = 60 / min/km",
+    expression: "min/km = 60 / km/t     sluttid = tempo · distanse",
     variables: [
       { symbol: "min/km", meaning: "Tempo, minutter per kilometer" },
       { symbol: "km/t", meaning: "Fart i kilometer per time" },
+      { symbol: "distanse", meaning: "Løpsdistanse i kilometer" },
     ],
     explanation:
-      "12 km/t er 5:00 per km. 15 km/t er 4:00 per km. Tempo er den vanlige måten løpere snakker om fart.",
-    example: "10 km/t tilsvarer 6:00 min/km.",
+      "12 km/t er 5:00 per km. Samme tempo gir direkte sluttid på 400 m, mile, 3 km, 5 km, 10 km, 10 mile, halvmaraton og maraton.",
+    example: "10 km/t (6:00 /km) gir ca. 30:00 på 5 km og 2:06:32 på halvmaraton.",
     prerequisites: "Jevn fart over hele distansen.",
     commonMistakes: [
       "Blande min/km og min/mile uten omregning.",
-      "Glemme at sluttid = tempo · distanse.",
+      "Glemme at mile er 1,609 km, ikke 1,5 km.",
     ],
     calculatorSlug: "km-t-min-km",
   },

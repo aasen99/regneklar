@@ -179,6 +179,21 @@ const nextConfig: NextConfig = {
         destination: "/kalkulator/bsu",
         permanent: true,
       },
+      {
+        source: "/kalkulator/lopefart",
+        destination: "/kalkulator/km-t-min-km",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/lopefart-kalkulator",
+        destination: "/kalkulator/km-t-min-km",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/fart-tempo-loping",
+        destination: "/kalkulator/km-t-min-km",
+        permanent: true,
+      },
     ];
   },
 };

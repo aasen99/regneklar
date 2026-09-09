@@ -23,6 +23,8 @@ function timeForMeters(minPerKm: number, meters: number): number {
 
 function paceBundle(minPerKm: number): ResultItem[] {
   const kmh = kmhFromPace(minPerKm);
+  const mileMeters = 1609.344;
+  const tenMileMeters = 16093.44;
   return [
     result("tempo", "Tempo", `${formatPace(minPerKm)} /km`, {
       kind: "text",
@@ -30,25 +32,25 @@ function paceBundle(minPerKm: number): ResultItem[] {
     }),
     result("kmh", "Fart", kmh, { digits: 2, unit: "km/t" }),
     result("ms", "Meter per sekund", kmh / 3.6, { digits: 2, unit: "m/s" }),
-    result("mile", "Tempo per engelsk mil", `${formatPace(minPerKm * 1.609344)} /mi`, {
+    result("tempoMi", "Tempo per engelsk mil", `${formatPace(minPerKm * 1.609344)} /mi`, {
       kind: "text",
     }),
-    result("r400", "400 m-runde", formatHms(timeForMeters(minPerKm, 400)), {
+    result("r400", "400 m", formatHms(timeForMeters(minPerKm, 400)), {
       kind: "text",
     }),
-    result("r100", "100 m", formatHms(timeForMeters(minPerKm, 100)), {
+    result("mile", "1 mile (1,609 km)", formatHms(timeForMeters(minPerKm, mileMeters)), {
       kind: "text",
     }),
-    result("r200", "200 m", formatHms(timeForMeters(minPerKm, 200)), {
-      kind: "text",
-    }),
-    result("r800", "800 m", formatHms(timeForMeters(minPerKm, 800)), {
+    result("k3", "3 km", formatHms(timeForMeters(minPerKm, 3000)), {
       kind: "text",
     }),
     result("k5", "5 km", formatHms(timeForMeters(minPerKm, 5000)), {
       kind: "text",
     }),
     result("k10", "10 km", formatHms(timeForMeters(minPerKm, 10000)), {
+      kind: "text",
+    }),
+    result("m10", "10 mile (16,1 km)", formatHms(timeForMeters(minPerKm, tenMileMeters)), {
       kind: "text",
     }),
     result("halv", "Halvmaraton (21,1 km)", formatHms(timeForMeters(minPerKm, 21097.5)), {
@@ -67,15 +69,43 @@ function readPace(input: Record<string, string>): number | null {
     return pace != null && pace > 0 ? pace : null;
   }
   if (mode === "tid") {
-    const km = num(input, "distanse");
+    const fromRace = resolveRaceDistance(input);
+    const fromKm = num(input, "distanse");
+    const km =
+      fromRace != null
+        ? fromRace
+        : Number.isFinite(fromKm) && fromKm > 0
+          ? fromKm
+          : null;
     const sec = parseRaceSeconds(input.tid);
-    if (!Number.isFinite(km) || km <= 0 || sec == null || sec <= 0) return null;
+    if (km == null || km <= 0 || sec == null || sec <= 0) return null;
     return sec / 60 / km;
   }
   const kmh = parseNumber(input.verdi);
   if (kmh == null || kmh <= 0) return null;
   return 60 / kmh;
 }
+
+function resolveRaceDistance(input: Record<string, string>): number | null {
+  if (input.distansevalg === "custom") {
+    const km = num(input, "egendistanse");
+    return Number.isFinite(km) && km > 0 ? km : null;
+  }
+  const km = Number(input.distansevalg);
+  return Number.isFinite(km) && km > 0 ? km : null;
+}
+
+const raceDistances = [
+  { value: "0.4", label: "400 m" },
+  { value: "1.609344", label: "1 mile" },
+  { value: "3", label: "3 km" },
+  { value: "5", label: "5 km" },
+  { value: "10", label: "10 km" },
+  { value: "16.09344", label: "10 mile" },
+  { value: "21.0975", label: "Halvmaraton" },
+  { value: "42.195", label: "Maraton" },
+  { value: "custom", label: "Egen distanse" },
+];
 
 const distances = [
   { value: "1", label: "1 km" },
@@ -91,12 +121,13 @@ const distances = [
 export const sportCalculators: Calculator[] = [
   {
     slug: "km-t-min-km",
-    title: "Løpekalkulator – km/t til min/km",
-    shortTitle: "Løpetempo",
+    title: "Løpefart og tempo",
+    shortTitle: "Løpefart",
     description:
-      "Løpekalkulator og tempokalkulator: regn om mellom kilometer i timen og minutter per kilometer. Viser også 400 m-runde og vanlige løpsdistanser.",
+      "Komplett løpekalkulator for fart og tempo. Oppgi km/t, min/km eller sluttid – få tempo, hastighet og sluttid på 400 m, mile, 3 km, 5 km, 10 km, 10 mile, halvmaraton og maraton.",
     category: "sport",
     tags: [
+      "løpefart",
       "løpekalkulator",
       "tempokalkulator",
       "løpetempo",
@@ -105,7 +136,10 @@ export const sportCalculators: Calculator[] = [
       "pace",
       "løping",
       "fart",
-      "400m",
+      "sluttid",
+      "maraton",
+      "5km",
+      "10km",
     ],
     popular: true,
     fields: [
@@ -115,21 +149,57 @@ export const sportCalculators: Calculator[] = [
         type: "select",
         defaultValue: "kmh",
         options: [
-          { value: "kmh", label: "Kilometer i timen (km/t)" },
+          { value: "kmh", label: "Fart (km/t)" },
           { value: "tempo", label: "Tempo (min/km)" },
+          { value: "tid", label: "Sluttid på en distanse" },
         ],
       },
       {
         id: "verdi",
-        label: "Verdi",
+        label: "Fart eller tempo",
         type: "text",
         defaultValue: "12",
-        hint: "Skriv km/t som 12 eller 12,5, og tempo som 5:00 eller 4:45.",
+        hint: "Km/t som 12 eller 12,5. Tempo som 5:00 eller 4:45. Brukes når du ikke velger sluttid.",
+      },
+      {
+        id: "distansevalg",
+        label: "Distanse (ved sluttid)",
+        type: "select",
+        defaultValue: "5",
+        options: raceDistances,
+        hint: "Brukes bare når du oppgir sluttid.",
+      },
+      {
+        id: "egendistanse",
+        label: "Egen distanse",
+        type: "number",
+        unit: "km",
+        defaultValue: 8,
+        hint: "Brukes når du velger egen distanse.",
+      },
+      {
+        id: "tid",
+        label: "Sluttid",
+        type: "text",
+        defaultValue: "25:00",
+        hint: "For eksempel 25:00, 1:45:00 eller 3:30:00.",
       },
     ],
-    formula: "min/km = 60 / km/t     km/t = 60 / min/km",
+    formula: "min/km = 60 / km/t     sluttid = tempo · distanse",
     explanation:
-      "Tempo er tiden du bruker på én kilometer. 12 km/t er nøyaktig 5:00 /km, fordi 60 ÷ 12 = 5. 400 m på bane er 0,4 km, så rundetiden er tempo × 0,4.",
+      "Oppgi fart, tempo eller en kjent sluttid. Kalkulatoren regner om til min/km og km/t, og viser hva samme fart gir på vanlige løpsdistanser. 12 km/t er 5:00 /km.",
+    faqs: [
+      {
+        question: "Hva er forskjellen på tempo og fart?",
+        answer:
+          "Tempo er tid per kilometer (f.eks. 5:00 /km). Fart er kilometer per time (f.eks. 12 km/t). De er omvendte størrelser: 60 ÷ km/t = min/km.",
+      },
+      {
+        question: "Er mile og 10 mile engelske mil?",
+        answer:
+          "Ja. 1 mile = 1,609344 km og 10 mile = 16,09344 km.",
+      },
+    ],
     compute(input) {
       const pace = readPace(input);
       if (pace == null) return [];
