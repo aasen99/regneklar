@@ -410,3 +410,23 @@ describe("aksjekalkulatorer", () => {
     );
   });
 });
+
+describe("bettingkalkulatorer", () => {
+  it("regner utbetaling og implisitt sannsynlighet", () => {
+    const results = compute("odds-kalkulator", { odds: "2.5", innsats: "100" });
+    expect(results.find((r) => r.id === "utbetaling")?.value).toBe(250);
+    expect(results.find((r) => r.id === "gevinst")?.value).toBe(150);
+    expect(results.find((r) => r.id === "implied")?.value).toBeCloseTo(40, 5);
+  });
+
+  it("flagger positiv EV som verdibett", () => {
+    const results = compute("verdibett", {
+      odds: "2.5",
+      sannsynlighet: "45",
+      innsats: "100",
+    });
+    // EV = 100 * (0.45 * 2.5 - 1) = 12.5
+    expect(results.find((r) => r.id === "ev")?.value).toBeCloseTo(12.5, 5);
+    expect(results.find((r) => r.id === "status")?.value).toMatch(/Positiv/);
+  });
+});

@@ -4287,6 +4287,34 @@ export const formulas: Formula[] = [
       "Annualisert sammensatt vekst mellom to kursnivåer, samme prinsipp som Nasdaq bruker for CAGR.",
     calculatorSlug: "cagr-aksje",
   },
+  {
+    slug: "odds-formel",
+    title: "Desimalodds og utbetaling",
+    category: "okonomi",
+    expression: "utbetaling = innsats · odds     p = 1 / odds",
+    variables: [
+      { symbol: "odds", meaning: "Desimalodds" },
+      { symbol: "innsats", meaning: "Beløp som satse" },
+      { symbol: "p", meaning: "Implisitt sannsynlighet" },
+    ],
+    explanation:
+      "Utbetaling inkluderer innsatsen. Implisitt sannsynlighet er 1 delt på desimalodds.",
+    calculatorSlug: "odds-kalkulator",
+  },
+  {
+    slug: "verdibett-formel",
+    title: "Forventet verdi (verdibett)",
+    category: "okonomi",
+    expression: "EV = innsats · (p · odds − 1)",
+    variables: [
+      { symbol: "p", meaning: "Din sannsynlighet (desimal)" },
+      { symbol: "odds", meaning: "Desimalodds" },
+      { symbol: "innsats", meaning: "Innsatsbeløp" },
+    ],
+    explanation:
+      "Positiv EV betyr at tipset har verdi hvis sannsynlighetsestimatet er riktig over tid.",
+    calculatorSlug: "verdibett",
+  },
 ];
 
 export function getFormula(slug: string): Formula | undefined {

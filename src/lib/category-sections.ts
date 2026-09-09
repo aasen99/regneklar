@@ -91,6 +91,10 @@ export const CATEGORY_SECTIONS: Partial<Record<CategoryId, CategorySection[]>> =
         "cagr-aksje",
       ],
     },
+    {
+      title: "Spill og odds",
+      slugs: ["odds-kalkulator", "verdibett"],
+    },
   ],
   fysikk: [
     {

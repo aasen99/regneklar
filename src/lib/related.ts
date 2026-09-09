@@ -96,6 +96,8 @@ export const RELATED_BY_SLUG: Record<string, string[]> = {
   ],
   "cagr-aksje": ["cagr", "totalavkastning-aksje", "avkastning", "rentes-rente"],
   cagr: ["cagr-aksje", "rentes-rente", "regel-72", "avkastning"],
+  "odds-kalkulator": ["verdibett", "prosent", "sannsynlighet-enkel", "avkastning"],
+  verdibett: ["odds-kalkulator", "prosent", "sannsynlighet-enkel", "avkastning"],
 };
 
 export function relatedCalculators(slug: string, limit = 4): Calculator[] {
