@@ -1,5 +1,15 @@
 /** Felles finansberegninger for lån og effektiv rente. */
 
+/** Nominell årsrente → månedlig rente (rente/12). Vanlig for norske lån. */
+export function monthlyRateFromNominalAnnual(annualPercent: number): number {
+  return annualPercent / 100 / 12;
+}
+
+/** Effektiv årsrente → ekvivalent månedlig rente. */
+export function monthlyRateFromEffectiveAnnual(annualPercent: number): number {
+  return Math.pow(1 + annualPercent / 100, 1 / 12) - 1;
+}
+
 export function annuityPayment(
   principal: number,
   annualRatePercent: number,

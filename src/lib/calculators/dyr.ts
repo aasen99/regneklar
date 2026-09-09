@@ -184,6 +184,8 @@ export const dyrCalculators: Calculator[] = [
         type: "number",
         unit: "%",
         defaultValue: 90,
+        min: 0,
+        max: 100,
         hint: "Trekk fra for dekor, sand og luft under kanten.",
       },
     ],
@@ -195,7 +197,16 @@ export const dyrCalculators: Calculator[] = [
       const b = num(input, "b");
       const h = num(input, "h");
       const fyll = num(input, "fyll");
-      if (!allNumbers([l, b, h, fyll]) || l <= 0 || b <= 0 || h <= 0) return [];
+      if (
+        !allNumbers([l, b, h, fyll]) ||
+        l <= 0 ||
+        b <= 0 ||
+        h <= 0 ||
+        fyll < 0 ||
+        fyll > 100
+      ) {
+        return [];
+      }
       const liter = (l * b * h) / 1000;
       const effektiv = liter * (fyll / 100);
       return [

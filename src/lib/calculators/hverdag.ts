@@ -54,18 +54,24 @@ export const hverdagCalculators: Calculator[] = [
       const fast = num(input, "fast");
       if (!allNumbers([kwh, pris, paslag, fast])) return [];
       const energi = kwh * (pris + paslag);
-      return [
-        result("total", "Totalt", energi + fast, {
+      const total = energi + fast;
+      const out = [
+        result("total", "Totalt", total, {
           kind: "currency",
           digits: 0,
           primary: true,
         }),
         result("energi", "Energiledd", energi, { kind: "currency", digits: 0 }),
-        result("snitt", "Snittpris per kWh", (energi + fast) / kwh, {
-          kind: "currency",
-          digits: 2,
-        }),
       ];
+      if (kwh > 0) {
+        out.push(
+          result("snitt", "Snittpris per kWh", total / kwh, {
+            kind: "currency",
+            digits: 2,
+          }),
+        );
+      }
+      return out;
     },
   },
   {
@@ -124,7 +130,7 @@ export const hverdagCalculators: Calculator[] = [
       const energi = kwh * pris;
       const fastTot = fast * maaneder;
       const total = energi + fastTot;
-      return [
+      const out = [
         result("total", "Nettleie totalt", total, {
           kind: "currency",
           digits: 0,
@@ -132,11 +138,16 @@ export const hverdagCalculators: Calculator[] = [
         }),
         result("energi", "Energiledd", energi, { kind: "currency", digits: 0 }),
         result("fast", "Fast nettledd", fastTot, { kind: "currency", digits: 0 }),
-        result("snitt", "Snitt per kWh", total / kwh, {
-          kind: "currency",
-          digits: 2,
-        }),
       ];
+      if (kwh > 0) {
+        out.push(
+          result("snitt", "Snitt per kWh", total / kwh, {
+            kind: "currency",
+            digits: 2,
+          }),
+        );
+      }
+      return out;
     },
   },
   {
@@ -180,18 +191,24 @@ export const hverdagCalculators: Calculator[] = [
       const pris = num(input, "pris");
       if (!allNumbers([km, forbruk, pris])) return [];
       const liter = (km / 100) * forbruk;
-      return [
-        result("kost", "Kostnad", liter * pris, {
+      const kost = liter * pris;
+      const out = [
+        result("kost", "Kostnad", kost, {
           kind: "currency",
           digits: 0,
           primary: true,
         }),
         result("mengde", "Drivstoff", liter, { digits: 2, unit: "liter" }),
-        result("perkm", "Per km", (liter * pris) / km, {
-          kind: "currency",
-          digits: 2,
-        }),
       ];
+      if (km > 0) {
+        out.push(
+          result("perkm", "Per km", kost / km, {
+            kind: "currency",
+            digits: 2,
+          }),
+        );
+      }
+      return out;
     },
   },
   {
@@ -362,7 +379,13 @@ export const hverdagCalculators: Calculator[] = [
     tags: ["dato", "frist", "kalender"],
     fields: [
       { id: "dato", label: "Startdato", type: "date", defaultValue: "2026-08-24" },
-      { id: "dager", label: "Dager (+/−)", type: "number", defaultValue: 14 },
+      {
+        id: "dager",
+        label: "Dager (+/−)",
+        type: "number",
+        defaultValue: 14,
+        allowNegative: true,
+      },
     ],
     formula: "ny dato = dato + n dager",
     explanation: "Negativt tall går bakover i tid. Nyttig til frister og varsling.",

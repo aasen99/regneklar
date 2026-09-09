@@ -28,6 +28,8 @@ export type Field = {
   max?: number;
   step?: number;
   placeholder?: string;
+  /** When true, negative numbers are allowed even without a negative min. */
+  allowNegative?: boolean;
 };
 
 export type ResultKind = "number" | "currency" | "percent" | "integer" | "text";

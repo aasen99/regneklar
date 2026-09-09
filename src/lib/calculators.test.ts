@@ -1,7 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { getCalculator } from "@/lib/catalog";
-import { annuityPayment, effectiveLoanRate } from "@/lib/finance";
-import { parseNumber } from "@/lib/format";
+import {
+  annuityPayment,
+  effectiveLoanRate,
+  monthlyRateFromEffectiveAnnual,
+} from "@/lib/finance";
+import {
+  ceilStable,
+  parseNumber,
+  parseNumberList,
+  parsePaceMinutes,
+  parseRaceSeconds,
+} from "@/lib/format";
 import { validateField } from "@/lib/validate";
 
 function compute(slug: string, input: Record<string, string>) {
@@ -14,6 +24,10 @@ function primaryValue(slug: string, input: Record<string, string>) {
   const results = compute(slug, input);
   const primary = results.find((r) => r.primary) ?? results[0];
   return primary?.value;
+}
+
+function resultById(slug: string, input: Record<string, string>, id: string) {
+  return compute(slug, input).find((r) => r.id === id)?.value;
 }
 
 describe("lanekalkulator", () => {
@@ -113,23 +127,44 @@ describe("BSU", () => {
     expect(calculator?.fields.find((f) => f.id === "tak")?.defaultValue).toBe(300_000);
   });
 
-  it("respekterer totalgrensen", () => {
-    const saldo = primaryValue("bsu", {
+  it("måler tak mot innskutt, ikke saldo med renter", () => {
+    const results = compute("bsu", {
       innskudd: "27500",
-      aar: "20",
+      aar: "11",
       rente: "4.5",
       fradrag: "10",
       tak: "300000",
     });
-    expect(saldo as number).toBeLessThanOrEqual(300_000 * 1.1);
-    const innskutt = compute("bsu", {
+    expect(results.find((r) => r.id === "innskutt")?.value).toBe(300_000);
+    const saldo = results.find((r) => r.id === "slutt")?.value as number;
+    expect(saldo).toBeGreaterThan(300_000);
+  });
+
+  it("forrenter videre etter at innskuddstaket er nådd", () => {
+    const atCap = compute("bsu", {
+      innskudd: "27500",
+      aar: "11",
+      rente: "4.5",
+      fradrag: "10",
+      tak: "300000",
+    }).find((r) => r.id === "slutt")?.value as number;
+    const later = compute("bsu", {
       innskudd: "27500",
       aar: "20",
       rente: "4.5",
       fradrag: "10",
       tak: "300000",
-    }).find((r) => r.id === "innskutt")?.value;
-    expect(innskutt).toBeLessThanOrEqual(300_000);
+    }).find((r) => r.id === "slutt")?.value as number;
+    expect(later).toBeGreaterThan(atCap);
+    expect(
+      compute("bsu", {
+        innskudd: "27500",
+        aar: "20",
+        rente: "4.5",
+        fradrag: "10",
+        tak: "300000",
+      }).find((r) => r.id === "innskutt")?.value,
+    ).toBe(300_000);
   });
 });
 
@@ -167,7 +202,145 @@ describe("inputhåndtering", () => {
       validateField({ id: "x", label: "X", type: "number" }, "-5"),
     ).toBe("Kan ikke være negativt");
     expect(
+      validateField(
+        { id: "x", label: "X", type: "number", allowNegative: true },
+        "-5",
+      ),
+    ).toBeNull();
+    expect(
       validateField({ id: "x", label: "X", type: "number", max: 100 }, "150"),
     ).toBe("Høyst 100");
+  });
+
+  it("parser tallister med norsk desimalkomma via semikolon", () => {
+    expect(parseNumberList("12,5; 13,2")).toEqual([12.5, 13.2]);
+    expect(parseNumberList("12.5 13.2")).toEqual([12.5, 13.2]);
+    expect(parseNumberList("1; 2; 3")).toEqual([1, 2, 3]);
+  });
+
+  it("avviser ugyldige tempo-/tidsformater", () => {
+    expect(parsePaceMinutes("4:30")).toBe(4.5);
+    expect(parsePaceMinutes("4:90")).toBeNull();
+    expect(parseRaceSeconds("25:30")).toBe(1530);
+    expect(parseRaceSeconds("1:99")).toBeNull();
+    expect(parseRaceSeconds("1:23:45")).toBe(5025);
+  });
+
+  it("ceilStable unngår flyttallsopprunding", () => {
+    expect(ceilStable(48.00000000001)).toBe(48);
+    expect(ceilStable(48.1)).toBe(49);
+  });
+});
+
+describe("QA P0 negative verdier", () => {
+  it("andregrad med b=-5", () => {
+    const results = compute("andregrad", { a: "1", b: "-5", c: "6" });
+    const roots = [results.find((r) => r.id === "x1")?.value, results.find((r) => r.id === "x2")?.value]
+      .map(Number)
+      .sort((a, b) => a - b);
+    expect(roots[0]).toBeCloseTo(2, 5);
+    expect(roots[1]).toBeCloseTo(3, 5);
+  });
+
+  it("dato-pluss bakover", () => {
+    expect(
+      primaryValue("dato-pluss", { dato: "2026-08-24", dager: "-14" }),
+    ).toBe("10. august 2026");
+  });
+
+  it("varmeenergi med negativ ΔT", () => {
+    expect(
+      primaryValue("varmeenergi", { m: "1", c: "4186", dt: "-20" }),
+    ).toBeCloseTo(-83720, 0);
+  });
+
+  it("bevegelse med negativ akselerasjon", () => {
+    const results = compute("bevegelse", { v0: "20", a: "-2", t: "5" });
+    expect(results.find((r) => r.id === "v")?.value).toBeCloseTo(10, 5);
+    expect(results.find((r) => r.id === "s")?.value).toBeCloseTo(75, 5);
+  });
+
+  it("temperatur under null", () => {
+    const results = compute("temperatur", { verdi: "-10", fra: "c" });
+    expect(results.find((r) => r.id === "f")?.value).toBeCloseTo(14, 5);
+    expect(results.find((r) => r.id === "k")?.value).toBeCloseTo(263.15, 5);
+  });
+
+  it("trigonometri med negative verdier", () => {
+    expect(
+      resultById("trigonometri", { modus: "fra_vinkel", vinkel: "-30", verdi: "0" }, "sin"),
+    ).toBeCloseTo(-0.5, 5);
+    expect(
+      resultById("trigonometri", { modus: "arcsin", vinkel: "0", verdi: "-0.5" }, "deg"),
+    ).toBeCloseTo(-30, 5);
+  });
+});
+
+describe("QA P0/P1 finans og bygg", () => {
+  it("kredittkort bruker effektiv månedsrente", () => {
+    const rente = resultById(
+      "kredittkort-renter",
+      { saldo: "25000", rente: "22", betaling: "1500" },
+      "rente",
+    ) as number;
+    expect(rente).toBeCloseTo(25000 * monthlyRateFromEffectiveAnnual(22), 2);
+    expect(rente).toBeCloseTo(417.72, 1);
+  });
+
+  it("betong 4×3×10 cm gir 48 sekker", () => {
+    const results = compute("betong", {
+      l: "4",
+      b: "3",
+      h: "10",
+      sekk: "25",
+    });
+    expect(results.find((r) => r.id === "m3")?.value).toBeCloseTo(1.2, 5);
+    expect(results.find((r) => r.id === "sekker")?.value).toBe(48);
+  });
+
+  it("konfidensintervall bruker t når s er valgt", () => {
+    const margin = resultById(
+      "konfidensintervall",
+      { snitt: "50", s: "10", n: "10", konf: "95", stype: "s" },
+      "margin",
+    ) as number;
+    expect(margin).toBeCloseTo(7.154, 2);
+  });
+
+  it("rentes-rente tolker årlig avkastning som effektiv", () => {
+    const slutt = primaryValue("rentes-rente", {
+      start: "50000",
+      maaned: "2000",
+      rente: "6",
+      aar: "15",
+    }) as number;
+    expect(slutt).toBeCloseTo(693652, -2);
+  });
+
+  it("standardavvik CV er ikke 0 når snitt er 0", () => {
+    const cv = resultById(
+      "standardavvik",
+      { tall: "-1; 1", type: "utvalg" },
+      "cv",
+    );
+    expect(cv).toBe("Ikke definert når gjennomsnitt = 0");
+  });
+
+  it("eksponeringstrekant støtter lukker i sekunder", () => {
+    const t = resultById(
+      "eksponeringstrekant",
+      {
+        f: "2.8",
+        lukkerModus: "sekunder",
+        lukker: "2",
+        iso: "100",
+        f2: "4",
+        lukker2Modus: "nevner",
+        lukker2: "60",
+        iso2: "100",
+      },
+      "t",
+    );
+    expect(t).toBe(2);
   });
 });

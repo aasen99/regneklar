@@ -21,11 +21,21 @@ export const fotoCalculators: Calculator[] = [
         step: 0.1,
       },
       {
+        id: "lukkerModus",
+        label: "Lukkertid som",
+        type: "select",
+        defaultValue: "nevner",
+        options: [
+          { value: "nevner", label: "1/x sekund (f.eks. 125)" },
+          { value: "sekunder", label: "Sekunder (f.eks. 2)" },
+        ],
+      },
+      {
         id: "lukker",
         label: "Lukkertid",
         type: "number",
         defaultValue: 125,
-        hint: "Som nevner: 125 = 1/125 s. Bruk 0,5 for 0,5 s.",
+        hint: "Avhengig av valget over: 125 = 1/125 s, eller 2 = 2 s.",
       },
       {
         id: "iso",
@@ -39,6 +49,16 @@ export const fotoCalculators: Calculator[] = [
         type: "number",
         defaultValue: 4,
         step: 0.1,
+      },
+      {
+        id: "lukker2Modus",
+        label: "Sammenlign: lukker som",
+        type: "select",
+        defaultValue: "nevner",
+        options: [
+          { value: "nevner", label: "1/x sekund" },
+          { value: "sekunder", label: "Sekunder" },
+        ],
       },
       {
         id: "lukker2",
@@ -63,7 +83,9 @@ export const fotoCalculators: Calculator[] = [
       if (!allNumbers([f, lukker, iso]) || f <= 0 || lukker <= 0 || iso <= 0) {
         return [];
       }
-      const t = lukker >= 1 ? 1 / lukker : lukker;
+      const shutterSeconds = (value: number, modus: string | undefined) =>
+        modus === "sekunder" ? value : 1 / value;
+      const t = shutterSeconds(lukker, input.lukkerModus);
       const ev = Math.log2((f * f) / t) - Math.log2(iso / 100);
       const f2 = num(input, "f2");
       const lukker2 = num(input, "lukker2");
@@ -73,9 +95,10 @@ export const fotoCalculators: Calculator[] = [
           digits: 2,
           primary: true,
         }),
+        result("t", "Lukkertid", t, { digits: 4, unit: "s" }),
       ];
       if (allNumbers([f2, lukker2, iso2]) && f2 > 0 && lukker2 > 0 && iso2 > 0) {
-        const t2 = lukker2 >= 1 ? 1 / lukker2 : lukker2;
+        const t2 = shutterSeconds(lukker2, input.lukker2Modus);
         const ev2 = Math.log2((f2 * f2) / t2) - Math.log2(iso2 / 100);
         out.push(
           result("ev2", "EV sammenligning", ev2, { digits: 2 }),

@@ -249,7 +249,7 @@ export const matCalculators: Calculator[] = [
     ],
     formula: "fersk : aktiv : instant ≈ 3 : 1,5 : 1",
     explanation:
-      "En pose instant gjær er ofte 7 g og tilsvarer grovt 25 g fersk. Forholdet varierer mellom merker. Ikke bytt 1:1 i søte, tunge deiger uten å kjenne etter.",
+      "Forholdet i denne kalkulatoren er fersk : aktiv : instant ≈ 3 : 1,5 : 1, så 7 g instant tilsvarer ca. 21 g fersk. Produsenttabeller varierer (noen sier ca. 25 g) – juster etter deigen.",
     compute(input) {
       const m = num(input, "mengde");
       if (!Number.isFinite(m) || m < 0) return [];

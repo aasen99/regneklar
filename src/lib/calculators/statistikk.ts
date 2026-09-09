@@ -1,14 +1,9 @@
 import type { Calculator, ResultItem } from "../types";
-import { num } from "../format";
+import { num, parseNumberList } from "../format";
 import { allNumbers, result } from "../helpers";
 
 function parseList(raw: string | undefined): number[] {
-  return (raw ?? "")
-    .split(/[,;\s]+/)
-    .map((p) => p.trim())
-    .filter(Boolean)
-    .map((p) => Number(p.replace(",", ".")))
-    .filter((n) => Number.isFinite(n));
+  return parseNumberList(raw);
 }
 
 function mean(xs: number[]): number {
@@ -126,6 +121,45 @@ function zCritical(confidencePct: number): number {
   return normInv(1 - alpha / 2);
 }
 
+/** Two-sided t critical values for common confidence levels (df → t). */
+const T_CRIT: Record<number, number[]> = {
+  // index = df; values for df 1..40
+  90: [
+    NaN, 6.314, 2.92, 2.353, 2.132, 2.015, 1.943, 1.895, 1.86, 1.833, 1.812,
+    1.796, 1.782, 1.771, 1.761, 1.753, 1.746, 1.74, 1.734, 1.729, 1.725,
+    1.721, 1.717, 1.714, 1.711, 1.708, 1.706, 1.703, 1.701, 1.699, 1.697,
+    1.696, 1.694, 1.692, 1.691, 1.69, 1.688, 1.687, 1.686, 1.685, 1.684,
+  ],
+  95: [
+    NaN, 12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228,
+    2.201, 2.179, 2.16, 2.145, 2.131, 2.12, 2.11, 2.101, 2.093, 2.086,
+    2.08, 2.074, 2.069, 2.064, 2.06, 2.056, 2.052, 2.048, 2.045, 2.042,
+    2.04, 2.037, 2.035, 2.032, 2.03, 2.028, 2.026, 2.024, 2.023, 2.021,
+  ],
+  99: [
+    NaN, 63.657, 9.925, 5.841, 4.604, 4.032, 3.707, 3.499, 3.355, 3.25, 3.169,
+    3.106, 3.055, 3.012, 2.977, 2.947, 2.921, 2.898, 2.878, 2.861, 2.845,
+    2.831, 2.819, 2.807, 2.797, 2.787, 2.779, 2.771, 2.763, 2.756, 2.75,
+    2.744, 2.738, 2.733, 2.728, 2.724, 2.719, 2.715, 2.712, 2.708, 2.704,
+  ],
+};
+
+/** Two-tailed t critical; table for df≤40, then Cornish–Fisher toward z. */
+function tCritical(df: number, confidencePct: number): number {
+  if (df <= 0) return Number.NaN;
+  const z = zCritical(confidencePct);
+  const table = T_CRIT[confidencePct];
+  const d = Math.round(df);
+  if (table && d >= 1 && d < table.length) return table[d];
+  if (df >= 200) return z;
+  const z2 = z * z;
+  const z3 = z2 * z;
+  const z5 = z3 * z2;
+  const g1 = (z3 + z) / (4 * df);
+  const g2 = (5 * z5 + 16 * z3 + 3 * z) / (96 * df * df);
+  return z + g1 + g2;
+}
+
 export const statistikkCalculators: Calculator[] = [
   {
     slug: "deskriptiv-statistikk",
@@ -142,7 +176,7 @@ export const statistikkCalculators: Calculator[] = [
         label: "Observasjoner",
         type: "text",
         defaultValue: "12, 15, 14, 10, 18, 15, 11, 16",
-        hint: "Skill med komma, semikolon eller mellomrom.",
+        hint: "Skill desimaltall med semikolon, f.eks. 12,5; 13,2.",
       },
       {
         id: "type",
@@ -256,10 +290,17 @@ export const statistikkCalculators: Calculator[] = [
         }),
         result("var", sample ? "Varians s²" : "Varians σ²", v, { digits: 4 }),
         result("snitt", "Gjennomsnitt", mu, { digits: 4 }),
-        result("cv", "Variasjonskoeffisient", mu === 0 ? 0 : (Math.sqrt(v) / Math.abs(mu)) * 100, {
-          kind: "percent",
-          digits: 2,
-        }),
+        mu === 0
+          ? result(
+              "cv",
+              "Variasjonskoeffisient",
+              "Ikke definert når gjennomsnitt = 0",
+              { kind: "text" },
+            )
+          : result("cv", "Variasjonskoeffisient", (Math.sqrt(v) / Math.abs(mu)) * 100, {
+              kind: "percent",
+              digits: 2,
+            }),
       ];
     },
   },
@@ -371,18 +412,28 @@ export const statistikkCalculators: Calculator[] = [
     title: "Konfidensintervall for snitt",
     shortTitle: "Konfidensintervall",
     description:
-      "Estimer et intervall for populasjonssnittet når σ er kjent (z) eller s brukes som tilnærming.",
+      "Estimer et intervall for populasjonssnittet med z (kjent σ) eller Student-t (utvalgs-s).",
     category: "statistikk",
     tags: ["konfidensintervall", "snitt", "utvalg", "statistikk"],
     fields: [
       { id: "snitt", label: "Utvalgssnitt x̄", type: "number", defaultValue: 52 },
       {
         id: "s",
-        label: "Standardavvik (s eller σ)",
+        label: "Standardavvik",
         type: "number",
         defaultValue: 8,
       },
       { id: "n", label: "Utvalgsstørrelse n", type: "number", defaultValue: 40 },
+      {
+        id: "stype",
+        label: "Standardavvikstype",
+        type: "select",
+        defaultValue: "s",
+        options: [
+          { value: "sigma", label: "Populasjon σ kjent (z)" },
+          { value: "s", label: "Utvalg s (Student-t)" },
+        ],
+      },
       {
         id: "konf",
         label: "Konfidensnivå",
@@ -395,19 +446,21 @@ export const statistikkCalculators: Calculator[] = [
         ],
       },
     ],
-    formula: "x̄ ± z · (s / √n)",
+    formula: "x̄ ± kritisk · (s / √n)",
     explanation:
-      "For store n (tommelfinger ≥ 30) er z-tilnærming grei også når s erstatter σ. Mindre utvalg bør egentlig bruke t-fordeling.",
-    disclaimer: "z-basert tilnærming. Bruk t-fordeling for små utvalg når σ er ukjent.",
+      "Når σ er kjent brukes z. Når bare utvalgsstandardavviket s er kjent, brukes Student-t med n−1 frihetsgrader – spesielt viktig ved små utvalg.",
+    disclaimer: "Tilnærming forutsetter omtrent normalfordelte data eller tilstrekkelig stort utvalg.",
     compute(input) {
       const xbar = num(input, "snitt");
       const s = num(input, "s");
       const n = num(input, "n");
       const konf = Number(input.konf) || 95;
-      if (!allNumbers([xbar, s, n]) || n <= 0 || s < 0) return [];
-      const z = zCritical(konf);
+      if (!allNumbers([xbar, s, n]) || n <= 1 || s < 0) return [];
+      const useT = input.stype !== "sigma";
+      const df = n - 1;
+      const crit = useT ? tCritical(df, konf) : zCritical(konf);
       const se = s / Math.sqrt(n);
-      const margin = z * se;
+      const margin = crit * se;
       return [
         result(
           "int",
@@ -417,7 +470,9 @@ export const statistikkCalculators: Calculator[] = [
         ),
         result("margin", "Feilmargin", margin, { digits: 4 }),
         result("se", "Standardfeil", se, { digits: 4 }),
-        result("z", "z-kritisk", z, { digits: 3 }),
+        result("kritisk", useT ? `t-kritisk (df=${Math.floor(df)})` : "z-kritisk", crit, {
+          digits: 3,
+        }),
       ];
     },
   },

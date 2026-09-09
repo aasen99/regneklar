@@ -55,7 +55,7 @@ export const helseCalculators: Calculator[] = [
     title: "New BMI",
     shortTitle: "New BMI",
     description:
-      "Trefethens New BMI: vekt delt på høyde opphøyd i 2,5. Mindre skjev for korte og høye enn klassisk BMI.",
+      "Trefethens New BMI: 1,3 × vekt delt på høyde opphøyd i 2,5. Mindre skjev for korte og høye enn klassisk BMI.",
     category: "sport",
     tags: ["bmi", "new bmi", "trefethen", "vekt", "helse"],
     fields: [

@@ -240,6 +240,7 @@ export const fysikkCalculators: Calculator[] = [
         type: "number",
         unit: "°C",
         defaultValue: 20,
+        allowNegative: true,
       },
     ],
     formula: "Q = m · c · ΔT",
@@ -274,6 +275,7 @@ export const fysikkCalculators: Calculator[] = [
         type: "number",
         unit: "m/s",
         defaultValue: 0,
+        allowNegative: true,
       },
       {
         id: "a",
@@ -281,6 +283,7 @@ export const fysikkCalculators: Calculator[] = [
         type: "number",
         unit: "m/s²",
         defaultValue: 2,
+        allowNegative: true,
       },
       {
         id: "t",

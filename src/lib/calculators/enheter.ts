@@ -56,7 +56,13 @@ export const enheterCalculators: Calculator[] = [
     tags: ["temperatur", "celsius", "fahrenheit"],
     popular: true,
     fields: [
-      { id: "verdi", label: "Verdi", type: "number", defaultValue: 20 },
+      {
+        id: "verdi",
+        label: "Verdi",
+        type: "number",
+        defaultValue: 20,
+        allowNegative: true,
+      },
       {
         id: "fra",
         label: "Fra",
@@ -71,10 +77,13 @@ export const enheterCalculators: Calculator[] = [
     ],
     formula: "F = C · 9/5 + 32     K = C + 273,15",
     explanation:
-      "Celsius og Kelvin har samme stegstørrelse, men ulike nullpunkt. Fahrenheit har både annet nullpunkt og annen skala.",
+      "Celsius og Kelvin har samme stegstørrelse, men ulike nullpunkt. Fahrenheit har både annet nullpunkt og annen skala. Verdier under absolutt null avvises.",
     compute(input) {
       const verdi = num(input, "verdi");
       if (!Number.isFinite(verdi)) return [];
+      if (input.fra === "k" && verdi < 0) return [];
+      if (input.fra === "c" && verdi < -273.15) return [];
+      if (input.fra === "f" && verdi < -459.67) return [];
       let c = verdi;
       if (input.fra === "f") c = (verdi - 32) * (5 / 9);
       if (input.fra === "k") c = verdi - 273.15;
@@ -210,26 +219,31 @@ export const enheterCalculators: Calculator[] = [
   {
     slug: "skostorrelse",
     title: "Skostørrelse",
-    description: "Omtrentlig omregning mellom EU, UK, US og centimeter.",
+    description:
+      "Omtrentlig omregning mellom EU-størrelse, fotlengde, UK og US (herre/dame).",
     category: "enheter",
     tags: ["sko", "størrelse"],
     fields: [
-      { id: "eu", label: "EU-størrelse", type: "number", defaultValue: 42 },
+      { id: "eu", label: "EU-størrelse", type: "number", defaultValue: 42, step: 0.5 },
     ],
-    formula: "cm ≈ 2/3 · EU     UK ≈ EU − 33     US ≈ EU − 32,5",
+    formula: "fotlengde via Mondopoint-tabell     UK ≈ EU − 33     US herre ≈ EU − 33     US dame ≈ EU − 31",
     explanation:
-      "Skostørrelser varierer mellom merker. Dette er en grov tommelfingerregel, ikke en garanti for passform.",
+      "Fotlengde er typisk lestlengde minus tårom (ca. 15 mm), ikke EU×2/3. Størrelser varierer mellom merker – bruk tabellen som grovt anslag, ikke passformgaranti.",
     compute(input) {
       const eu = num(input, "eu");
-      if (!Number.isFinite(eu)) return [];
+      if (!Number.isFinite(eu) || eu < 30 || eu > 52) return [];
+      // Approximate adult foot length (cm) from EU via mondopoint-style table.
+      // Source model: foot_mm ≈ EU × 6.67 − 10 (Paris point with ~15 mm allowance).
+      const cm = Math.round((eu * 6.67 - 10) * 10) / 100;
       return [
-        result("cm", "Fotlengde (ca.)", (eu * 2) / 3, {
+        result("cm", "Typisk fotlengde (ca.)", cm, {
           digits: 1,
           unit: "cm",
           primary: true,
         }),
         result("uk", "UK (ca.)", eu - 33, { digits: 1 }),
-        result("us", "US herrer (ca.)", eu - 32.5, { digits: 1 }),
+        result("usm", "US herrer (ca.)", eu - 33, { digits: 1 }),
+        result("usw", "US damer (ca.)", eu - 31, { digits: 1 }),
       ];
     },
   },

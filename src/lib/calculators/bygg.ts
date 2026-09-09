@@ -1,5 +1,5 @@
 import type { Calculator } from "../types";
-import { num } from "../format";
+import { ceilStable, num } from "../format";
 import { allNumbers, result } from "../helpers";
 
 export const byggCalculators: Calculator[] = [
@@ -111,7 +111,7 @@ export const byggCalculators: Calculator[] = [
       const flisM2 = (flisB / 100) * (flisH / 100);
       const antall = (areal / flisM2) * (1 + svinn / 100);
       return [
-        result("antall", "Antall fliser", Math.ceil(antall), {
+        result("antall", "Antall fliser", ceilStable(antall), {
           kind: "integer",
           primary: true,
         }),
@@ -159,7 +159,7 @@ export const byggCalculators: Calculator[] = [
       const liter = m3 * 1000;
       return [
         result("m3", "Volum", m3, { digits: 3, unit: "m³", primary: true }),
-        result("sekker", "Antall sekker", Math.ceil(liter / sekk), {
+        result("sekker", "Antall sekker", ceilStable(liter / sekk), {
           kind: "integer",
         }),
       ];
@@ -204,7 +204,8 @@ export const byggCalculators: Calculator[] = [
   {
     slug: "tapet",
     title: "Tapetkalkulator",
-    description: "Estimer antall ruller ut fra veggareal og rullestørrelse.",
+    description:
+      "Estimer antall ruller ut fra romomkrets, takhøyde og rullmål (stripebasert).",
     category: "bygg",
     tags: ["tapet", "vegg"],
     fields: [
@@ -223,37 +224,77 @@ export const byggCalculators: Calculator[] = [
         defaultValue: 2.4,
       },
       {
-        id: "dorer",
-        label: "Trekk fra dører/vinduer",
+        id: "rullengde",
+        label: "Rullengde",
         type: "number",
-        unit: "m²",
-        defaultValue: 4,
+        unit: "m",
+        defaultValue: 10.05,
       },
       {
-        id: "rull",
-        label: "Areal per rull",
+        id: "rullbredde",
+        label: "Rullbredde",
         type: "number",
-        unit: "m²",
-        defaultValue: 5.3,
-        hint: "En vanlig rull er 10,05 × 0,53 m ≈ 5,3 m².",
+        unit: "m",
+        defaultValue: 0.53,
+      },
+      {
+        id: "rapport",
+        label: "Mønsterrapport",
+        type: "number",
+        unit: "m",
+        defaultValue: 0,
+        hint: "0 hvis tapetet ikke har rapport / mønstertilpasning.",
+      },
+      {
+        id: "reserve",
+        label: "Ekstra striper",
+        type: "number",
+        defaultValue: 0,
+        hint: "Valgfri reserve. Dører/vinduer trekkes ikke fra – modellen er konservativ.",
       },
     ],
-    formula: "ruller = (omkrets · høyde − åpninger) / rullareal",
+    formula:
+      "stripe = høyde (+ rapport)     striper/rull = ⌊rullengde / stripe⌋     ruller = ⌈striper / striperPerRull⌉",
     explanation:
-      "Mønstertilpasning øker forbruket. Rund opp til hele ruller, og kjøp gjerne én ekstra.",
+      "Tapet kuttes i hele lengder fra gulv til tak. Antall striper følger omkretsen delt på rullbredde. Mønsterrapport øker lengden per stripe. Åpninger håndteres ikke direkte – kjøp gjerne litt ekstra.",
     compute(input) {
       const omkrets = num(input, "omkrets");
       const hoyde = num(input, "hoyde");
-      const dorer = num(input, "dorer");
-      const rull = num(input, "rull");
-      if (!allNumbers([omkrets, hoyde, dorer, rull]) || rull <= 0) return [];
-      const areal = Math.max(0, omkrets * hoyde - dorer);
+      const rullengde = num(input, "rullengde");
+      const rullbredde = num(input, "rullbredde");
+      const rapport = num(input, "rapport");
+      const reserve = num(input, "reserve");
+      if (
+        !allNumbers([omkrets, hoyde, rullengde, rullbredde, rapport, reserve]) ||
+        omkrets <= 0 ||
+        hoyde <= 0 ||
+        rullengde <= 0 ||
+        rullbredde <= 0 ||
+        rapport < 0 ||
+        reserve < 0
+      ) {
+        return [];
+      }
+      const stripeLengde = rapport > 0 ? hoyde + rapport : hoyde;
+      if (stripeLengde > rullengde) return [];
+      const striperPerRull = Math.floor(rullengde / stripeLengde);
+      if (striperPerRull <= 0) return [];
+      const striperBehov =
+        ceilStable(omkrets / rullbredde) + Math.floor(reserve);
+      const ruller = ceilStable(striperBehov / striperPerRull);
       return [
-        result("ruller", "Ruller (avrundet opp)", Math.ceil(areal / rull), {
+        result("ruller", "Ruller (avrundet opp)", ruller, {
           kind: "integer",
           primary: true,
         }),
-        result("areal", "Veggareal", areal, { digits: 1, unit: "m²" }),
+        result("striper", "Striper totalt", striperBehov, { kind: "integer" }),
+        result("perRull", "Striper per rull", striperPerRull, {
+          kind: "integer",
+        }),
+        result("stripe", "Lengde per stripe", stripeLengde, {
+          digits: 2,
+          unit: "m",
+        }),
       ];
     },
   },
@@ -286,7 +327,7 @@ export const byggCalculators: Calculator[] = [
       const lengde = num(input, "lengde");
       const seksjon = num(input, "seksjon");
       if (!allNumbers([lengde, seksjon]) || seksjon <= 0) return [];
-      const seksjoner = Math.ceil(lengde / seksjon);
+      const seksjoner = ceilStable(lengde / seksjon);
       return [
         result("stolper", "Stolper", seksjoner + 1, {
           kind: "integer",
@@ -335,7 +376,7 @@ export const byggCalculators: Calculator[] = [
       const medSvinn = areal * (1 + svinn / 100);
       const plater = medSvinn / 2.88;
       return [
-        result("plater", "Plater (avrundet opp)", Math.ceil(plater), {
+        result("plater", "Plater (avrundet opp)", ceilStable(plater), {
           kind: "integer",
           primary: true,
         }),
@@ -422,7 +463,7 @@ export const byggCalculators: Calculator[] = [
       const cc = Number(input.cc) / 1000;
       const dorer = num(input, "dorer") ?? 0;
       if (!allNumbers([l, h, cc]) || l <= 0 || h <= 0) return [];
-      const stendere = Math.ceil(l / cc) + 1 + dorer * 2;
+      const stendere = ceilStable(l / cc) + 1 + dorer * 2;
       const lm = stendere * h;
       return [
         result("stendere", "Stendere", stendere, {
@@ -552,13 +593,13 @@ export const byggCalculators: Calculator[] = [
       const pr = num(input, "prstein");
       const svinn = num(input, "svinn");
       if (!allNumbers([areal, pr, svinn]) || areal <= 0 || pr <= 0) return [];
-      const antall = Math.ceil((areal * (1 + svinn / 100)) / pr);
+      const antall = ceilStable((areal * (1 + svinn / 100)) / pr);
       return [
         result("antall", "Stein (avrundet opp)", antall, {
           kind: "integer",
           primary: true,
         }),
-        result("pakker", "Pakker à 10", Math.ceil(antall / 10), {
+        result("pakker", "Pakker à 10", ceilStable(antall / 10), {
           kind: "integer",
         }),
       ];

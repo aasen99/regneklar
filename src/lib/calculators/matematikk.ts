@@ -1,5 +1,5 @@
 import type { Calculator } from "../types";
-import { num } from "../format";
+import { num, parseNumberList } from "../format";
 import { allNumbers, result } from "../helpers";
 
 export const matematikkCalculators: Calculator[] = [
@@ -361,19 +361,14 @@ export const matematikkCalculators: Calculator[] = [
         label: "Tall",
         type: "text",
         defaultValue: "4, 5, 9, 10, 12",
-        hint: "Skill med komma, semikolon eller mellomrom.",
+        hint: "Skill desimaltall med semikolon, f.eks. 12,5; 13,2. Ellers komma/mellomrom.",
       },
     ],
     formula: "snitt = sum / n     median = midterste verdi når listen er sortert",
     explanation:
       "Gjennomsnitt trekker alle observasjonene likt. Median er mer robust mot ekstremverdier.",
     compute(input) {
-      const parts = (input.tall ?? "")
-        .split(/[,;\s]+/)
-        .map((p) => p.trim())
-        .filter(Boolean)
-        .map((p) => Number(p.replace(",", ".")))
-        .filter((n) => Number.isFinite(n));
+      const parts = parseNumberList(input.tall);
       if (parts.length === 0) return [];
       const sum = parts.reduce((a, b) => a + b, 0);
       const sorted = [...parts].sort((a, b) => a - b);
@@ -583,9 +578,9 @@ export const matematikkCalculators: Calculator[] = [
     category: "matematikk",
     tags: ["ligning", "abc-formel", "diskriminant"],
     fields: [
-      { id: "a", label: "a", type: "number", defaultValue: 1 },
-      { id: "b", label: "b", type: "number", defaultValue: -5 },
-      { id: "c", label: "c", type: "number", defaultValue: 6 },
+      { id: "a", label: "a", type: "number", defaultValue: 1, allowNegative: true },
+      { id: "b", label: "b", type: "number", defaultValue: -5, allowNegative: true },
+      { id: "c", label: "c", type: "number", defaultValue: 6, allowNegative: true },
     ],
     formula: "x = (−b ± √(b² − 4ac)) / (2a)",
     explanation:
@@ -850,6 +845,7 @@ export const matematikkCalculators: Calculator[] = [
         type: "number",
         unit: "°",
         defaultValue: 30,
+        allowNegative: true,
       },
       {
         id: "verdi",
@@ -857,6 +853,7 @@ export const matematikkCalculators: Calculator[] = [
         type: "number",
         defaultValue: 0.5,
         step: 0.01,
+        allowNegative: true,
       },
     ],
     formula: "sin²θ + cos²θ = 1     tan θ = sin θ / cos θ",
@@ -999,10 +996,10 @@ export const matematikkCalculators: Calculator[] = [
     category: "matematikk",
     tags: ["vektor", "prikkprodukt", "geometri"],
     fields: [
-      { id: "ax", label: "aₓ", type: "number", defaultValue: 3 },
-      { id: "ay", label: "aᵧ", type: "number", defaultValue: 4 },
-      { id: "bx", label: "bₓ", type: "number", defaultValue: 1 },
-      { id: "by", label: "bᵧ", type: "number", defaultValue: 0 },
+      { id: "ax", label: "aₓ", type: "number", defaultValue: 3, allowNegative: true },
+      { id: "ay", label: "aᵧ", type: "number", defaultValue: 4, allowNegative: true },
+      { id: "bx", label: "bₓ", type: "number", defaultValue: 1, allowNegative: true },
+      { id: "by", label: "bᵧ", type: "number", defaultValue: 0, allowNegative: true },
     ],
     formula: "|a| = √(aₓ² + aᵧ²)     a·b = aₓbₓ + aᵧbᵧ",
     explanation:
@@ -1120,8 +1117,8 @@ export const matematikkCalculators: Calculator[] = [
         id: "endringer",
         label: "Prosentendringer",
         type: "text",
-        defaultValue: "10, -20, 5",
-        hint: "Skill med komma. Negativ = nedgang.",
+        defaultValue: "10; -20; 5",
+        hint: "Skill med semikolon (anbefalt for desimaler) eller komma. Negativ = nedgang.",
       },
     ],
     formula: "slutt = start · Π (1 + pᵢ/100)",
@@ -1130,10 +1127,7 @@ export const matematikkCalculators: Calculator[] = [
     compute(input) {
       const start = num(input, "start");
       if (!Number.isFinite(start)) return [];
-      const ps = (input.endringer ?? "")
-        .split(/[,;\s]+/)
-        .map((p) => Number(p.replace(",", ".")))
-        .filter((n) => Number.isFinite(n));
+      const ps = parseNumberList(input.endringer);
       if (ps.length === 0) return [];
       let verdi = start;
       for (const p of ps) verdi *= 1 + p / 100;

@@ -7,6 +7,33 @@ export function parseNumber(value: string | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/**
+ * Parse a list of numbers with Norwegian decimal support.
+ * If the string contains `;` or newlines, those separate items (comma = decimal).
+ * Otherwise commas/spaces separate items (use `.` for decimals in that mode).
+ */
+export function parseNumberList(raw: string | undefined): number[] {
+  if (raw == null) return [];
+  const trimmed = raw.trim();
+  if (!trimmed) return [];
+  const useSemicolon = /[;\n\r]/.test(trimmed);
+  const parts = useSemicolon
+    ? trimmed.split(/[;\n\r]+/)
+    : trimmed.split(/[,\s]+/);
+  return parts
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .map((p) => Number(p.replace(/\s/g, "").replace(",", ".")))
+    .filter((n) => Number.isFinite(n));
+}
+
+/** Ceil that ignores float noise just above an integer (e.g. 48.00000000001 → 48). */
+export function ceilStable(x: number): number {
+  if (!Number.isFinite(x)) return Number.NaN;
+  const rounded = Math.round(x * 1e10) / 1e10;
+  return Math.ceil(rounded);
+}
+
 export function num(input: Record<string, string>, id: string): number {
   return parseNumber(input[id]) ?? Number.NaN;
 }
@@ -104,7 +131,10 @@ export function parsePaceMinutes(value: string | undefined): number | null {
   if (t.includes(":")) {
     const parts = t.split(":").map((p) => Number(p.replace(",", ".")));
     if (parts.length !== 2 || parts.some((p) => !Number.isFinite(p))) return null;
-    return parts[0] + parts[1] / 60;
+    const [min, sec] = parts;
+    if (sec < 0 || sec >= 60) return null;
+    if (min < 0) return null;
+    return min + sec / 60;
   }
   const n = Number(t.replace(",", "."));
   return Number.isFinite(n) ? n : null;
@@ -117,9 +147,17 @@ export function parseRaceSeconds(value: string | undefined): number | null {
   if (!t) return null;
   if (t.includes(":")) {
     const parts = t.split(":").map((p) => Number(p.replace(",", ".")));
-    if (parts.some((p) => !Number.isFinite(p))) return null;
-    if (parts.length === 2) return parts[0] * 60 + parts[1];
-    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    if (parts.some((p) => !Number.isFinite(p) || p < 0)) return null;
+    if (parts.length === 2) {
+      const [m, s] = parts;
+      if (s >= 60) return null;
+      return m * 60 + s;
+    }
+    if (parts.length === 3) {
+      const [h, m, s] = parts;
+      if (m >= 60 || s >= 60) return null;
+      return h * 3600 + m * 60 + s;
+    }
     return null;
   }
   const n = Number(t.replace(",", "."));
@@ -140,12 +178,8 @@ export function formatHms(totalSeconds: number): string {
 
 export function formatPace(minPerKm: number): string {
   if (!Number.isFinite(minPerKm) || minPerKm <= 0) return "–";
-  let sec = Math.round(minPerKm * 60);
-  let min = Math.floor(sec / 60);
-  sec = sec % 60;
-  if (sec === 60) {
-    min += 1;
-    sec = 0;
-  }
+  const totalSec = Math.round(minPerKm * 60);
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
   return `${min}:${String(sec).padStart(2, "0")}`;
 }

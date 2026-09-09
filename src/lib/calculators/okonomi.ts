@@ -1,5 +1,8 @@
 import type { Calculator } from "../types";
-import { effectiveLoanRate } from "../finance";
+import {
+  effectiveLoanRate,
+  monthlyRateFromEffectiveAnnual,
+} from "../finance";
 import { num } from "../format";
 import { allNumbers, result } from "../helpers";
 import { reg, regPercent } from "../regulations";
@@ -141,7 +144,7 @@ export const okonomiCalculators: Calculator[] = [
     formula:
       "A = P(1 + r)^n + PMT · (((1 + r)^n − 1) / r)",
     explanation:
-      "Startbeløpet forrentes hvert år. Faste innskudd behandles som en annuitet. Her brukes månedlig modell: r er månedlig rente, n er antall måneder.",
+      "Startbeløpet forrentes hvert år. Faste innskudd behandles som en annuitet. Årlig avkastning tolkes som effektiv årsrente og omregnes til ekvivalent månedlig rente.",
     compute(input) {
       const P = num(input, "start");
       const PMT = num(input, "maaned");
@@ -149,7 +152,7 @@ export const okonomiCalculators: Calculator[] = [
       const aar = num(input, "aar");
       if (!allNumbers([P, PMT, rente, aar]) || aar < 0) return [];
       const n = aar * 12;
-      const r = rente / 100 / 12;
+      const r = monthlyRateFromEffectiveAnnual(rente);
       const futureP = r === 0 ? P : P * Math.pow(1 + r, n);
       const futurePmt =
         r === 0 ? PMT * n : PMT * ((Math.pow(1 + r, n) - 1) / r);
@@ -191,7 +194,7 @@ export const okonomiCalculators: Calculator[] = [
           { value: "25", label: "25 % – alminnelig sats" },
           { value: "15", label: "15 % – næringsmidler" },
           { value: "12", label: "12 % – persontransport, kinobilletter m.m." },
-          { value: "0", label: "0 % – unntatt / fritatt" },
+          { value: "0", label: "0 % – beregn uten MVA" },
         ],
       },
       {
@@ -207,7 +210,7 @@ export const okonomiCalculators: Calculator[] = [
     ],
     formula: "inkl. = eks. · (1 + s)    eks. = inkl. / (1 + s)",
     explanation:
-      "Standard MVA i Norge er 25 %. Matvarer har 15 %, og enkelte tjenester som persontransport har 12 %. Kalkulatoren skiller mellom å legge til og å trekke ut avgiften.",
+      "Standard MVA i Norge er 25 %. Matvarer har 15 %, og enkelte tjenester som persontransport har 12 %. 0 % betyr bare at beregningen gjøres uten avgift – avgiftsmessig status (unntatt vs. fritatt) må vurderes separat.",
     compute(input) {
       const belop = num(input, "belop");
       const sats = num(input, "sats");
@@ -1076,13 +1079,13 @@ export const okonomiCalculators: Calculator[] = [
     ],
     formula: "n = ln(PMT / (PMT − r · S)) / ln(1 + r)",
     explanation:
-      "r er månedlig rente. Hvis betalingen bare dekker rentene, synker ikke saldoen. Små ekstra innbetalinger kutter tiden mye når renten er høy.",
+      "r er ekvivalent månedlig rente fra den effektive årsrenten: (1+r_år)^(1/12)−1. Hvis betalingen bare dekker rentene, synker ikke saldoen. Små ekstra innbetalinger kutter tiden mye når renten er høy.",
     compute(input) {
       const S = num(input, "saldo");
       const rente = num(input, "rente");
       const pmt = num(input, "betaling");
       if (!allNumbers([S, rente, pmt]) || S <= 0) return [];
-      const r = rente / 100 / 12;
+      const r = monthlyRateFromEffectiveAnnual(rente);
       const nesteRente = S * r;
       if (pmt <= nesteRente + 1e-9) {
         return [
@@ -1217,7 +1220,7 @@ export const okonomiCalculators: Calculator[] = [
     ],
     formula: "skattefordel = innskudd · sats     slutt ≈ innskudd · ((1+r)ⁿ − 1) / r",
     explanation:
-      "BSU har årlige og totale tak. Skattefradraget beregnes av årets innskudd. Renteanslaget forutsetter innskudd ved starten av hvert år.",
+      "BSU har årlige og totale tak på innbetalt beløp (renter teller ikke mot 300 000-grensen). Skattefradraget beregnes av årets innskudd. Renteanslaget forutsetter innskudd ved starten av hvert år. Alders- og boligregler er ikke modellert her.",
     disclaimer:
       "Regler for BSU, alder og skattefradrag endres. Sjekk bank og Skatteetaten. Ikke skatteråd.",
     compute(input) {
@@ -1235,9 +1238,8 @@ export const okonomiCalculators: Calculator[] = [
       let skatteTot = 0;
       const r = rente / 100;
       for (let i = 0; i < years; i++) {
-        const room = Math.max(0, tak - saldo);
+        const room = Math.max(0, tak - innskutt);
         const dep = Math.min(innskudd, room);
-        if (dep <= 0) break;
         saldo = (saldo + dep) * (1 + r);
         innskutt += dep;
         skatteTot += dep * (fradrag / 100);
@@ -1302,7 +1304,7 @@ export const okonomiCalculators: Calculator[] = [
     ],
     formula: "FV = P(1+r)ⁿ + PMT · ((1+r)ⁿ − 1) / r",
     explanation:
-      "Kalkulatoren løser for antall måneder til målet nås med startbeløp, faste innskudd og rentes rente.",
+      "Kalkulatoren løser for antall måneder til målet nås med startbeløp, faste innskudd og rentes rente. Årlig avkastning tolkes som effektiv årsrente.",
     compute(input) {
       const mal = num(input, "mal");
       const start = num(input, "start");
@@ -1317,7 +1319,7 @@ export const okonomiCalculators: Calculator[] = [
           }),
         ];
       }
-      const r = rente / 100 / 12;
+      const r = monthlyRateFromEffectiveAnnual(rente);
       let n: number;
       if (r === 0) {
         if (pmt <= 0) return [];

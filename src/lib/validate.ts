@@ -20,7 +20,11 @@ export function validateField(field: Field, value: string): string | null {
   if (field.max != null && n > field.max) {
     return `Høyst ${field.max}`;
   }
-  if (n < 0 && (field.min == null || field.min >= 0)) {
+  if (
+    n < 0 &&
+    !field.allowNegative &&
+    (field.min == null || field.min >= 0)
+  ) {
     return "Kan ikke være negativt";
   }
 

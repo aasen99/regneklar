@@ -25,7 +25,7 @@ export const skoleCalculators: Calculator[] = [
         label: "Karakterer",
         type: "text",
         defaultValue: "5, 4, 6, 5, 3",
-        hint: "Skill med komma. For vekting skriv 5:2 (karakter:vekttall).",
+        hint: "Skill med komma. For vekting skriv 5:2 (karakter:vekttall). Karakterer 1–6.",
       },
     ],
     formula: "snitt = Σ (karakter · vekt) / Σ vekt",
@@ -42,6 +42,7 @@ export const skoleCalculators: Calculator[] = [
         const k = Number(ks.replace(",", "."));
         const v = vs ? Number(vs.replace(",", ".")) : 1;
         if (!Number.isFinite(k) || !Number.isFinite(v) || v <= 0) continue;
+        if (k < 1 || k > 6) continue;
         rows.push({ k, v });
       }
       if (rows.length === 0) return [];
@@ -66,12 +67,15 @@ export const skoleCalculators: Calculator[] = [
         type: "number",
         defaultValue: 4.2,
         step: 0.1,
+        min: 1,
+        max: 6,
       },
       {
         id: "antall",
         label: "Antall karakterer så langt",
         type: "number",
         defaultValue: 4,
+        min: 0,
       },
       {
         id: "maal",
@@ -79,6 +83,8 @@ export const skoleCalculators: Calculator[] = [
         type: "number",
         defaultValue: 4.5,
         step: 0.1,
+        min: 1,
+        max: 6,
       },
     ],
     formula: "x = mål · (n+1) − nåværende snitt · n",
@@ -92,7 +98,7 @@ export const skoleCalculators: Calculator[] = [
       const x = maal * (antall + 1) - naa * antall;
       let kommentar = "Innenfor 1–6.";
       if (x > 6) kommentar = "Trenger mer enn 6 – målet er for høyt med én prøve.";
-      if (x < 1) kommentar = "Du kan ligge under 1 og likevel nå målet.";
+      if (x < 1) kommentar = "Selv karakter 1 er nok til å nå målet.";
       return [
         result("x", "Nødvendig karakter", x, { digits: 2, primary: true }),
         result("kom", "Vurdering", kommentar, { kind: "text" }),
@@ -113,6 +119,8 @@ export const skoleCalculators: Calculator[] = [
         type: "number",
         unit: "%",
         defaultValue: 78,
+        min: 0,
+        max: 100,
       },
     ],
     formula:
@@ -122,7 +130,7 @@ export const skoleCalculators: Calculator[] = [
     disclaimer: "Bruk lærers vurderingsskjema når det finnes.",
     compute(input) {
       const p = num(input, "prosent");
-      if (!Number.isFinite(p)) return [];
+      if (!Number.isFinite(p) || p < 0 || p > 100) return [];
       let k = 1;
       if (p >= 93) k = 6;
       else if (p >= 84) k = 5;
@@ -192,12 +200,16 @@ export const skoleCalculators: Calculator[] = [
         label: "Standpunkt",
         type: "number",
         defaultValue: 5,
+        min: 1,
+        max: 6,
       },
       {
         id: "eksamen",
         label: "Eksamen",
         type: "number",
         defaultValue: 4,
+        min: 1,
+        max: 6,
       },
       {
         id: "eksvekt",
@@ -205,6 +217,8 @@ export const skoleCalculators: Calculator[] = [
         type: "number",
         unit: "%",
         defaultValue: 50,
+        min: 0,
+        max: 100,
         hint: "Mange fag teller 50/50. Noen teller eksamen mindre.",
       },
     ],
@@ -215,7 +229,7 @@ export const skoleCalculators: Calculator[] = [
       const s = num(input, "standpunkt");
       const e = num(input, "eksamen");
       const v = num(input, "eksvekt");
-      if (!allNumbers([s, e, v])) return [];
+      if (!allNumbers([s, e, v]) || v < 0 || v > 100) return [];
       const andel = v / 100;
       const samlet = s * (1 - andel) + e * andel;
       return [
