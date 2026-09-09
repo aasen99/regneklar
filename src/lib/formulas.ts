@@ -4330,6 +4330,324 @@ export const formulas: Formula[] = [
       "Kelly gir teoretisk optimal innsatsandel. Fraksjonell Kelly (¼–½) og et absolutt tak demper svingninger og feilestimat av p.",
     calculatorSlug: "bankroll-kelly",
   },
+
+  // —— Generell matematikk (skole) ——
+  {
+    slug: "kvadratsetningene",
+    title: "Kvadratsetningene",
+    category: "matematikk",
+    expression:
+      "(a+b)² = a² + 2ab + b²     (a−b)² = a² − 2ab + b²     (a+b)(a−b) = a² − b²",
+    variables: [
+      { symbol: "a, b", meaning: "Tall eller algebraiske uttrykk" },
+    ],
+    explanation:
+      "Første, andre og tredje kvadratsetning. Brukes til å utvide og faktorisere. Den tredje heter også konjugatregelen (differanse av kvadrater).",
+    example: "(x+3)² = x² + 6x + 9.     (x+3)(x−3) = x² − 9.",
+    commonMistakes: [
+      "Å tro at (a+b)² = a² + b² (mangler midtleddet 2ab).",
+    ],
+    calculatorSlug: "andregrad",
+  },
+  {
+    slug: "lineaer-funksjon",
+    title: "Lineær funksjon",
+    category: "matematikk",
+    expression: "y = ax + b",
+    variables: [
+      { symbol: "a", meaning: "Stigningstall" },
+      { symbol: "b", meaning: "Skjæring med y-aksen (konstantledd)" },
+    ],
+    explanation:
+      "Grafen er en rett linje. a > 0 stiger, a < 0 synker. Når a = 0 er funksjonen konstant y = b.",
+    example: "y = 2x − 1 går gjennom (0, −1) og stiger med 2 når x øker med 1.",
+    calculatorSlug: "stigningstall",
+  },
+  {
+    slug: "toppunkt-parabel",
+    title: "Toppunkt for parabel",
+    category: "matematikk",
+    expression: "x = −b / (2a)     y = f(x)",
+    variables: [
+      { symbol: "a, b, c", meaning: "I f(x) = ax² + bx + c" },
+    ],
+    explanation:
+      "Parabelen y = ax² + bx + c har toppunkt (maksimum hvis a < 0, minimum hvis a > 0) i x = −b/(2a). y-verdien finnes ved å sette x inn i f.",
+    example: "f(x) = x² − 4x + 1 har toppunkt i x = 2, y = −3.",
+    calculatorSlug: "andregrad",
+  },
+  {
+    slug: "diskriminant",
+    title: "Diskriminant",
+    category: "matematikk",
+    expression: "D = b² − 4ac",
+    variables: [
+      { symbol: "a, b, c", meaning: "Koeffisienter i ax² + bx + c = 0" },
+      { symbol: "D", meaning: "Diskriminant" },
+    ],
+    explanation:
+      "D > 0: to ulike reelle røtter. D = 0: én dobbeltrot. D < 0: ingen reelle røtter (komplekse løsninger).",
+    calculatorSlug: "andregrad",
+  },
+  {
+    slug: "aritmetisk-folge",
+    title: "Aritmetisk følge",
+    category: "matematikk",
+    expression: "aₙ = a₁ + (n−1)d     Sₙ = n/2 · (a₁ + aₙ)",
+    variables: [
+      { symbol: "a₁", meaning: "Første ledd" },
+      { symbol: "d", meaning: "Differanse mellom ledd" },
+      { symbol: "n", meaning: "Leddnummer / antall ledd" },
+      { symbol: "Sₙ", meaning: "Sum av de n første leddene" },
+    ],
+    explanation:
+      "Hvert ledd øker (eller minker) med konstant differanse d. Eksempel: 3, 7, 11, 15 … har d = 4.",
+    example: "a₁ = 2, d = 3, n = 5 → a₅ = 14, S₅ = 40.",
+  },
+  {
+    slug: "geometrisk-folge",
+    title: "Geometrisk følge",
+    category: "matematikk",
+    expression: "aₙ = a₁ · r^(n−1)     Sₙ = a₁ (rⁿ − 1) / (r − 1)  (r ≠ 1)",
+    variables: [
+      { symbol: "a₁", meaning: "Første ledd" },
+      { symbol: "r", meaning: "Kvotient (forhold mellom ledd)" },
+      { symbol: "n", meaning: "Leddnummer / antall ledd" },
+    ],
+    explanation:
+      "Hvert ledd multipliseres med konstant kvotient r. Kobles ofte til rentes rente når r = 1 + rente.",
+    example: "a₁ = 3, r = 2, n = 4 → 3, 6, 12, 24. S₄ = 45.",
+    calculatorSlug: "rentes-rente",
+  },
+  {
+    slug: "binomialformel",
+    title: "Binomialformelen",
+    category: "matematikk",
+    expression: "(a + b)ⁿ = Σₖ C(n,k) a^(n−k) b^k",
+    variables: [
+      { symbol: "n", meaning: "Ikke-negativt heltall" },
+      { symbol: "C(n,k)", meaning: "Binomisk koeffisient n! / (k!(n−k)!)" },
+    ],
+    explanation:
+      "Utvikler (a+b)ⁿ. For n = 2 får du kvadratsetningen. Koeffisientene er radene i Pascals trekant.",
+    example: "(x+1)³ = x³ + 3x² + 3x + 1.",
+    calculatorSlug: "fakultet",
+  },
+  {
+    slug: "binomisk-koeffisient",
+    title: "Binomisk koeffisient",
+    category: "matematikk",
+    expression: "C(n, k) = n! / (k! · (n−k)!) = nCr",
+    variables: [
+      { symbol: "n", meaning: "Totalt antall" },
+      { symbol: "k", meaning: "Antall som velges" },
+    ],
+    explanation:
+      "Antall måter å velge k elementer fra n uten hensyn til rekkefølge. C(n,k) = C(n, n−k).",
+    example: "C(5,2) = 10.",
+    calculatorSlug: "fakultet",
+  },
+  {
+    slug: "absoluttverdi",
+    title: "Absoluttverdi",
+    category: "matematikk",
+    expression: "|x| = x hvis x ≥ 0,   −x hvis x < 0",
+    variables: [{ symbol: "x", meaning: "Reelt tall" }],
+    explanation:
+      "Avstand fra null på tallinja. |a−b| er avstanden mellom a og b. |xy| = |x||y|.",
+    example: "|−7| = 7.     |3 − 10| = 7.",
+  },
+  {
+    slug: "proporsjonalitet",
+    title: "Proporsjonalitet",
+    category: "matematikk",
+    expression: "y = k · x     (direkte)     y = k / x     (omvendt)",
+    variables: [
+      { symbol: "k", meaning: "Proporsjonalitetskonstant" },
+      { symbol: "x, y", meaning: "Proporsjonale størrelser" },
+    ],
+    explanation:
+      "Direkte: dobbelt x gir dobbelt y. Omvendt: dobbelt x gir halv y. Grafen y = kx er rett linje gjennom origo.",
+    calculatorSlug: "regel-av-tre",
+  },
+  {
+    slug: "prosentfaktor",
+    title: "Prosentfaktor",
+    category: "matematikk",
+    expression: "ny = gammel · (1 ± p/100)",
+    variables: [
+      { symbol: "p", meaning: "Prosentendring" },
+      { symbol: "1 ± p/100", meaning: "Vekstfaktor / reduksjonsfaktor" },
+    ],
+    explanation:
+      "Økning på 20 % → multipliser med 1,20. Nedgang på 15 % → multipliser med 0,85. Flere endringer etter hverandre: multipliser faktorene.",
+    example: "200 · 1,10 · 0,90 = 198 (ikke tilbake til 200).",
+    calculatorSlug: "compound-prosent",
+  },
+  {
+    slug: "vinkelsum-trekant",
+    title: "Vinkelsum i trekant",
+    category: "matematikk",
+    expression: "A + B + C = 180°",
+    variables: [
+      { symbol: "A, B, C", meaning: "De tre vinklene i trekanten" },
+    ],
+    explanation:
+      "Summen av vinklene i en trekant er alltid 180°. I en regulær n-kant er vinkelsummen (n−2)·180°.",
+    calculatorSlug: "trekant-vinkler",
+  },
+  {
+    slug: "vinkelsum-polygon",
+    title: "Vinkelsum i mangekant",
+    category: "matematikk",
+    expression: "S = (n − 2) · 180°",
+    variables: [
+      { symbol: "n", meaning: "Antall sider (n ≥ 3)" },
+      { symbol: "S", meaning: "Sum av innenivinkler" },
+    ],
+    explanation:
+      "En firkanter har 360°, femkant 540°, osv. Hver vinkel i en regulær n-kant er S/n.",
+    example: "Sekskant: (6−2)·180° = 720°, regulær vinkel = 120°.",
+  },
+  {
+    slug: "lignende-trekanter",
+    title: "Formlike trekanter",
+    category: "matematikk",
+    expression: "a/a′ = b/b′ = c/c′ = k",
+    variables: [
+      { symbol: "a,b,c", meaning: "Sider i den ene trekanten" },
+      { symbol: "a′,b′,c′", meaning: "Tilsvarende sider i den andre" },
+      { symbol: "k", meaning: "Skaleringsfaktor" },
+    ],
+    explanation:
+      "Formlike (similære) trekanter har like vinkler og proporsjonale sider. Areal skaleres med k², volum med k³.",
+    calculatorSlug: "regel-av-tre",
+  },
+  {
+    slug: "overflate-kule",
+    title: "Overflate av kule",
+    category: "matematikk",
+    expression: "A = 4πr²",
+    variables: [{ symbol: "r", meaning: "Radius" }],
+    explanation:
+      "Hele kuleoverflaten. Halvkuleflate uten grunnflate er 2πr²; med grunnflate 3πr².",
+    example: "r = 3 → A = 4π·9 ≈ 113.",
+    calculatorSlug: "volum-kule",
+  },
+  {
+    slug: "areal-rombe",
+    title: "Areal av rombe",
+    category: "matematikk",
+    expression: "A = g · h = (d₁ · d₂) / 2",
+    variables: [
+      { symbol: "g, h", meaning: "Side og tilhørende høyde" },
+      { symbol: "d₁, d₂", meaning: "Diagonalene" },
+    ],
+    explanation:
+      "Rombe er et parallellogram med like sider. Diagonalene står vinkelrett på hverandre og deler hverandre på midten.",
+    calculatorSlug: "areal",
+  },
+  {
+    slug: "omkrets-rektangel",
+    title: "Omkrets av rektangel",
+    category: "matematikk",
+    expression: "O = 2(l + b)",
+    variables: [
+      { symbol: "l", meaning: "Lengde" },
+      { symbol: "b", meaning: "Bredde" },
+    ],
+    explanation: "Summen av alle fire sidene. For kvadrat med side s: O = 4s.",
+    calculatorSlug: "omkrets",
+  },
+  {
+    slug: "radianer-grader",
+    title: "Radianer og grader",
+    category: "matematikk",
+    expression: "π rad = 180°     rad = grader · π/180",
+    variables: [
+      { symbol: "π", meaning: "Pi ≈ 3,14159" },
+    ],
+    explanation:
+      "En full sirkel er 2π radianer = 360°. 90° = π/2, 60° = π/3, 45° = π/4, 30° = π/6.",
+    calculatorSlug: "grader-radianer",
+  },
+  {
+    slug: "enhetsirkel",
+    title: "Enhetssirkelen",
+    category: "matematikk",
+    expression: "x = cos θ     y = sin θ     x² + y² = 1",
+    variables: [
+      { symbol: "θ", meaning: "Vinkel fra positiv x-akse" },
+    ],
+    explanation:
+      "Punktet (cos θ, sin θ) ligger på sirkelen med radius 1. Forklarer fortegn i kvadrantene og periodisitet 360° (2π).",
+    calculatorSlug: "trigonometri",
+  },
+  {
+    slug: "dobbeltvinkel",
+    title: "Dobbeltvinkel (sin og cos)",
+    category: "matematikk",
+    expression:
+      "sin 2θ = 2 sin θ cos θ     cos 2θ = cos²θ − sin²θ = 2cos²θ − 1 = 1 − 2sin²θ",
+    variables: [{ symbol: "θ", meaning: "Vinkel" }],
+    explanation:
+      "Nyttige identiteter for å forenkle uttrykk og løse trigonomiske ligninger.",
+    calculatorSlug: "trigonometri",
+  },
+  {
+    slug: "pq-formelen",
+    title: "pq-formelen",
+    category: "matematikk",
+    expression: "x² + px + q = 0  ⇒  x = −p/2 ± √((p/2)² − q)",
+    variables: [
+      { symbol: "p", meaning: "Koeffisient foran x (når a = 1)" },
+      { symbol: "q", meaning: "Konstantledd" },
+    ],
+    explanation:
+      "Spesialtilfelle av abc-formelen når koeffisienten foran x² er 1. Vanlig i norsk videregående.",
+    example: "x² − 5x + 6 = 0 → x = 5/2 ± √(25/4 − 6) = 2 eller 3.",
+    calculatorSlug: "andregrad",
+  },
+  {
+    slug: "aritmetisk-middel",
+    title: "Aritmetisk middel",
+    category: "matematikk",
+    expression: "x̄ = (x₁ + x₂ + … + xₙ) / n",
+    variables: [
+      { symbol: "xᵢ", meaning: "Observasjoner" },
+      { symbol: "n", meaning: "Antall verdier" },
+    ],
+    explanation:
+      "Vanlig gjennomsnitt. Ikke det samme som median (midterste verdi) eller typetall (mest frekvente).",
+    calculatorSlug: "gjennomsnitt",
+  },
+  {
+    slug: "vektingssnitt",
+    title: "Veid gjennomsnitt",
+    category: "matematikk",
+    expression: "x̄ = (Σ wᵢ xᵢ) / (Σ wᵢ)",
+    variables: [
+      { symbol: "xᵢ", meaning: "Verdier" },
+      { symbol: "wᵢ", meaning: "Vekter" },
+    ],
+    explanation:
+      "Brukes når noen verdier teller mer enn andre (karakterer med vekttall, snittkurs for aksjer, karakterpoeng).",
+    calculatorSlug: "gjennomsnitt",
+  },
+  {
+    slug: "rotregler",
+    title: "Rotregler",
+    category: "matematikk",
+    expression:
+      "√(ab) = √a · √b     √(a/b) = √a / √b     ⁿ√(a^m) = a^(m/n)",
+    variables: [
+      { symbol: "a, b", meaning: "Ikke-negative tall (for partalls-røtter)" },
+    ],
+    explanation:
+      "Kvadratrot er potens 1/2. √a · √a = a (a ≥ 0). Du kan ikke uten videre «forenkle» √(a+b) til √a + √b.",
+    commonMistakes: ["√(a+b) = √a + √b (feil)."],
+    calculatorSlug: "potens-rot",
+  },
 ];
 
 export function getFormula(slug: string): Formula | undefined {
