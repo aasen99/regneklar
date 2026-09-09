@@ -29,7 +29,16 @@ export const CATEGORY_SECTIONS: Partial<Record<CategoryId, CategorySection[]>> =
     },
     {
       title: "Kropp og helse",
-      slugs: ["bmi", "kaloribehov", "kroppsfett-navy", "terminkalkulator", "sovnbehov"],
+      slugs: [
+        "bmi",
+        "kaloribehov",
+        "carbs-kalkulator",
+        "sportsdrikk-sukker",
+        "makrofordeling",
+        "kroppsfett-navy",
+        "terminkalkulator",
+        "sovnbehov",
+      ],
     },
     {
       title: "Restitusjon",

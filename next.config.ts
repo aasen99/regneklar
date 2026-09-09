@@ -194,6 +194,36 @@ const nextConfig: NextConfig = {
         destination: "/kalkulator/km-t-min-km",
         permanent: true,
       },
+      {
+        source: "/kalkulator/karbohydratkalkulator",
+        destination: "/kalkulator/carbs-kalkulator",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/carbs",
+        destination: "/kalkulator/carbs-kalkulator",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/karbo-kalkulator",
+        destination: "/kalkulator/carbs-kalkulator",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/sportsdrikk",
+        destination: "/kalkulator/sportsdrikk-sukker",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/sportsdrikk-kalkulator",
+        destination: "/kalkulator/sportsdrikk-sukker",
+        permanent: true,
+      },
+      {
+        source: "/kalkulator/hjemmelaget-sportsdrikk",
+        destination: "/kalkulator/sportsdrikk-sukker",
+        permanent: true,
+      },
     ];
   },
 };

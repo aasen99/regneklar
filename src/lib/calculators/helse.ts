@@ -826,4 +826,330 @@ export const helseCalculators: Calculator[] = [
       ];
     },
   },
+  {
+    slug: "carbs-kalkulator",
+    title: "Karbohydratkalkulator (carbs)",
+    shortTitle: "Carbs",
+    description:
+      "Regn ut daglig karbohydratinntak fra kroppsvekt og aktivitetsnivå, eller fra kalorier og prosentandel. Se også sportsdrikk med husholdningssukker.",
+    category: "sport",
+    tags: [
+      "carbs",
+      "carbs kalkulator",
+      "karbohydrat",
+      "karbohydratkalkulator",
+      "karbo",
+      "kosthold",
+      "makro",
+      "løping",
+      "trening",
+      "sportsdrikk",
+    ],
+    popular: true,
+    fields: [
+      {
+        id: "metode",
+        label: "Metode",
+        type: "select",
+        defaultValue: "vekt",
+        options: [
+          { value: "vekt", label: "Ut fra vekt og aktivitet (g/kg)" },
+          { value: "kalorier", label: "Ut fra kalorier og prosent" },
+        ],
+      },
+      {
+        id: "kg",
+        label: "Kroppsvekt",
+        type: "number",
+        unit: "kg",
+        defaultValue: 75,
+        hint: "Brukes ved g/kg-metoden.",
+      },
+      {
+        id: "aktivitet",
+        label: "Aktivitetsnivå / mål",
+        type: "select",
+        defaultValue: "moderat",
+        options: [
+          { value: "lav", label: "Lav aktivitet (ca. 3–5 g/kg)" },
+          { value: "moderat", label: "Moderat trening (ca. 5–7 g/kg)" },
+          { value: "hoy", label: "Høy utholdenhet (ca. 6–10 g/kg)" },
+          { value: "svart_hoy", label: "Svært høy / konkurranse (ca. 8–12 g/kg)" },
+          { value: "loading", label: "Karboloading før konkurranse (ca. 10–12 g/kg)" },
+        ],
+        hint: "Vanlige retningslinjer fra idrettsernæring. Individuelle behov varierer.",
+      },
+      {
+        id: "kcal",
+        label: "Kalorier per dag",
+        type: "number",
+        unit: "kcal",
+        defaultValue: 2400,
+        hint: "Brukes ved kalori-metoden.",
+      },
+      {
+        id: "prosent",
+        label: "Andel karbohydrat",
+        type: "number",
+        unit: "%",
+        defaultValue: 50,
+        hint: "Typisk 45–65 % av energi for mange. Brukes ved kalori-metoden.",
+      },
+    ],
+    formula: "karbo (g) = vekt · g/kg     eller     karbo (g) = kcal · % / 4",
+    explanation:
+      "Ved trening brukes ofte gram karbohydrat per kilo kroppsvekt. Alternativt: karbohydrat gir 4 kcal per gram, så andel av dagskalorier omregnes til gram. Tallene er veiledende – ikke personlig kostholdsveiledning.",
+    disclaimer:
+      "Anslag for friske voksne. Sykdom, diabetes og spesielle dietter krever råd fra fagfolk.",
+    faqs: [
+      {
+        question: "Hvor mange carbs trenger jeg per dag?",
+        answer:
+          "Det avhenger av vekt og hvor mye du trener. Lav aktivitet ligger ofte rundt 3–5 g/kg, mens hard utholdenhetstrening kan ligge på 6–10 g/kg eller mer.",
+      },
+      {
+        question: "Hva er karboloading?",
+        answer:
+          "Økt karbohydratinntak (ofte ca. 10–12 g/kg) i 1–3 dager før en hard konkurranse for å fylle glykogenlagrene. Brukes mest før lange løp.",
+      },
+      {
+        question: "Kan jeg lage sportsdrikk med vanlig sukker?",
+        answer:
+          "Ja. Bruk sportsdrikk-kalkulatoren for å finne hvor mange gram husholdningssukker du trenger per flaske ut fra treningstid og ønsket karbo per time.",
+      },
+    ],
+    compute(input) {
+      const ranges: Record<string, [number, number]> = {
+        lav: [3, 5],
+        moderat: [5, 7],
+        hoy: [6, 10],
+        svart_hoy: [8, 12],
+        loading: [10, 12],
+      };
+
+      if (input.metode === "kalorier") {
+        const kcal = num(input, "kcal");
+        const prosent = num(input, "prosent");
+        if (!allNumbers([kcal, prosent]) || kcal <= 0 || prosent <= 0 || prosent > 100) {
+          return [];
+        }
+        const gram = (kcal * (prosent / 100)) / 4;
+        const kg = num(input, "kg");
+        const out = [
+          result("gram", "Karbohydrat per dag", gram, {
+            digits: 0,
+            unit: "g",
+            primary: true,
+          }),
+          result("kcal", "Fra karbohydrat", gram * 4, {
+            digits: 0,
+            unit: "kcal",
+          }),
+        ];
+        if (Number.isFinite(kg) && kg > 0) {
+          out.push(
+            result("gpk", "Gram per kg", gram / kg, {
+              digits: 1,
+              unit: "g/kg",
+            }),
+          );
+        }
+        return out;
+      }
+
+      const kg = num(input, "kg");
+      const [lo, hi] = ranges[input.aktivitet ?? "moderat"] ?? [5, 7];
+      if (!Number.isFinite(kg) || kg <= 0) return [];
+      const mid = ((lo + hi) / 2) * kg;
+      const low = lo * kg;
+      const high = hi * kg;
+      return [
+        result("mid", "Anslag midt i området", mid, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+          hint: `${lo}–${hi} g/kg`,
+        }),
+        result(
+          "omrade",
+          "Anbefalt område",
+          `${Math.round(low)}–${Math.round(high)} g`,
+          { kind: "text" },
+        ),
+        result("gpk", "Per kg kroppsvekt", `${lo}–${hi}`, {
+          kind: "text",
+          unit: "g/kg",
+        }),
+        result("kcal", "Ca. kcal fra karbo (midt)", mid * 4, {
+          digits: 0,
+          unit: "kcal",
+        }),
+      ];
+    },
+  },
+  {
+    slug: "sportsdrikk-sukker",
+    title: "Sportsdrikk med sukker",
+    shortTitle: "Sportsdrikk",
+    description:
+      "Finn hvor mange gram vanlig husholdningssukker du trenger for å lage din egen sportsdrikk – ut fra treningstid, karbo per time og flaskestørrelse.",
+    category: "sport",
+    tags: [
+      "sportsdrikk",
+      "sukker",
+      "husholdningssukker",
+      "carbs",
+      "karbohydrat",
+      "løping",
+      "sykling",
+      "elektrolytter",
+      "diy sportsdrikk",
+    ],
+    popular: true,
+    fields: [
+      {
+        id: "timer",
+        label: "Treningstid",
+        type: "number",
+        unit: "timer",
+        defaultValue: 2,
+        step: 0.25,
+        hint: "F.eks. 1,5 for 90 minutter. Under ca. 1 time trengs ofte lite ekstra karbo.",
+      },
+      {
+        id: "perTime",
+        label: "Karbohydrat per time",
+        type: "select",
+        defaultValue: "60",
+        options: [
+          { value: "30", label: "30 g/t – lett / nybegynner" },
+          { value: "45", label: "45 g/t – moderat" },
+          { value: "60", label: "60 g/t – vanlig mål" },
+          { value: "90", label: "90 g/t – hardt / vant mage" },
+          { value: "egendefinert", label: "Egendefinert" },
+        ],
+      },
+      {
+        id: "egendefinert",
+        label: "Egen mengde per time",
+        type: "number",
+        unit: "g/t",
+        defaultValue: 60,
+        hint: "Brukes når du velger egendefinert.",
+      },
+      {
+        id: "volum",
+        label: "Flaskevolum",
+        type: "number",
+        unit: "ml",
+        defaultValue: 500,
+      },
+      {
+        id: "flasker",
+        label: "Antall flasker",
+        type: "number",
+        defaultValue: 2,
+        hint: "Hvor mange like flasker du blander totalt for økta.",
+      },
+      {
+        id: "salt",
+        label: "Salt per liter (valgfritt)",
+        type: "number",
+        unit: "g",
+        defaultValue: 1,
+        hint: "Ca. 0,5–1,5 g salt per liter er vanlig i hjemmelaget sportsdrikk. Sett 0 for uten salt.",
+      },
+    ],
+    formula: "sukker (g) = g/t · timer     % = sukker / liter · 100",
+    explanation:
+      "Vanlig hvitt sukker (sukrose) er karbohydrat. Mange hjemmelagede sportsdrikker sikter mot ca. 4–8 % løsning (40–80 g sukker per liter). Start lavt hvis magen er uvant. Litt salt kan erstatte natriuminnhold i kjøpt sportsdrikk.",
+    disclaimer:
+      "Veiledende for trening. Ved varme, lange konkurranser eller mageproblemer: test i trening først. Ikke medisinsk råd.",
+    faqs: [
+      {
+        question: "Hvor mye sukker i 500 ml flaske?",
+        answer:
+          "Ved 60 g karbo per time og 2 timers økt med to 500 ml-flasker: 120 g totalt → 60 g sukker per flaske (ca. 5 ss).",
+      },
+      {
+        question: "Hva er en god konsentrasjon?",
+        answer:
+          "Ofte 4–8 %. Over ca. 8–10 % kan enkelte få magebesvær. Da kan du bruke flere flasker eller blande tynnere.",
+      },
+    ],
+    compute(input) {
+      const timer = num(input, "timer");
+      const volumMl = num(input, "volum");
+      const flasker = num(input, "flasker");
+      const saltPerL = num(input, "salt");
+      let perTime = num(input, "perTime");
+      if (input.perTime === "egendefinert") {
+        perTime = num(input, "egendefinert");
+      }
+      if (
+        !allNumbers([timer, perTime, volumMl, flasker]) ||
+        timer <= 0 ||
+        perTime < 0 ||
+        volumMl <= 0 ||
+        flasker <= 0
+      ) {
+        return [];
+      }
+
+      const totalSukker = perTime * timer;
+      const perFlaske = totalSukker / flasker;
+      const totalMl = volumMl * flasker;
+      const totalLiter = totalMl / 1000;
+      // Vekt/volum-prosent: gram per 100 ml (60 g/L = 6 %)
+      const konsentrasjon = totalMl > 0 ? (totalSukker / totalMl) * 100 : Number.NaN;
+      const ts = perFlaske / 4; // 1 ts ≈ 4 g
+      const ss = perFlaske / 12; // 1 ss ≈ 12 g
+      const saltTotalt = Number.isFinite(saltPerL)
+        ? saltPerL * totalLiter
+        : 0;
+      const saltPerFlaske = saltTotalt / flasker;
+
+      const out = [
+        result("perFlaske", "Sukker per flaske", perFlaske, {
+          digits: 0,
+          unit: "g",
+          primary: true,
+          hint: `Ca. ${ss.toFixed(1)} ss eller ${ts.toFixed(0)} ts`,
+        }),
+        result("total", "Sukker totalt for økta", totalSukker, {
+          digits: 0,
+          unit: "g",
+        }),
+        result("pct", "Konsentrasjon", konsentrasjon, {
+          kind: "percent",
+          digits: 1,
+          hint:
+            konsentrasjon > 8
+              ? "Litt høyt for mange – vurder mer væske eller lavere g/t"
+              : konsentrasjon < 4 && totalSukker > 0
+                ? "Tynn blanding – greit for magen, mindre karbo per slurk"
+                : "Typisk målområde er ca. 4–8 %",
+        }),
+        result("perTimeVis", "Karbo per time", perTime, {
+          digits: 0,
+          unit: "g/t",
+        }),
+      ];
+
+      if (saltTotalt > 0) {
+        out.push(
+          result("saltFlaske", "Salt per flaske", saltPerFlaske, {
+            digits: 2,
+            unit: "g",
+          }),
+          result("saltTotal", "Salt totalt", saltTotalt, {
+            digits: 2,
+            unit: "g",
+          }),
+        );
+      }
+
+      return out;
+    },
+  },
 ];

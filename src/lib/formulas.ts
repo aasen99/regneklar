@@ -3260,6 +3260,46 @@ export const formulas: Formula[] = [
     calculatorSlug: "makrofordeling",
   },
   {
+    slug: "carbs-formel",
+    title: "Karbohydratinntak (carbs)",
+    category: "sport",
+    expression: "karbo (g) = vekt · g/kg     eller     karbo (g) = kcal · % / 4",
+    variables: [
+      { symbol: "vekt", meaning: "Kroppsvekt i kg" },
+      { symbol: "g/kg", meaning: "Gram karbohydrat per kilo, etter aktivitetsnivå" },
+      { symbol: "%", meaning: "Andel av daglige kalorier" },
+    ],
+    explanation:
+      "Ved trening brukes ofte 3–12 g/kg avhengig av volum. Fra kalorier: karbohydrat gir 4 kcal/g.",
+    example: "75 kg og 6 g/kg gir 450 g karbohydrat per dag (ca. 1800 kcal fra karbo).",
+    prerequisites: "Veiledende for friske voksne. Individuelle behov varierer.",
+    commonMistakes: [
+      "Bruke samme g/kg på hviledag som på hard treningsdag.",
+      "Glemme at 1 g karbohydrat = 4 kcal.",
+    ],
+    calculatorSlug: "carbs-kalkulator",
+  },
+  {
+    slug: "sportsdrikk-sukker-formel",
+    title: "Sportsdrikk med sukker",
+    category: "sport",
+    expression: "sukker = g/t · timer     % = (sukker / liter) · 100",
+    variables: [
+      { symbol: "g/t", meaning: "Gram karbohydrat per time" },
+      { symbol: "timer", meaning: "Varighet på økta" },
+      { symbol: "%", meaning: "Konsentrasjon (gram per 100 ml)" },
+    ],
+    explanation:
+      "Husholdningssukker er karbohydrat. 4–8 % løsning er vanlig. Fordel total mengde på antall flasker.",
+    example:
+      "2 timer × 60 g/t = 120 g sukker. To 500 ml-flasker → 60 g per flaske (ca. 6 %).",
+    commonMistakes: [
+      "Blande for sterkt (over 8–10 %) uten å ha testet magen.",
+      "Glemme at all drikk under økta teller med i total karbo.",
+    ],
+    calculatorSlug: "sportsdrikk-sukker",
+  },
+  {
     slug: "graviditetsuke-formel",
     title: "Graviditetsuke",
     category: "sport",
